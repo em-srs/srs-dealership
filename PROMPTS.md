@@ -240,12 +240,24 @@ This document provides a detailed, chronological record of all prompts, instruct
 
 ---
 
+### Phase 7: Live Production Cloud Deployment (Neon + Render + Vercel)
+- **User Prompt**:
+  > "neon.tech account and connection string... update the development, readme, prompt and etc all files in detail with these latest changes and upgrades"
+- **Implementation Delivered**:
+  1. Provisioned serverless PostgreSQL database on **Neon Cloud** (`ep-late-rain-azb9bcjm.c-3.ap-southeast-1.aws.neon.tech`). Executed `schema.sql` DDL and seeded 51 vehicle records and demo accounts (`admin@dealership.com` & `user@dealership.com`).
+  2. Deployed Python FastAPI backend to **Render Web Service** (`https://drivehub-dealership.onrender.com`) running multi-worker Gunicorn ASGI server (`render.yaml`).
+  3. Deployed React 19 SPA dashboard to **Vercel** (`https://srs-dealership.vercel.app`) configured with `VITE_API_BASE_URL` pointing to Render API (`frontend/vercel.json`).
+  4. Verified 100% live cloud operation across frontend, backend, and PostgreSQL database.
+
+---
+
 ## AI Usage & Ownership Disclosure
 
 - **Human Direction & Conceptual Ownership (sunnyrajsu)**:
   Architectural vision, tech stack selection (FastAPI, PostgreSQL, React 19, Vite, Tailwind CSS), UI/UX design aesthetics, single-page permission-gated layout design, and TDD workflow design (Red -> Green -> Refactor methodology).
 - **AI Contribution & Code Generation**:
-  Almost all Python backend endpoints/models/schemas, React frontend components, pytest fixtures, Vitest component tests, and bug resolution were written using AI code generation and inspiration.
+  Almost all Python backend endpoints/models/schemas, React frontend components, pytest fixtures, Vitest component tests, cloud deployment manifests (`render.yaml`, `vercel.json`), and bug resolutions were written using AI code generation and inspiration.
+
 
 
 
