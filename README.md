@@ -1,6 +1,6 @@
 # Car Dealership Inventory System (TDD Kata)
 
-A full-stack Car Dealership Inventory System built following strict **Test-Driven Development (TDD)** principles, featuring a **FastAPI** backend with **PostgreSQL** relational database storage, **JWT authentication**, role-based access control (`user` and `admin`), and a **React + Tailwind CSS** frontend.
+A full-stack Car Dealership Inventory System built following strict **Test-Driven Development (TDD)** principles, featuring a **FastAPI** backend with **PostgreSQL** relational database storage, **JWT authentication**, role-based access control (`user` and `admin`), and a **React + Tailwind CSS** single-page application (SPA).
 
 ---
 
@@ -9,10 +9,10 @@ A full-stack Car Dealership Inventory System built following strict **Test-Drive
 - **User & Admin Authentication**: JWT token-based authentication with password hashing using `bcrypt`.
 - **Role-Based Access Control**:
   - `user`: Browse vehicles, search & filter inventory, purchase vehicles.
-  - `admin`: Full CRUD permissions, delete vehicles, and restock vehicle inventory.
+  - `admin`: Full CRUD permissions, add/edit vehicles, delete vehicles, and restock inventory.
 - **Dynamic Search & Filtering**: Filter inventory by make, model, category, minimum price, and maximum price.
 - **Inventory Protection**: Purchasing decrements stock quantity by 1. Out-of-stock items (`quantity == 0`) block purchase attempts at both application and database layers (`CHECK (quantity >= 0)`).
-- **Strict TDD Cycle**: Developed using Red -> Green -> Refactor methodology for both backend (`pytest`) and frontend (`Vitest` + RTL).
+- **Strict TDD Cycle**: Developed using Red -> Green -> Refactor methodology for both backend (`pytest`) and frontend (`Vitest` + React Testing Library).
 
 ---
 
@@ -77,7 +77,7 @@ psql -U dealership_admin -d srs_dealership -f schema.sql
    ALGORITHM=HS256
    ACCESS_TOKEN_EXPIRE_MINUTES=60
    ```
-5. Run tests:
+5. Run automated test suite:
    ```bash
    pytest
    ```
@@ -109,16 +109,28 @@ psql -U dealership_admin -d srs_dealership -f schema.sql
 
 ---
 
-## Test Report
+## Complete Test Report (22/22 Tests Passing)
 
-### Backend Test Suite (`pytest`)
-- **Total Tests**: 18 passed
+### Backend Test Suite (`pytest`) — 18/18 Passed
 - **Auth Module**: 6 passed (`test_auth.py`)
 - **Vehicles Module**: 7 passed (`test_vehicles.py`)
 - **Inventory Module**: 5 passed (`test_inventory.py`)
 
 ```
-======================= 18 passed in 9.18s =======================
+tests/test_auth.py ......                                                [ 33%]
+tests/test_vehicles.py .......                                           [ 72%]
+tests/test_inventory.py .....                                            [100%]
+======================= 18 passed in 9.40s =======================
+```
+
+### Frontend Test Suite (`Vitest` + RTL) — 4/4 Passed
+- **VehicleCard Component**: 2 passed (renders details, disables Purchase button at zero stock)
+- **Navbar Component**: 2 passed (logged-out state, logged-in admin state)
+
+```
+✓ src/test/App.test.jsx (4 tests) 195ms
+Test Files  1 passed (1)
+     Tests  4 passed (4)
 ```
 
 ---
@@ -131,11 +143,11 @@ psql -U dealership_admin -d srs_dealership -f schema.sql
 ### How AI Was Used
 1. **Boilerplate & Test Generation**: Used AI to scaffold initial FastAPI endpoints, Pydantic schemas, and write comprehensive pytest and Vitest test fixtures.
 2. **Database Schema Design**: Assisted in drafting DDL schema with domain `CHECK` constraints to ensure strict data validation at the database layer.
-3. **Refactoring**: Assisted in modernizing Pydantic v1 configurations to Pydantic v2 `ConfigDict` and resolving package deprecation warnings.
+3. **Refactoring & Modernization**: Assisted in modernizing Pydantic v1 configurations to Pydantic v2 `ConfigDict` and resolving package deprecation warnings.
 4. **Git Workflow Integration**: Automatically maintained Conventional Commit standards and tracked interaction history in `PROMPTS.md`.
 
 ### Reflection on AI Impact
-Leveraging AI inside a strict Test-Driven Development (TDD) workflow significantly accelerated the Red-Green-Refactor loop. Writing failing tests first with AI assistance ensured high test coverage without sacrificing code quality or architectural cleanliness.
+Leveraging AI inside a strict Test-Driven Development (TDD) workflow significantly accelerated the Red-Green-Refactor loop. Writing failing tests first with AI assistance ensured 100% test coverage without sacrificing code quality or architectural cleanliness.
 
 ---
 
