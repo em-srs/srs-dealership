@@ -25,7 +25,7 @@ describe('VehicleCard Component', () => {
 
     expect(screen.getByText('Toyota Camry')).toBeInTheDocument();
     expect(screen.getByText('$26,000.00')).toBeInTheDocument();
-    expect(screen.getByText('5 In Stock')).toBeInTheDocument();
+    expect(screen.getByText('5 Available')).toBeInTheDocument();
   });
 
   it('disables purchase button when vehicle is out of stock', () => {
@@ -43,11 +43,13 @@ describe('VehicleCard Component', () => {
 });
 
 describe('Navbar Component', () => {
+  const mockFilters = { search: '', category: '', min_price: '', max_price: '' };
+
   it('renders brand title and login link for guest users', () => {
     const mockContext = { user: null, logout: () => {} };
     render(
       <AuthContext.Provider value={mockContext}>
-        <Navbar onOpenAuth={() => {}} onOpenAddVehicle={() => {}} onOpenProfile={() => {}} />
+        <Navbar filters={mockFilters} onFilterChange={() => {}} onResetFilters={() => {}} onOpenAuth={() => {}} onOpenProfile={() => {}} />
       </AuthContext.Provider>
     );
 
@@ -59,7 +61,7 @@ describe('Navbar Component', () => {
     const mockContext = { user: { email: 'admin@example.com', role: 'admin' }, logout: () => {} };
     render(
       <AuthContext.Provider value={mockContext}>
-        <Navbar onOpenAuth={() => {}} onOpenAddVehicle={() => {}} onOpenProfile={() => {}} />
+        <Navbar filters={mockFilters} onFilterChange={() => {}} onResetFilters={() => {}} onOpenAuth={() => {}} onOpenProfile={() => {}} />
       </AuthContext.Provider>
     );
 

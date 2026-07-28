@@ -218,5 +218,15 @@ This document provides a detailed, chronological record of all prompts, instruct
   3. Added click-outside listener to automatically close dropdown menu when clicking away.
   4. Verified Vitest tests (`4/4 PASSED`) and pytest suite (`18/18 PASSED`).
 
+### Feature: Single-Page Permission-Gated Dashboard Layout & Integrated Top Bar
+- **User Prompt**:
+  > "Regular users and admins share the same dashboard — the difference is just extra controls admins can see, not a totally separate app... write a detailed feat for this push"
+- **Implementation Delivered**:
+  1. Updated `Navbar.jsx` to integrate top bar search input (filtering maker/model), category dropdown, min/max price inputs, logged-in user email, and logout button.
+  2. Updated `VehicleCard.jsx` to conditionally layer Edit (pencil icon), Delete (trash icon with confirmation), and Restock (+ icon) buttons for admins while preserving standard purchase workflow for customers.
+  3. Positioned `+ Add Vehicle` button above grid visible exclusively to administrators.
+  4. Verified Vitest suite (`4/4 PASSED`) and Pytest suite (`18/18 PASSED`).
+
+
 
 

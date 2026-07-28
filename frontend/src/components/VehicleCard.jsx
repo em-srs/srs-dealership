@@ -33,7 +33,7 @@ const VehicleCard = ({ vehicle, onPurchase, onEdit, onDelete, onRestock }) => {
           {vehicle.category}
         </div>
 
-        {/* Stock Badge */}
+        {/* Quantity Status Pill */}
         <div
           className={`absolute top-3 right-3 text-xs px-3 py-1 rounded-full font-semibold border backdrop-blur-md shadow-md ${
             isOutOfStock
@@ -43,11 +43,11 @@ const VehicleCard = ({ vehicle, onPurchase, onEdit, onDelete, onRestock }) => {
               : 'bg-emerald-500/20 text-emerald-400 border-emerald-500/40'
           }`}
         >
-          {isOutOfStock ? 'Out of Stock' : `${vehicle.quantity} In Stock`}
+          {isOutOfStock ? 'Out of Stock' : `${vehicle.quantity} Available`}
         </div>
       </div>
 
-      {/* Content */}
+      {/* Content Area */}
       <div className="p-5 flex-1 flex flex-col justify-between">
         <div>
           <div className="flex items-center justify-between mb-1">
@@ -70,12 +70,13 @@ const VehicleCard = ({ vehicle, onPurchase, onEdit, onDelete, onRestock }) => {
           </div>
         </div>
 
-        {/* Actions */}
+        {/* Action Controls Section */}
         <div className="mt-5 pt-4 border-t border-slate-800 flex flex-col gap-2">
+          {/* Purchase Button — Always visible to all users */}
           <button
             onClick={() => onPurchase(vehicle.id)}
             disabled={isOutOfStock}
-            className={`w-full py-2.5 px-4 rounded-xl font-semibold text-sm transition-all flex items-center justify-center gap-2 shadow-lg ${
+            className={`w-full py-2.5 px-4 rounded-xl font-semibold text-sm transition-all flex items-center justify-center gap-2 shadow-lg cursor-pointer ${
               isOutOfStock
                 ? 'bg-slate-800 text-slate-500 cursor-not-allowed border border-slate-700/50 shadow-none'
                 : 'bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white shadow-cyan-500/25 active:scale-[0.98]'
@@ -85,26 +86,29 @@ const VehicleCard = ({ vehicle, onPurchase, onEdit, onDelete, onRestock }) => {
             {isOutOfStock ? 'Out of Stock' : 'Purchase Vehicle'}
           </button>
 
-          {/* Admin Tools */}
+          {/* Admin-Only Extra Controls — Layered conditionally on the card */}
           {user && user.role === 'admin' && (
             <div className="flex items-center gap-2 mt-1">
               <button
                 onClick={() => onRestock(vehicle)}
-                className="flex-1 py-1.5 px-2 bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white border border-slate-700 text-xs font-medium rounded-lg transition-colors flex items-center justify-center gap-1"
+                title="Restock Inventory"
+                className="flex-1 py-1.5 px-2 bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white border border-slate-700 text-xs font-medium rounded-lg transition-colors flex items-center justify-center gap-1 cursor-pointer"
               >
                 <PlusCircle className="w-3.5 h-3.5 text-emerald-400" />
                 Restock
               </button>
               <button
                 onClick={() => onEdit(vehicle)}
-                className="flex-1 py-1.5 px-2 bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white border border-slate-700 text-xs font-medium rounded-lg transition-colors flex items-center justify-center gap-1"
+                title="Edit Vehicle Entry"
+                className="flex-1 py-1.5 px-2 bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white border border-slate-700 text-xs font-medium rounded-lg transition-colors flex items-center justify-center gap-1 cursor-pointer"
               >
                 <Edit className="w-3.5 h-3.5 text-cyan-400" />
                 Edit
               </button>
               <button
                 onClick={() => onDelete(vehicle.id)}
-                className="py-1.5 px-2.5 bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/20 text-xs font-medium rounded-lg transition-colors flex items-center justify-center"
+                title="Delete Vehicle Entry"
+                className="py-1.5 px-2.5 bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/20 text-xs font-medium rounded-lg transition-colors flex items-center justify-center cursor-pointer"
               >
                 <Trash2 className="w-3.5 h-3.5" />
               </button>
