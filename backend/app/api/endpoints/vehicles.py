@@ -1,6 +1,7 @@
 from typing import List, Optional
 from fastapi import APIRouter, Depends, HTTPException, status, Query
 from sqlalchemy.orm import Session
+from sqlalchemy import or_
 
 from app.db.database import get_db
 from app.models.vehicle import Vehicle
@@ -37,6 +38,7 @@ def get_all_vehicles(
 
 @router.get("/search", response_model=List[VehicleResponse])
 def search_vehicles(
+    q: Optional[str] = Query(None),
     maker: Optional[str] = Query(None),
     model: Optional[str] = Query(None),
     category: Optional[str] = Query(None),
@@ -45,6 +47,13 @@ def search_vehicles(
     db: Session = Depends(get_db)
 ):
     query = db.query(Vehicle)
+    if q:
+        query = query.filter(
+            or_(
+                Vehicle.maker.ilike(f"%{q}%"),
+                Vehicle.model.ilike(f"%{q}%")
+            )
+        )
     if maker:
         query = query.filter(Vehicle.maker.ilike(f"%{maker}%"))
     if model:

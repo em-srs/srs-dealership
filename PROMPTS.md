@@ -177,3 +177,21 @@ This document provides a detailed, chronological record of all prompts, instruct
   3. Updated `frontend/src/index.css` to `@import "tailwindcss";`.
   4. Verified Vitest tests (`4/4 PASSED`) and production build (`vite build` compiled in 627ms).
   5. Logged entry in `DEVELOPMENT_LOG.docx` under `FIRST ERROR`.
+
+### SECOND ERROR: Login/Register Button Unresponsive Due to Prop Mismatch
+- **User Prompt**:
+  > "the login/register button is completely not working..." (attaching browser screenshot).
+- **Error Observed**: Clicking "Login / Register" in Navbar did not trigger the Auth Modal.
+- **Root Cause Analysis**: Prop mismatch between `App.jsx` (`onOpenAuth`) and `Navbar.jsx` (`onOpenAuthModal`), causing `onClick` handler to be `undefined`.
+- **Fix Executed**: Updated `Navbar.jsx` prop signature to `onOpenAuth` and `onOpenAddVehicle`.
+
+### THIRD ERROR: Search Query AND Logic Causing False Zero Results
+- **User Prompt**:
+  > "...and also the search button/logic is not properly implemented and has bugs. fix these asap..."
+- **Error Observed**: Typing `"fo"` in search input returned 0 results for `"Ford F-150"`.
+- **Root Cause Analysis**: Backend search endpoint filtered `maker.ilike("%fo%") AND model.ilike("%fo%")`. Search failed because `"F-150"` does not contain `"fo"`.
+- **Fix Executed**:
+  1. Updated `backend/app/api/endpoints/vehicles.py` to accept `q` parameter using `or_(Vehicle.maker.ilike(f"%{q}%"), Vehicle.model.ilike(f"%{q}%"))`.
+  2. Updated `FilterBar.jsx` and `App.jsx` to map single search input to `q`.
+  3. Verified all 18 pytest tests and 4 Vitest tests PASSED.
+

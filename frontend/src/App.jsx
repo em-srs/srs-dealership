@@ -15,8 +15,7 @@ function App() {
   const [vehicles, setVehicles] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filters, setFilters] = useState({
-    maker: '',
-    model: '',
+    search: '',
     category: '',
     min_price: '',
     max_price: '',
@@ -39,8 +38,7 @@ function App() {
     setLoading(true);
     try {
       const params = new URLSearchParams();
-      if (filters.maker) params.append('maker', filters.maker);
-      if (filters.model) params.append('model', filters.model);
+      if (filters.search) params.append('q', filters.search);
       if (filters.category) params.append('category', filters.category);
       if (filters.min_price) params.append('min_price', filters.min_price);
       if (filters.max_price) params.append('max_price', filters.max_price);
@@ -75,8 +73,7 @@ function App() {
 
   const handleResetFilters = () => {
     setFilters({
-      maker: '',
-      model: '',
+      search: '',
       category: '',
       min_price: '',
       max_price: '',
@@ -273,7 +270,7 @@ function App() {
             </p>
             <button
               onClick={handleResetFilters}
-              className="mt-6 px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold rounded-lg border border-slate-700 transition-colors"
+              className="mt-6 px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold rounded-lg border border-slate-700 transition-colors cursor-pointer"
             >
               Clear All Filters
             </button>

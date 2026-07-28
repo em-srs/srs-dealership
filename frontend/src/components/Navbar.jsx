@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import AuthContext from '../context/AuthContext';
 import { Car, LogIn, LogOut, ShieldCheck, User as UserIcon } from 'lucide-react';
 
-const Navbar = ({ onOpenAuthModal, onOpenAddVehicleModal }) => {
+const Navbar = ({ onOpenAuth, onOpenAddVehicle }) => {
   const { user, logout } = useContext(AuthContext);
 
   return (
@@ -25,8 +25,8 @@ const Navbar = ({ onOpenAuthModal, onOpenAddVehicleModal }) => {
             <div className="flex items-center gap-4">
               {user.role === 'admin' && (
                 <button
-                  onClick={onOpenAddVehicleModal}
-                  className="px-4 py-2 bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white font-medium text-sm rounded-lg transition-all shadow-md shadow-emerald-500/20 flex items-center gap-2"
+                  onClick={onOpenAddVehicle}
+                  className="px-4 py-2 bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white font-medium text-sm rounded-lg transition-all shadow-md shadow-emerald-500/20 flex items-center gap-2 cursor-pointer"
                 >
                   + Add Vehicle
                 </button>
@@ -49,7 +49,7 @@ const Navbar = ({ onOpenAuthModal, onOpenAddVehicleModal }) => {
 
               <button
                 onClick={logout}
-                className="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white border border-slate-700 font-medium text-sm rounded-lg transition-colors flex items-center gap-1.5"
+                className="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white border border-slate-700 font-medium text-sm rounded-lg transition-colors flex items-center gap-1.5 cursor-pointer"
               >
                 <LogOut className="w-4 h-4" />
                 Logout
@@ -57,8 +57,8 @@ const Navbar = ({ onOpenAuthModal, onOpenAddVehicleModal }) => {
             </div>
           ) : (
             <button
-              onClick={onOpenAuthModal}
-              className="px-5 py-2 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white font-medium text-sm rounded-lg transition-all shadow-lg shadow-cyan-500/25 flex items-center gap-2"
+              onClick={onOpenAuth}
+              className="px-5 py-2 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white font-medium text-sm rounded-lg transition-all shadow-lg shadow-cyan-500/25 flex items-center gap-2 cursor-pointer"
             >
               <LogIn className="w-4 h-4" />
               Login / Register
