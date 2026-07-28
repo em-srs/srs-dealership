@@ -238,6 +238,16 @@ This document provides a detailed, chronological record of all prompts, instruct
   3. Verified immediate Navbar update and permission-gated card rendering for regular users and admins.
   4. Verified Vitest suite (`4/4 PASSED`) and Pytest suite (`18/18 PASSED`).
 
+---
+
+## AI Usage & Ownership Disclosure
+
+- **Human Direction & Conceptual Ownership (sunnyrajsu)**:
+  Architectural vision, tech stack selection (FastAPI, PostgreSQL, React 19, Vite, Tailwind CSS), UI/UX design aesthetics, single-page permission-gated layout design, and TDD workflow design (Red -> Green -> Refactor methodology).
+- **AI Contribution & Code Generation**:
+  Almost all Python backend endpoints/models/schemas, React frontend components, pytest fixtures, Vitest component tests, and bug resolution were written using AI code generation and inspiration.
+
+
 
 
 
