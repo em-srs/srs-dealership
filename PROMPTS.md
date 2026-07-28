@@ -195,3 +195,14 @@ This document provides a detailed, chronological record of all prompts, instruct
   2. Updated `FilterBar.jsx` and `App.jsx` to map single search input to `q`.
   3. Verified all 18 pytest tests and 4 Vitest tests PASSED.
 
+### FOURTH ERROR: AuthModal Unclear Login Error Feedback & Processing Indicator
+- **User Prompt**:
+  > "after filling the details & clicking on login button, nothing happens. fix this" (attaching browser screenshot).
+- **Error Observed**: Submitting login form with unregistered email or wrong password provided ambiguous user feedback.
+- **Root Cause Analysis**: AuthModal catch block did not format specific authentication errors (`Invalid credentials`, `Email already registered`), leaving the user uncertain of what failed.
+- **Fix Executed**:
+  1. Updated `AuthModal.jsx` with specific error banners (`Invalid email or password. If you do not have an account yet, click 'Sign Up' below`).
+  2. Added processing spinner state to login button.
+  3. Wired `onSuccess` toast callback in `App.jsx` to notify the user upon successful login/registration.
+
+

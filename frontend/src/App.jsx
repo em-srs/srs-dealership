@@ -321,6 +321,7 @@ function App() {
       <AuthModal
         isOpen={isAuthModalOpen}
         onClose={() => setIsAuthModalOpen(false)}
+        onSuccess={(msg) => showToast(msg, 'success')}
       />
     </div>
   );
