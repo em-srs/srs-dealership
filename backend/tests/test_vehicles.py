@@ -56,22 +56,23 @@ def test_create_vehicle_unauthenticated_fails(client):
     response = client.post("/api/vehicles", json=payload)
     assert response.status_code == 401
 
-def test_get_all_vehicles(client, user_token_headers):
+def test_get_all_vehicles_public_access(client, user_token_headers):
     client.post("/api/vehicles", json={"maker": "Ford", "model": "Mustang", "year": 2021, "category": "Coupe", "price": 35000.00, "quantity": 2}, headers=user_token_headers)
     client.post("/api/vehicles", json={"maker": "Tesla", "model": "Model 3", "year": 2024, "category": "Electric", "price": 42000.00, "quantity": 4}, headers=user_token_headers)
 
-    response = client.get("/api/vehicles", headers=user_token_headers)
+    # Public unauthenticated request to view vehicles catalog
+    response = client.get("/api/vehicles")
     assert response.status_code == 200
     data = response.json()
     assert len(data) >= 2
 
-def test_search_vehicles_filters(client, user_token_headers):
+def test_search_vehicles_filters_public_access(client, user_token_headers):
     client.post("/api/vehicles", json={"maker": "Toyota", "model": "Corolla", "year": 2020, "category": "Sedan", "price": 18000.00, "quantity": 3}, headers=user_token_headers)
     client.post("/api/vehicles", json={"maker": "Toyota", "model": "RAV4", "year": 2023, "category": "SUV", "price": 32000.00, "quantity": 4}, headers=user_token_headers)
     client.post("/api/vehicles", json={"maker": "BMW", "model": "X5", "year": 2023, "category": "SUV", "price": 65000.00, "quantity": 1}, headers=user_token_headers)
 
-    # Search by maker and max_price
-    response = client.get("/api/vehicles/search?maker=Toyota&max_price=30000", headers=user_token_headers)
+    # Public unauthenticated search request
+    response = client.get("/api/vehicles/search?maker=Toyota&max_price=30000")
     assert response.status_code == 200
     results = response.json()
     assert len(results) == 1
