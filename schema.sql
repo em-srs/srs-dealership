@@ -10,7 +10,7 @@ CREATE TABLE IF NOT EXISTS users (
 -- Vehicles Table
 CREATE TABLE IF NOT EXISTS vehicles (
     id SERIAL PRIMARY KEY,
-    make VARCHAR(100) NOT NULL,
+    maker VARCHAR(100) NOT NULL,
     model VARCHAR(100) NOT NULL,
     year INT NOT NULL CHECK (year >= 1886),
     category VARCHAR(50) NOT NULL,
@@ -21,5 +21,5 @@ CREATE TABLE IF NOT EXISTS vehicles (
 );
 
 -- Indexing for search performance
-CREATE INDEX IF NOT EXISTS idx_vehicles_search ON vehicles (make, model, category);
+CREATE INDEX IF NOT EXISTS idx_vehicles_search ON vehicles (maker, model, category);
 CREATE INDEX IF NOT EXISTS idx_vehicles_price ON vehicles (price);

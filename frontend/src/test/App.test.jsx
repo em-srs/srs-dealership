@@ -1,5 +1,5 @@
-import { render, screen, fireEvent } from '@testing-library/react';
-import { describe, it, expect, vi } from 'vitest';
+import { render, screen } from '@testing-library/react';
+import { describe, it, expect } from 'vitest';
 import VehicleCard from '../components/VehicleCard';
 import Navbar from '../components/Navbar';
 import AuthContext from '../context/AuthContext';
@@ -7,51 +7,63 @@ import AuthContext from '../context/AuthContext';
 describe('VehicleCard Component', () => {
   const sampleVehicle = {
     id: 1,
-    make: 'Toyota',
+    maker: 'Toyota',
     model: 'Camry',
     year: 2023,
     category: 'Sedan',
     price: 26000.00,
-    quantity: 3
+    quantity: 5
   };
 
-  it('renders vehicle details correctly', () => {
-    render(<VehicleCard vehicle={sampleVehicle} onPurchase={() => {}} />);
+  it('renders vehicle maker, model, and price correctly', () => {
+    const mockContext = { user: null };
+    render(
+      <AuthContext.Provider value={mockContext}>
+        <VehicleCard vehicle={sampleVehicle} onPurchase={() => {}} />
+      </AuthContext.Provider>
+    );
+
     expect(screen.getByText('Toyota Camry')).toBeInTheDocument();
-    expect(screen.getByText(/26,000/)).toBeInTheDocument();
-    expect(screen.getByText('Sedan')).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /purchase/i })).not.toBeDisabled();
+    expect(screen.getByText('$26,000.00')).toBeInTheDocument();
+    expect(screen.getByText('5 In Stock')).toBeInTheDocument();
   });
 
-  it('disables purchase button when quantity is zero', () => {
-    const zeroStockVehicle = { ...sampleVehicle, quantity: 0 };
-    render(<VehicleCard vehicle={zeroStockVehicle} onPurchase={() => {}} />);
-    const purchaseBtn = screen.getByRole('button', { name: /out of stock/i });
-    expect(purchaseBtn).toBeDisabled();
+  it('disables purchase button when vehicle is out of stock', () => {
+    const outOfStockVehicle = { ...sampleVehicle, quantity: 0 };
+    const mockContext = { user: null };
+    render(
+      <AuthContext.Provider value={mockContext}>
+        <VehicleCard vehicle={outOfStockVehicle} onPurchase={() => {}} />
+      </AuthContext.Provider>
+    );
+
+    const button = screen.getByRole('button', { name: /Out of Stock/i });
+    expect(button).toBeDisabled();
   });
 });
 
 describe('Navbar Component', () => {
-  it('renders brand title and auth options when logged out', () => {
-    const authState = { user: null, logout: vi.fn() };
+  it('renders brand title and login link for guest users', () => {
+    const mockContext = { user: null, logout: () => {} };
     render(
-      <AuthContext.Provider value={authState}>
-        <Navbar />
+      <AuthContext.Provider value={mockContext}>
+        <Navbar onOpenAuth={() => {}} onOpenAddVehicle={() => {}} />
       </AuthContext.Provider>
     );
-    expect(screen.getByText(/drivehub dealership/i)).toBeInTheDocument();
-    expect(screen.getByText(/login/i)).toBeInTheDocument();
+
+    expect(screen.getByText('DriveHub Dealership')).toBeInTheDocument();
+    expect(screen.getByText('Login / Register')).toBeInTheDocument();
   });
 
-  it('renders user details and logout button when logged in', () => {
-    const authState = { user: { email: 'user@example.com', role: 'admin' }, logout: vi.fn() };
+  it('renders Admin badge and Add Vehicle button for admin users', () => {
+    const mockContext = { user: { email: 'admin@example.com', role: 'admin' }, logout: () => {} };
     render(
-      <AuthContext.Provider value={authState}>
-        <Navbar />
+      <AuthContext.Provider value={mockContext}>
+        <Navbar onOpenAuth={() => {}} onOpenAddVehicle={() => {}} />
       </AuthContext.Provider>
     );
-    expect(screen.getByText('user@example.com')).toBeInTheDocument();
-    expect(screen.getByText(/admin/i)).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /logout/i })).toBeInTheDocument();
+
+    expect(screen.getByText('admin')).toBeInTheDocument();
+    expect(screen.getByText('+ Add Vehicle')).toBeInTheDocument();
   });
 });

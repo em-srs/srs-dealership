@@ -29,7 +29,7 @@ def admin_token_headers(client):
 
 def test_create_vehicle_success(client, user_token_headers):
     payload = {
-        "make": "Toyota",
+        "maker": "Toyota",
         "model": "Camry",
         "year": 2023,
         "category": "Sedan",
@@ -39,14 +39,14 @@ def test_create_vehicle_success(client, user_token_headers):
     response = client.post("/api/vehicles", json=payload, headers=user_token_headers)
     assert response.status_code == 201
     data = response.json()
-    assert data["make"] == "Toyota"
+    assert data["maker"] == "Toyota"
     assert data["model"] == "Camry"
     assert data["price"] == 26000.00
     assert "id" in data
 
 def test_create_vehicle_unauthenticated_fails(client):
     payload = {
-        "make": "Honda",
+        "maker": "Honda",
         "model": "Civic",
         "year": 2022,
         "category": "Sedan",
@@ -57,8 +57,8 @@ def test_create_vehicle_unauthenticated_fails(client):
     assert response.status_code == 401
 
 def test_get_all_vehicles(client, user_token_headers):
-    client.post("/api/vehicles", json={"make": "Ford", "model": "Mustang", "year": 2021, "category": "Coupe", "price": 35000.00, "quantity": 2}, headers=user_token_headers)
-    client.post("/api/vehicles", json={"make": "Tesla", "model": "Model 3", "year": 2024, "category": "Electric", "price": 42000.00, "quantity": 4}, headers=user_token_headers)
+    client.post("/api/vehicles", json={"maker": "Ford", "model": "Mustang", "year": 2021, "category": "Coupe", "price": 35000.00, "quantity": 2}, headers=user_token_headers)
+    client.post("/api/vehicles", json={"maker": "Tesla", "model": "Model 3", "year": 2024, "category": "Electric", "price": 42000.00, "quantity": 4}, headers=user_token_headers)
 
     response = client.get("/api/vehicles", headers=user_token_headers)
     assert response.status_code == 200
@@ -66,19 +66,19 @@ def test_get_all_vehicles(client, user_token_headers):
     assert len(data) >= 2
 
 def test_search_vehicles_filters(client, user_token_headers):
-    client.post("/api/vehicles", json={"make": "Toyota", "model": "Corolla", "year": 2020, "category": "Sedan", "price": 18000.00, "quantity": 3}, headers=user_token_headers)
-    client.post("/api/vehicles", json={"make": "Toyota", "model": "RAV4", "year": 2023, "category": "SUV", "price": 32000.00, "quantity": 4}, headers=user_token_headers)
-    client.post("/api/vehicles", json={"make": "BMW", "model": "X5", "year": 2023, "category": "SUV", "price": 65000.00, "quantity": 1}, headers=user_token_headers)
+    client.post("/api/vehicles", json={"maker": "Toyota", "model": "Corolla", "year": 2020, "category": "Sedan", "price": 18000.00, "quantity": 3}, headers=user_token_headers)
+    client.post("/api/vehicles", json={"maker": "Toyota", "model": "RAV4", "year": 2023, "category": "SUV", "price": 32000.00, "quantity": 4}, headers=user_token_headers)
+    client.post("/api/vehicles", json={"maker": "BMW", "model": "X5", "year": 2023, "category": "SUV", "price": 65000.00, "quantity": 1}, headers=user_token_headers)
 
-    # Search by make and max_price
-    response = client.get("/api/vehicles/search?make=Toyota&max_price=30000", headers=user_token_headers)
+    # Search by maker and max_price
+    response = client.get("/api/vehicles/search?maker=Toyota&max_price=30000", headers=user_token_headers)
     assert response.status_code == 200
     results = response.json()
     assert len(results) == 1
     assert results[0]["model"] == "Corolla"
 
 def test_update_vehicle_success(client, user_token_headers):
-    res = client.post("/api/vehicles", json={"make": "Subaru", "model": "Outback", "year": 2022, "category": "SUV", "price": 29000.00, "quantity": 2}, headers=user_token_headers)
+    res = client.post("/api/vehicles", json={"maker": "Subaru", "model": "Outback", "year": 2022, "category": "SUV", "price": 29000.00, "quantity": 2}, headers=user_token_headers)
     vehicle_id = res.json()["id"]
 
     update_payload = {"price": 27500.00, "quantity": 5}
@@ -88,14 +88,14 @@ def test_update_vehicle_success(client, user_token_headers):
     assert response.json()["quantity"] == 5
 
 def test_delete_vehicle_admin_only_success(client, admin_token_headers):
-    res = client.post("/api/vehicles", json={"make": "Mazda", "model": "CX-5", "year": 2023, "category": "SUV", "price": 28000.00, "quantity": 2}, headers=admin_token_headers)
+    res = client.post("/api/vehicles", json={"maker": "Mazda", "model": "CX-5", "year": 2023, "category": "SUV", "price": 28000.00, "quantity": 2}, headers=admin_token_headers)
     vehicle_id = res.json()["id"]
 
     response = client.delete(f"/api/vehicles/{vehicle_id}", headers=admin_token_headers)
     assert response.status_code == 200 or response.status_code == 204
 
 def test_delete_vehicle_regular_user_forbidden(client, user_token_headers, admin_token_headers):
-    res = client.post("/api/vehicles", json={"make": "Audi", "model": "A4", "year": 2023, "category": "Sedan", "price": 40000.00, "quantity": 1}, headers=admin_token_headers)
+    res = client.post("/api/vehicles", json={"maker": "Audi", "model": "A4", "year": 2023, "category": "Sedan", "price": 40000.00, "quantity": 1}, headers=admin_token_headers)
     vehicle_id = res.json()["id"]
 
     response = client.delete(f"/api/vehicles/{vehicle_id}", headers=user_token_headers)

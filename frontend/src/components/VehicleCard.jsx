@@ -22,7 +22,7 @@ const VehicleCard = ({ vehicle, onPurchase, onEdit, onDelete, onRestock }) => {
       <div className="relative h-48 overflow-hidden bg-slate-950">
         <img
           src={imageUrl}
-          alt={`${vehicle.make} ${vehicle.model}`}
+          alt={`${vehicle.maker} ${vehicle.model}`}
           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-transparent"></div>
@@ -52,7 +52,7 @@ const VehicleCard = ({ vehicle, onPurchase, onEdit, onDelete, onRestock }) => {
         <div>
           <div className="flex items-center justify-between mb-1">
             <h3 className="text-lg font-bold text-white group-hover:text-cyan-400 transition-colors">
-              {vehicle.make} {vehicle.model}
+              {vehicle.maker} {vehicle.model}
             </h3>
             <span className="text-xs text-slate-400 flex items-center gap-1">
               <Calendar className="w-3.5 h-3.5" />

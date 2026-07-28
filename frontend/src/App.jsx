@@ -1,51 +1,56 @@
 import React, { useState, useEffect, useContext } from 'react';
-import AuthContext, { AuthProvider } from './context/AuthContext';
 import Navbar from './components/Navbar';
-import VehicleCard from './components/VehicleCard';
 import FilterBar from './components/FilterBar';
+import VehicleCard from './components/VehicleCard';
 import AdminModal from './components/AdminModal';
-import AuthModal from './components/AuthModal';
 import RestockModal from './components/RestockModal';
-import { Car, AlertCircle, CheckCircle, Sparkles } from 'lucide-react';
+import AuthModal from './components/AuthModal';
+import AuthContext from './context/AuthContext';
+import { Car, AlertCircle, CheckCircle2 } from 'lucide-react';
 
-const MainApp = () => {
+const API_BASE = 'http://localhost:8000/api';
+
+function App() {
   const { token, user } = useContext(AuthContext);
   const [vehicles, setVehicles] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [filters, setFilters] = useState({ make: '', category: '', min_price: '', max_price: '' });
+  const [filters, setFilters] = useState({
+    maker: '',
+    model: '',
+    category: '',
+    min_price: '',
+    max_price: '',
+  });
 
-  // Modal states
-  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [isAdminModalOpen, setIsAdminModalOpen] = useState(false);
   const [isRestockModalOpen, setIsRestockModalOpen] = useState(false);
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const [vehicleToEdit, setVehicleToEdit] = useState(null);
+  const [vehicleToRestock, setVehicleToRestock] = useState(null);
 
-  const [selectedVehicle, setSelectedVehicle] = useState(null);
-  const [notification, setNotification] = useState(null);
+  const [toast, setToast] = useState(null);
 
-  const showNotification = (msg, type = 'success') => {
-    setNotification({ msg, type });
-    setTimeout(() => setNotification(null), 4000);
+  const showToast = (message, type = 'success') => {
+    setToast({ message, type });
+    setTimeout(() => setToast(null), 4000);
   };
 
   const fetchVehicles = async () => {
     setLoading(true);
     try {
-      let url = 'http://localhost:8000/api/vehicles/search';
       const params = new URLSearchParams();
-
-      if (filters.make) params.append('make', filters.make);
+      if (filters.maker) params.append('maker', filters.maker);
+      if (filters.model) params.append('model', filters.model);
       if (filters.category) params.append('category', filters.category);
       if (filters.min_price) params.append('min_price', filters.min_price);
       if (filters.max_price) params.append('max_price', filters.max_price);
 
-      if (params.toString()) {
-        url += `?${params.toString()}`;
-      } else {
-        url = 'http://localhost:8000/api/vehicles';
-      }
+      const endpoint = params.toString()
+        ? `${API_BASE}/vehicles/search?${params.toString()}`
+        : `${API_BASE}/vehicles`;
 
       const headers = token ? { Authorization: `Bearer ${token}` } : {};
-      const res = await fetch(url, { headers });
+      const res = await fetch(endpoint, { headers });
 
       if (res.ok) {
         const data = await res.json();
@@ -54,7 +59,7 @@ const MainApp = () => {
         setVehicles([]);
       }
     } catch (err) {
-      console.error(err);
+      console.error('Error fetching vehicles:', err);
     } finally {
       setLoading(false);
     }
@@ -69,188 +74,226 @@ const MainApp = () => {
   };
 
   const handleResetFilters = () => {
-    setFilters({ make: '', category: '', min_price: '', max_price: '' });
+    setFilters({
+      maker: '',
+      model: '',
+      category: '',
+      min_price: '',
+      max_price: '',
+    });
   };
 
-  // Purchase Vehicle
+  // Purchase vehicle endpoint
   const handlePurchase = async (vehicleId) => {
     if (!token) {
       setIsAuthModalOpen(true);
-      showNotification('Please log in to purchase vehicles', 'error');
+      showToast('Please log in to purchase vehicles.', 'error');
       return;
     }
 
     try {
-      const res = await fetch(`http://localhost:8000/api/vehicles/${vehicleId}/purchase`, {
+      const res = await fetch(`${API_BASE}/vehicles/${vehicleId}/purchase`, {
         method: 'POST',
-        headers: { Authorization: `Bearer ${token}` },
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
       });
 
-      if (!res.ok) {
-        const err = await res.json();
-        throw new Error(err.detail || 'Purchase failed');
+      if (res.ok) {
+        showToast('Vehicle purchased successfully!', 'success');
+        fetchVehicles();
+      } else {
+        const errData = await res.json();
+        showToast(errData.detail || 'Purchase failed.', 'error');
       }
-
-      showNotification('Vehicle purchased successfully!');
-      fetchVehicles();
     } catch (err) {
-      showNotification(err.message, 'error');
+      showToast('Network error during purchase.', 'error');
     }
   };
 
-  // Admin Add / Edit
-  const handleSaveVehicle = async (vehicleData) => {
+  // Add / Edit vehicle endpoint
+  const handleAdminSubmit = async (vehicleData) => {
     try {
-      const isEdit = Boolean(selectedVehicle);
-      const url = isEdit
-        ? `http://localhost:8000/api/vehicles/${selectedVehicle.id}`
-        : 'http://localhost:8000/api/vehicles';
+      const url = vehicleToEdit
+        ? `${API_BASE}/vehicles/${vehicleToEdit.id}`
+        : `${API_BASE}/vehicles`;
+      const method = vehicleToEdit ? 'PUT' : 'POST';
 
       const res = await fetch(url, {
-        method: isEdit ? 'PUT' : 'POST',
+        method,
         headers: {
-          'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify(vehicleData),
       });
 
-      if (!res.ok) {
-        const err = await res.json();
-        throw new Error(err.detail || 'Failed to save vehicle');
+      if (res.ok) {
+        showToast(
+          vehicleToEdit
+            ? 'Vehicle updated successfully!'
+            : 'New vehicle created successfully!',
+          'success'
+        );
+        setIsAdminModalOpen(false);
+        setVehicleToEdit(null);
+        fetchVehicles();
+      } else {
+        const errData = await res.json();
+        showToast(errData.detail || 'Operation failed.', 'error');
       }
-
-      showNotification(isEdit ? 'Vehicle updated successfully!' : 'New vehicle added to inventory!');
-      setIsAdminModalOpen(false);
-      setSelectedVehicle(null);
-      fetchVehicles();
     } catch (err) {
-      showNotification(err.message, 'error');
+      showToast('Network error saving vehicle.', 'error');
     }
   };
 
-  // Admin Delete
-  const handleDeleteVehicle = async (vehicleId) => {
-    if (!window.confirm('Are you sure you want to delete this vehicle entry?')) return;
-
-    try {
-      const res = await fetch(`http://localhost:8000/api/vehicles/${vehicleId}`, {
-        method: 'DELETE',
-        headers: { Authorization: `Bearer ${token}` },
-      });
-
-      if (!res.ok) {
-        const err = await res.json();
-        throw new Error(err.detail || 'Failed to delete vehicle');
-      }
-
-      showNotification('Vehicle deleted from inventory');
-      fetchVehicles();
-    } catch (err) {
-      showNotification(err.message, 'error');
-    }
-  };
-
-  // Admin Restock
+  // Restock inventory endpoint
   const handleRestockSubmit = async (vehicleId, amount) => {
     try {
-      const res = await fetch(`http://localhost:8000/api/vehicles/${vehicleId}/restock?amount=${amount}`, {
-        method: 'POST',
-        headers: { Authorization: `Bearer ${token}` },
+      const res = await fetch(
+        `${API_BASE}/vehicles/${vehicleId}/restock?amount=${amount}`,
+        {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (res.ok) {
+        showToast(`Added ${amount} units to inventory!`, 'success');
+        setIsRestockModalOpen(false);
+        setVehicleToRestock(null);
+        fetchVehicles();
+      } else {
+        const errData = await res.json();
+        showToast(errData.detail || 'Restock failed.', 'error');
+      }
+    } catch (err) {
+      showToast('Network error during restock.', 'error');
+    }
+  };
+
+  // Delete vehicle endpoint
+  const handleDelete = async (vehicleId) => {
+    if (!window.confirm('Are you sure you want to delete this vehicle entry?'))
+      return;
+
+    try {
+      const res = await fetch(`${API_BASE}/vehicles/${vehicleId}`, {
+        method: 'DELETE',
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       });
 
-      if (!res.ok) {
-        const err = await res.json();
-        throw new Error(err.detail || 'Failed to restock vehicle');
+      if (res.ok) {
+        showToast('Vehicle entry deleted.', 'success');
+        fetchVehicles();
+      } else {
+        const errData = await res.json();
+        showToast(errData.detail || 'Delete failed.', 'error');
       }
-
-      showNotification(`Restocked ${amount} units successfully!`);
-      setIsRestockModalOpen(false);
-      setSelectedVehicle(null);
-      fetchVehicles();
     } catch (err) {
-      showNotification(err.message, 'error');
+      showToast('Network error deleting vehicle.', 'error');
     }
   };
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col font-sans">
+      {/* Toast Notification */}
+      {toast && (
+        <div
+          className={`fixed bottom-6 right-6 z-50 px-4 py-3 rounded-xl border shadow-2xl flex items-center gap-3 backdrop-blur-md animate-bounce ${
+            toast.type === 'error'
+              ? 'bg-rose-950/90 text-rose-200 border-rose-800'
+              : 'bg-emerald-950/90 text-emerald-200 border-emerald-800'
+          }`}
+        >
+          {toast.type === 'error' ? (
+            <AlertCircle className="w-5 h-5 text-rose-400" />
+          ) : (
+            <CheckCircle2 className="w-5 h-5 text-emerald-400" />
+          )}
+          <span className="text-sm font-semibold">{toast.message}</span>
+        </div>
+      )}
+
+      {/* Navbar */}
       <Navbar
-        onOpenAuthModal={() => setIsAuthModalOpen(true)}
-        onOpenAddVehicleModal={() => {
-          setSelectedVehicle(null);
+        onOpenAuth={() => setIsAuthModalOpen(true)}
+        onOpenAddVehicle={() => {
+          setVehicleToEdit(null);
           setIsAdminModalOpen(true);
         }}
       />
 
-      {/* Notification Toast */}
-      {notification && (
-        <div
-          className={`fixed bottom-6 right-6 z-50 px-5 py-3.5 rounded-2xl shadow-2xl backdrop-blur-md border text-sm font-medium flex items-center gap-2.5 transition-all animate-bounce ${
-            notification.type === 'error'
-              ? 'bg-rose-500/20 border-rose-500/40 text-rose-300'
-              : 'bg-emerald-500/20 border-emerald-500/40 text-emerald-300'
-          }`}
-        >
-          {notification.type === 'error' ? <AlertCircle className="w-5 h-5" /> : <CheckCircle className="w-5 h-5" />}
-          {notification.msg}
-        </div>
-      )}
-
-      {/* Hero Banner */}
-      <div className="bg-gradient-to-b from-slate-900 via-slate-900 to-slate-950 border-b border-slate-800/80 px-6 py-12">
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-8">
+      {/* Main Container */}
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-1 w-full">
+        {/* Header Hero */}
+        <div className="mb-8 text-center md:text-left flex flex-col md:flex-row md:items-end justify-between gap-4">
           <div>
-            <div className="inline-flex items-center gap-2 bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 text-xs px-3.5 py-1.5 rounded-full font-medium mb-4">
-              <Sparkles className="w-3.5 h-3.5" />
-              Full-Stack TDD Car Inventory System
-            </div>
-            <h2 className="text-4xl md:text-5xl font-black text-white tracking-tight leading-tight">
-              Explore Our Featured <br />
-              <span className="bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent">
-                Dealership Vehicles
-              </span>
-            </h2>
-            <p className="mt-3 text-slate-400 text-sm md:text-base max-w-xl">
-              Browse top quality sedans, SUVs, trucks, and electric vehicles. Log in to manage orders or restock inventory as an administrator.
+            <h1 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
+              Vehicle Inventory Catalog
+            </h1>
+            <p className="mt-2 text-slate-400 text-sm max-w-xl">
+              Browse, search, and manage premium dealership inventory with real-time stock protection and dynamic category filtering.
             </p>
           </div>
+          <div className="bg-slate-900 border border-slate-800 rounded-xl px-4 py-2 text-xs text-slate-400 self-center md:self-auto">
+            Total Inventory Entries:{' '}
+            <span className="text-cyan-400 font-bold">{vehicles.length}</span>
+          </div>
         </div>
-      </div>
 
-      {/* Main Content */}
-      <main className="max-w-7xl mx-auto px-6 py-8 flex-1 w-full">
-        <FilterBar filters={filters} onFilterChange={handleFilterChange} onReset={handleResetFilters} />
+        {/* Search & Filter Bar */}
+        <FilterBar
+          filters={filters}
+          onFilterChange={handleFilterChange}
+          onReset={handleResetFilters}
+        />
 
+        {/* Vehicles Grid */}
         {loading ? (
-          <div className="text-center py-20">
-            <div className="inline-block w-10 h-10 border-4 border-cyan-500 border-t-transparent rounded-full animate-spin"></div>
-            <p className="mt-4 text-slate-400 text-sm">Loading vehicle inventory...</p>
+          <div className="flex flex-col items-center justify-center py-20">
+            <div className="w-10 h-10 border-4 border-cyan-500/30 border-t-cyan-500 rounded-full animate-spin"></div>
+            <p className="mt-4 text-sm text-slate-400 font-medium">
+              Loading inventory catalog...
+            </p>
           </div>
         ) : vehicles.length === 0 ? (
-          <div className="text-center py-20 bg-slate-900/50 border border-slate-800/80 rounded-2xl p-8">
-            <Car className="w-12 h-12 text-slate-600 mx-auto mb-3" />
-            <h3 className="text-lg font-bold text-slate-200">No Vehicles Found</h3>
-            <p className="text-xs text-slate-400 mt-1 max-w-sm mx-auto">
-              No inventory entries matched your search criteria. Try adjusting your filters or search terms.
+          <div className="bg-slate-900/50 border border-slate-800 rounded-2xl p-12 text-center my-8">
+            <Car className="w-12 h-12 text-slate-600 mx-auto mb-4" />
+            <h3 className="text-lg font-bold text-slate-300">
+              No Vehicles Found
+            </h3>
+            <p className="text-sm text-slate-500 mt-1 max-w-md mx-auto">
+              No inventory entries match your search criteria. Try resetting your search filters or add a new vehicle entry.
             </p>
+            <button
+              onClick={handleResetFilters}
+              className="mt-6 px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold rounded-lg border border-slate-700 transition-colors"
+            >
+              Clear All Filters
+            </button>
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {vehicles.map((vehicle) => (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {vehicles.map((v) => (
               <VehicleCard
-                key={vehicle.id}
-                vehicle={vehicle}
+                key={v.id}
+                vehicle={v}
                 onPurchase={handlePurchase}
-                onEdit={(v) => {
-                  setSelectedVehicle(v);
+                onEdit={(veh) => {
+                  setVehicleToEdit(veh);
                   setIsAdminModalOpen(true);
                 }}
-                onDelete={handleDeleteVehicle}
-                onRestock={(v) => {
-                  setSelectedVehicle(v);
+                onRestock={(veh) => {
+                  setVehicleToRestock(veh);
                   setIsRestockModalOpen(true);
                 }}
+                onDelete={handleDelete}
               />
             ))}
           </div>
@@ -258,32 +301,32 @@ const MainApp = () => {
       </main>
 
       {/* Modals */}
-      <AuthModal isOpen={isAuthModalOpen} onClose={() => setIsAuthModalOpen(false)} />
       <AdminModal
         isOpen={isAdminModalOpen}
-        onClose={() => setIsAdminModalOpen(false)}
-        onSubmit={handleSaveVehicle}
-        vehicleToEdit={selectedVehicle}
+        onClose={() => {
+          setIsAdminModalOpen(false);
+          setVehicleToEdit(null);
+        }}
+        onSubmit={handleAdminSubmit}
+        vehicleToEdit={vehicleToEdit}
       />
+
       <RestockModal
         isOpen={isRestockModalOpen}
-        onClose={() => setIsRestockModalOpen(false)}
-        vehicle={selectedVehicle}
-        onRestockSubmit={handleRestockSubmit}
+        onClose={() => {
+          setIsRestockModalOpen(false);
+          setVehicleToRestock(null);
+        }}
+        onSubmit={handleRestockSubmit}
+        vehicle={vehicleToRestock}
       />
 
-      {/* Footer */}
-      <footer className="border-t border-slate-800 bg-slate-950 py-6 text-center text-xs text-slate-500">
-        Car Dealership Inventory System — TDD Kata Project
-      </footer>
+      <AuthModal
+        isOpen={isAuthModalOpen}
+        onClose={() => setIsAuthModalOpen(false)}
+      />
     </div>
   );
-};
-
-export default function App() {
-  return (
-    <AuthProvider>
-      <MainApp />
-    </AuthProvider>
-  );
 }
+
+export default App;

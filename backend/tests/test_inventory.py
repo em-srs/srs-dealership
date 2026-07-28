@@ -31,7 +31,7 @@ def test_purchase_vehicle_success(client, user_token_headers, admin_token_header
     # Create vehicle with quantity = 2
     res = client.post(
         "/api/vehicles",
-        json={"make": "Honda", "model": "Accord", "year": 2023, "category": "Sedan", "price": 28000.00, "quantity": 2},
+        json={"maker": "Honda", "model": "Accord", "year": 2023, "category": "Sedan", "price": 28000.00, "quantity": 2},
         headers=admin_token_headers
     )
     vehicle_id = res.json()["id"]
@@ -45,7 +45,7 @@ def test_purchase_vehicle_out_of_stock_fails(client, user_token_headers, admin_t
     # Create vehicle with quantity = 0
     res = client.post(
         "/api/vehicles",
-        json={"make": "Tesla", "model": "Model Y", "year": 2024, "category": "Electric", "price": 48000.00, "quantity": 0},
+        json={"maker": "Tesla", "model": "Model Y", "year": 2024, "category": "Electric", "price": 48000.00, "quantity": 0},
         headers=admin_token_headers
     )
     vehicle_id = res.json()["id"]
@@ -64,7 +64,7 @@ def test_restock_vehicle_admin_success(client, admin_token_headers):
     # Create vehicle with quantity = 1
     res = client.post(
         "/api/vehicles",
-        json={"make": "Chevrolet", "model": "Tahoe", "year": 2023, "category": "SUV", "price": 55000.00, "quantity": 1},
+        json={"maker": "Chevrolet", "model": "Tahoe", "year": 2023, "category": "SUV", "price": 55000.00, "quantity": 1},
         headers=admin_token_headers
     )
     vehicle_id = res.json()["id"]
@@ -80,7 +80,7 @@ def test_restock_vehicle_admin_success(client, admin_token_headers):
 def test_restock_vehicle_regular_user_forbidden(client, user_token_headers, admin_token_headers):
     res = client.post(
         "/api/vehicles",
-        json={"make": "Ford", "model": "F-150", "year": 2023, "category": "Truck", "price": 45000.00, "quantity": 2},
+        json={"maker": "Ford", "model": "F-150", "year": 2023, "category": "Truck", "price": 45000.00, "quantity": 2},
         headers=admin_token_headers
     )
     vehicle_id = res.json()["id"]

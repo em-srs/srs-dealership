@@ -3,7 +3,7 @@ from datetime import datetime
 from typing import Optional
 
 class VehicleBase(BaseModel):
-    make: str
+    maker: str
     model: str
     year: int = Field(ge=1886)
     category: str
@@ -14,7 +14,7 @@ class VehicleCreate(VehicleBase):
     pass
 
 class VehicleUpdate(BaseModel):
-    make: Optional[str] = None
+    maker: Optional[str] = None
     model: Optional[str] = None
     year: Optional[int] = Field(default=None, ge=1886)
     category: Optional[str] = None

@@ -1,79 +1,75 @@
 import React from 'react';
-import { Search, Filter, RotateCcw, DollarSign } from 'lucide-react';
+import { Search, Filter, RotateCcw } from 'lucide-react';
+
+const categories = ['All', 'Sedan', 'SUV', 'Truck', 'Electric', 'Coupe'];
 
 const FilterBar = ({ filters, onFilterChange, onReset }) => {
-  const categories = ['All', 'Sedan', 'SUV', 'Truck', 'Electric', 'Coupe'];
-
   return (
-    <div className="bg-slate-900 border border-slate-800 rounded-2xl p-5 mb-8 shadow-xl">
-      <div className="flex items-center gap-2 mb-4 text-slate-300 font-semibold text-sm">
-        <Filter className="w-4 h-4 text-cyan-400" />
-        Filter & Search Inventory
-      </div>
-
+    <div className="bg-slate-900/90 backdrop-blur-md border border-slate-800 rounded-2xl p-4 shadow-xl mb-8">
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        {/* Search Make/Model */}
-        <div className="relative">
-          <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5" />
+        {/* Search input */}
+        <div className="relative md:col-span-2">
+          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
           <input
             type="text"
-            placeholder="Search make or model..."
-            value={filters.make || ''}
-            onChange={(e) => onFilterChange('make', e.target.value)}
-            className="w-full bg-slate-950 border border-slate-800 focus:border-cyan-500 text-slate-100 placeholder-slate-500 rounded-xl pl-10 pr-4 py-2.5 text-sm focus:outline-none focus:ring-1 focus:ring-cyan-500 transition-all"
+            placeholder="Search maker or model..."
+            value={filters.maker || filters.model || ''}
+            onChange={(e) => {
+              onFilterChange('maker', e.target.value);
+              onFilterChange('model', e.target.value);
+            }}
+            className="w-full bg-slate-950 border border-slate-800 rounded-xl pl-10 pr-4 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition-all"
           />
         </div>
 
-        {/* Category Selector */}
-        <div>
+        {/* Category Select */}
+        <div className="relative">
           <select
             value={filters.category || 'All'}
             onChange={(e) => onFilterChange('category', e.target.value === 'All' ? '' : e.target.value)}
-            className="w-full bg-slate-950 border border-slate-800 focus:border-cyan-500 text-slate-100 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-1 focus:ring-cyan-500 transition-all"
+            className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-white appearance-none focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition-all cursor-pointer"
           >
-            <option value="All">All Categories</option>
-            {categories.filter((c) => c !== 'All').map((cat) => (
-              <option key={cat} value={cat}>
-                {cat}
+            {categories.map((cat) => (
+              <option key={cat} value={cat} className="bg-slate-900 text-white">
+                {cat === 'All' ? 'All Categories' : cat}
               </option>
             ))}
           </select>
+          <Filter className="absolute right-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
         </div>
 
-        {/* Min Price */}
-        <div className="relative">
-          <DollarSign className="w-4 h-4 text-slate-500 absolute left-3.5 top-3.5" />
-          <input
-            type="number"
-            placeholder="Min Price"
-            value={filters.min_price || ''}
-            onChange={(e) => onFilterChange('min_price', e.target.value)}
-            className="w-full bg-slate-950 border border-slate-800 focus:border-cyan-500 text-slate-100 placeholder-slate-500 rounded-xl pl-10 pr-4 py-2.5 text-sm focus:outline-none focus:ring-1 focus:ring-cyan-500 transition-all"
-          />
-        </div>
-
-        {/* Max Price */}
-        <div className="relative">
-          <DollarSign className="w-4 h-4 text-slate-500 absolute left-3.5 top-3.5" />
-          <input
-            type="number"
-            placeholder="Max Price"
-            value={filters.max_price || ''}
-            onChange={(e) => onFilterChange('max_price', e.target.value)}
-            className="w-full bg-slate-950 border border-slate-800 focus:border-cyan-500 text-slate-100 placeholder-slate-500 rounded-xl pl-10 pr-4 py-2.5 text-sm focus:outline-none focus:ring-1 focus:ring-cyan-500 transition-all"
-          />
-        </div>
-      </div>
-
-      {/* Reset Button */}
-      <div className="mt-4 flex justify-end">
+        {/* Reset Button */}
         <button
           onClick={onReset}
-          className="text-xs text-slate-400 hover:text-cyan-400 font-medium flex items-center gap-1.5 transition-colors"
+          className="w-full bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white border border-slate-700 rounded-xl py-2.5 px-4 text-sm font-semibold transition-all flex items-center justify-center gap-2 shadow-sm"
         >
-          <RotateCcw className="w-3.5 h-3.5" />
+          <RotateCcw className="w-4 h-4 text-cyan-400" />
           Reset Filters
         </button>
+      </div>
+
+      {/* Price Range inputs */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4 pt-4 border-t border-slate-800/80">
+        <div>
+          <label className="block text-xs font-medium text-slate-400 mb-1">Min Price ($)</label>
+          <input
+            type="number"
+            placeholder="0"
+            value={filters.min_price || ''}
+            onChange={(e) => onFilterChange('min_price', e.target.value)}
+            className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2 text-sm text-white placeholder-slate-600 focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500"
+          />
+        </div>
+        <div>
+          <label className="block text-xs font-medium text-slate-400 mb-1">Max Price ($)</label>
+          <input
+            type="number"
+            placeholder="No Limit"
+            value={filters.max_price || ''}
+            onChange={(e) => onFilterChange('max_price', e.target.value)}
+            className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2 text-sm text-white placeholder-slate-600 focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500"
+          />
+        </div>
       </div>
     </div>
   );

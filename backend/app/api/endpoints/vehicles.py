@@ -17,7 +17,7 @@ def create_vehicle(
     current_user: User = Depends(get_current_user)
 ):
     new_vehicle = Vehicle(
-        make=vehicle_in.make,
+        maker=vehicle_in.maker,
         model=vehicle_in.model,
         year=vehicle_in.year,
         category=vehicle_in.category,
@@ -38,7 +38,7 @@ def get_all_vehicles(
 
 @router.get("/search", response_model=List[VehicleResponse])
 def search_vehicles(
-    make: Optional[str] = Query(None),
+    maker: Optional[str] = Query(None),
     model: Optional[str] = Query(None),
     category: Optional[str] = Query(None),
     min_price: Optional[float] = Query(None),
@@ -47,8 +47,8 @@ def search_vehicles(
     current_user: User = Depends(get_current_user)
 ):
     query = db.query(Vehicle)
-    if make:
-        query = query.filter(Vehicle.make.ilike(f"%{make}%"))
+    if maker:
+        query = query.filter(Vehicle.maker.ilike(f"%{maker}%"))
     if model:
         query = query.filter(Vehicle.model.ilike(f"%{model}%"))
     if category:

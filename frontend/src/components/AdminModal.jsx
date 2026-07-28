@@ -1,34 +1,34 @@
 import React, { useState, useEffect } from 'react';
-import { X, ShieldAlert } from 'lucide-react';
+import { X, Save } from 'lucide-react';
 
 const AdminModal = ({ isOpen, onClose, onSubmit, vehicleToEdit }) => {
   const [formData, setFormData] = useState({
-    make: '',
+    maker: '',
     model: '',
     year: new Date().getFullYear(),
     category: 'Sedan',
     price: '',
-    quantity: 1,
+    quantity: ''
   });
 
   useEffect(() => {
     if (vehicleToEdit) {
       setFormData({
-        make: vehicleToEdit.make,
-        model: vehicleToEdit.model,
-        year: vehicleToEdit.year,
-        category: vehicleToEdit.category,
-        price: vehicleToEdit.price,
-        quantity: vehicleToEdit.quantity,
+        maker: vehicleToEdit.maker || '',
+        model: vehicleToEdit.model || '',
+        year: vehicleToEdit.year || new Date().getFullYear(),
+        category: vehicleToEdit.category || 'Sedan',
+        price: vehicleToEdit.price || '',
+        quantity: vehicleToEdit.quantity || ''
       });
     } else {
       setFormData({
-        make: '',
+        maker: '',
         model: '',
         year: new Date().getFullYear(),
         category: 'Sedan',
         price: '',
-        quantity: 1,
+        quantity: ''
       });
     }
   }, [vehicleToEdit, isOpen]);
@@ -39,74 +39,72 @@ const AdminModal = ({ isOpen, onClose, onSubmit, vehicleToEdit }) => {
     e.preventDefault();
     onSubmit({
       ...formData,
-      year: Number(formData.year),
-      price: Number(formData.price),
-      quantity: Number(formData.quantity),
+      year: parseInt(formData.year, 10),
+      price: parseFloat(formData.price),
+      quantity: parseInt(formData.quantity, 10)
     });
   };
 
   return (
-    <div className="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-      <div className="bg-slate-900 border border-slate-800 w-full max-w-lg rounded-2xl p-6 shadow-2xl relative">
-        <button
-          onClick={onClose}
-          className="absolute top-4 right-4 text-slate-400 hover:text-white transition-colors"
-        >
-          <X className="w-5 h-5" />
-        </button>
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm animate-fade-in">
+      <div className="bg-slate-900 border border-slate-800 rounded-2xl w-full max-w-lg overflow-hidden shadow-2xl">
+        <div className="p-6 border-b border-slate-800 flex items-center justify-between">
+          <h2 className="text-xl font-bold text-white">
+            {vehicleToEdit ? 'Edit Vehicle Entry' : 'Add New Vehicle to Inventory'}
+          </h2>
+          <button
+            onClick={onClose}
+            className="p-2 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors"
+          >
+            <X className="w-5 h-5" />
+          </button>
+        </div>
 
-        <h2 className="text-xl font-bold text-white mb-1 flex items-center gap-2">
-          <ShieldAlert className="w-5 h-5 text-amber-400" />
-          {vehicleToEdit ? 'Edit Vehicle Details' : 'Add New Vehicle'}
-        </h2>
-        <p className="text-xs text-slate-400 mb-6">
-          {vehicleToEdit ? 'Update inventory specification for this vehicle' : 'Add a new vehicle entry to dealership inventory'}
-        </p>
-
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="p-6 space-y-4">
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="text-xs font-medium text-slate-300 block mb-1">Make</label>
+              <label className="block text-xs font-semibold text-slate-400 mb-1">Maker / Brand</label>
               <input
                 type="text"
                 required
-                value={formData.make}
-                onChange={(e) => setFormData({ ...formData, make: e.target.value })}
                 placeholder="e.g. Toyota"
-                className="w-full bg-slate-950 border border-slate-800 focus:border-cyan-500 text-slate-100 rounded-xl px-3.5 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-cyan-500"
+                value={formData.maker}
+                onChange={(e) => setFormData({ ...formData, maker: e.target.value })}
+                className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-cyan-500"
               />
             </div>
             <div>
-              <label className="text-xs font-medium text-slate-300 block mb-1">Model</label>
+              <label className="block text-xs font-semibold text-slate-400 mb-1">Model</label>
               <input
                 type="text"
                 required
+                placeholder="e.g. Camry"
                 value={formData.model}
                 onChange={(e) => setFormData({ ...formData, model: e.target.value })}
-                placeholder="e.g. Camry"
-                className="w-full bg-slate-950 border border-slate-800 focus:border-cyan-500 text-slate-100 rounded-xl px-3.5 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-cyan-500"
+                className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-cyan-500"
               />
             </div>
           </div>
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="text-xs font-medium text-slate-300 block mb-1">Year</label>
+              <label className="block text-xs font-semibold text-slate-400 mb-1">Year</label>
               <input
                 type="number"
-                min="1886"
                 required
+                min="1886"
+                max={new Date().getFullYear() + 1}
                 value={formData.year}
                 onChange={(e) => setFormData({ ...formData, year: e.target.value })}
-                className="w-full bg-slate-950 border border-slate-800 focus:border-cyan-500 text-slate-100 rounded-xl px-3.5 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-cyan-500"
+                className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-cyan-500"
               />
             </div>
             <div>
-              <label className="text-xs font-medium text-slate-300 block mb-1">Category</label>
+              <label className="block text-xs font-semibold text-slate-400 mb-1">Category</label>
               <select
                 value={formData.category}
                 onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                className="w-full bg-slate-950 border border-slate-800 focus:border-cyan-500 text-slate-100 rounded-xl px-3.5 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-cyan-500"
+                className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-cyan-500"
               >
                 <option value="Sedan">Sedan</option>
                 <option value="SUV">SUV</option>
@@ -119,43 +117,45 @@ const AdminModal = ({ isOpen, onClose, onSubmit, vehicleToEdit }) => {
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="text-xs font-medium text-slate-300 block mb-1">Price ($)</label>
+              <label className="block text-xs font-semibold text-slate-400 mb-1">Price ($)</label>
               <input
                 type="number"
                 step="0.01"
-                min="0"
                 required
+                min="0"
+                placeholder="0.00"
                 value={formData.price}
                 onChange={(e) => setFormData({ ...formData, price: e.target.value })}
-                placeholder="25000.00"
-                className="w-full bg-slate-950 border border-slate-800 focus:border-cyan-500 text-slate-100 rounded-xl px-3.5 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-cyan-500"
+                className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-cyan-500"
               />
             </div>
             <div>
-              <label className="text-xs font-medium text-slate-300 block mb-1">Quantity</label>
+              <label className="block text-xs font-semibold text-slate-400 mb-1">Initial Stock Quantity</label>
               <input
                 type="number"
-                min="0"
                 required
+                min="0"
+                placeholder="1"
                 value={formData.quantity}
                 onChange={(e) => setFormData({ ...formData, quantity: e.target.value })}
-                className="w-full bg-slate-950 border border-slate-800 focus:border-cyan-500 text-slate-100 rounded-xl px-3.5 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-cyan-500"
+                className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-cyan-500"
               />
             </div>
           </div>
 
-          <div className="pt-4 flex justify-end gap-3">
+          <div className="pt-4 flex items-center justify-end gap-3 border-t border-slate-800">
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 font-medium text-sm rounded-xl transition-colors"
+              className="px-4 py-2.5 text-sm font-semibold text-slate-400 hover:text-white transition-colors"
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="px-5 py-2 bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white font-medium text-sm rounded-xl shadow-lg shadow-emerald-500/20 transition-all"
+              className="px-6 py-2.5 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white font-semibold rounded-xl shadow-lg shadow-cyan-500/25 flex items-center gap-2"
             >
+              <Save className="w-4 h-4" />
               {vehicleToEdit ? 'Save Changes' : 'Create Vehicle'}
             </button>
           </div>
