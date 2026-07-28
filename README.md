@@ -79,7 +79,7 @@ psql -U dealership_admin -d srs_dealership -f schema.sql
    ```
 5. Run automated test suite:
    ```bash
-   pytest
+   pytest -v --cov=app > ../backend_test_report.txt
    ```
 6. Start backend development server:
    ```bash
@@ -100,7 +100,7 @@ psql -U dealership_admin -d srs_dealership -f schema.sql
    ```
 3. Run component test suite:
    ```bash
-   npm test
+   npm test > ../frontend_test_report.txt
    ```
 4. Start Vite development server:
    ```bash
@@ -109,29 +109,36 @@ psql -U dealership_admin -d srs_dealership -f schema.sql
 
 ---
 
-## Complete Test Report (22/22 Tests Passing)
+## Screenshots
 
-### Backend Test Suite (`pytest`) — 18/18 Passed
+> Drop screenshot images into the `docs/` folder to view them rendered below.
+
+![Dashboard View](docs/dashboard.png)
+*Figure 1: Main Dealership Inventory Dashboard displaying available vehicle stock.*
+
+![Vehicle Search & Filtering](docs/search_filter.png)
+*Figure 2: Real-time search and filter controls by make, model, category, and price range.*
+
+![Admin Restock Modal](docs/admin_modal.png)
+*Figure 3: Administrator modal interface for restocking inventory and managing vehicle entries.*
+
+![Auth & Purchase Flow](docs/auth_flow.png)
+*Figure 4: User authentication modal and vehicle purchasing workflow.*
+
+---
+
+## Complete Test Report Summary (22/22 Tests Passing)
+
+### Backend Test Suite (`pytest` + Coverage) — 18/18 Passed
 - **Auth Module**: 6 passed (`test_auth.py`)
 - **Vehicles Module**: 7 passed (`test_vehicles.py`)
 - **Inventory Module**: 5 passed (`test_inventory.py`)
-
-```
-tests/test_auth.py ......                                                [ 33%]
-tests/test_vehicles.py .......                                           [ 72%]
-tests/test_inventory.py .....                                            [100%]
-======================= 18 passed in 9.40s =======================
-```
+- Full test output captured in [`backend_test_report.txt`](backend_test_report.txt).
 
 ### Frontend Test Suite (`Vitest` + RTL) — 4/4 Passed
 - **VehicleCard Component**: 2 passed (renders details, disables Purchase button at zero stock)
 - **Navbar Component**: 2 passed (logged-out state, logged-in admin state)
-
-```
-✓ src/test/App.test.jsx (4 tests) 195ms
-Test Files  1 passed (1)
-     Tests  4 passed (4)
-```
+- Full test output captured in [`frontend_test_report.txt`](frontend_test_report.txt).
 
 ---
 
@@ -156,3 +163,5 @@ Leveraging AI inside a strict Test-Driven Development (TDD) workflow significant
 - `PROMPTS.md`: Complete interactive prompt log.
 - `schema.sql`: Hand-written DDL for PostgreSQL setup.
 - `DEVELOPMENT_LOG.docx`: Private local logbook documenting development iterations.
+- `backend_test_report.txt`: Output log for backend pytest execution.
+- `frontend_test_report.txt`: Output log for frontend Vitest execution.
