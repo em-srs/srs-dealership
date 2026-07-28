@@ -47,7 +47,7 @@ describe('Navbar Component', () => {
     const mockContext = { user: null, logout: () => {} };
     render(
       <AuthContext.Provider value={mockContext}>
-        <Navbar onOpenAuth={() => {}} onOpenAddVehicle={() => {}} />
+        <Navbar onOpenAuth={() => {}} onOpenAddVehicle={() => {}} onOpenProfile={() => {}} />
       </AuthContext.Provider>
     );
 
@@ -55,15 +55,15 @@ describe('Navbar Component', () => {
     expect(screen.getByText('Login / Register')).toBeInTheDocument();
   });
 
-  it('renders Admin badge and Add Vehicle button for admin users', () => {
+  it('renders user avatar and email for logged in users', () => {
     const mockContext = { user: { email: 'admin@example.com', role: 'admin' }, logout: () => {} };
     render(
       <AuthContext.Provider value={mockContext}>
-        <Navbar onOpenAuth={() => {}} onOpenAddVehicle={() => {}} />
+        <Navbar onOpenAuth={() => {}} onOpenAddVehicle={() => {}} onOpenProfile={() => {}} />
       </AuthContext.Provider>
     );
 
     expect(screen.getByText('admin')).toBeInTheDocument();
-    expect(screen.getByText('+ Add Vehicle')).toBeInTheDocument();
+    expect(screen.getByText('A')).toBeInTheDocument();
   });
 });

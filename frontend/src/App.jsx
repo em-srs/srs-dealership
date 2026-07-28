@@ -5,6 +5,7 @@ import VehicleCard from './components/VehicleCard';
 import AdminModal from './components/AdminModal';
 import RestockModal from './components/RestockModal';
 import AuthModal from './components/AuthModal';
+import ProfileModal from './components/ProfileModal';
 import AuthContext from './context/AuthContext';
 import { Car, AlertCircle, CheckCircle2 } from 'lucide-react';
 
@@ -24,6 +25,8 @@ function App() {
   const [isAdminModalOpen, setIsAdminModalOpen] = useState(false);
   const [isRestockModalOpen, setIsRestockModalOpen] = useState(false);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
+
   const [vehicleToEdit, setVehicleToEdit] = useState(null);
   const [vehicleToRestock, setVehicleToRestock] = useState(null);
 
@@ -224,6 +227,7 @@ function App() {
           setVehicleToEdit(null);
           setIsAdminModalOpen(true);
         }}
+        onOpenProfile={() => setIsProfileModalOpen(true)}
       />
 
       {/* Main Container */}
@@ -322,6 +326,12 @@ function App() {
         isOpen={isAuthModalOpen}
         onClose={() => setIsAuthModalOpen(false)}
         onSuccess={(msg) => showToast(msg, 'success')}
+      />
+
+      <ProfileModal
+        isOpen={isProfileModalOpen}
+        onClose={() => setIsProfileModalOpen(false)}
+        user={user}
       />
     </div>
   );

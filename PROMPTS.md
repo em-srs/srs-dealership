@@ -205,4 +205,18 @@ This document provides a detailed, chronological record of all prompts, instruct
   2. Added processing spinner state to login button.
   3. Wired `onSuccess` toast callback in `App.jsx` to notify the user upon successful login/registration.
 
+---
+
+## Additional Feature Additions
+
+### Feature: Interactive User Profile Button & Glassmorphism Dropdown Menu
+- **User Prompt**:
+  > "after logging in the top right should show the user name and profile icon, the profile button when clicked should give multiple options to user and at last a log out button, commit this as a feat to implement a user profile page/button."
+- **Implementation Delivered**:
+  1. Created `ProfileModal.jsx` for user account details and security settings.
+  2. Updated `Navbar.jsx` with an initial avatar badge, username preview, and an interactive glassmorphism dropdown menu containing multiple options (`View Account Profile`, `+ Add New Vehicle`, `My Purchases & History`, `Account Settings`, `System Status`, and `Log Out` at the bottom).
+  3. Added click-outside listener to automatically close dropdown menu when clicking away.
+  4. Verified Vitest tests (`4/4 PASSED`) and pytest suite (`18/18 PASSED`).
+
+
 
