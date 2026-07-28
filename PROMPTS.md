@@ -157,3 +157,23 @@ This document provides a detailed, chronological record of all prompts, instruct
   - Generated `frontend_test_report.txt` (4/4 Vitest tests passing).
   - Finalized `README.md` with screenshot placeholders, setup guide, and AI usage section.
   - Finalized `PROMPTS.md` with structured prompt logs.
+
+---
+
+## Troubleshooting & Error Resolution
+
+### FIRST ERROR: Tailwind CSS v4 PostCSS Plugin Deprecation Error
+- **User Prompt**:
+  > "explain the error, why is it happening, add this also in the development logbook as FIRST ERROR and then fix these errors" (attaching browser screenshot showing Vite PostCSS error).
+- **Error Observed**:
+  ```
+  [plugin:vite:css] [postcss] It looks like you're trying to use `tailwindcss` directly as a PostCSS plugin. The PostCSS plugin has moved to a separate package, so to continue using Tailwind CSS with PostCSS you'll need to install `@tailwindcss/postcss` and update your PostCSS configuration.
+  ```
+- **Root Cause Analysis**:
+  Tailwind CSS v4 (`tailwindcss: "^4.3.3"`) separated its PostCSS plugin into a dedicated package (`@tailwindcss/postcss`). Using `{ plugins: { tailwindcss: {} } }` in `postcss.config.js` is deprecated in Tailwind v4.
+- **Fix Executed**:
+  1. Installed `@tailwindcss/postcss` package: `npm install -D @tailwindcss/postcss`.
+  2. Updated `frontend/postcss.config.js` to use `@tailwindcss/postcss`.
+  3. Updated `frontend/src/index.css` to `@import "tailwindcss";`.
+  4. Verified Vitest tests (`4/4 PASSED`) and production build (`vite build` compiled in 627ms).
+  5. Logged entry in `DEVELOPMENT_LOG.docx` under `FIRST ERROR`.
