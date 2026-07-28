@@ -29,3 +29,14 @@ This log documents all prompts and interactive workflows used in building the **
 - **Prompt (GREEN Phase)**: Implement minimum code to pass all 7 vehicle tests, integrate search query building, enforce admin privileges on deletion, and verify test suite passes.
 - **AI Action**: Implemented `Vehicle` model, Pydantic schemas (`VehicleCreate`, `VehicleUpdate`, `VehicleResponse`), and endpoints in `app/api/endpoints/vehicles.py`. Registered router in `main.py`. All 13 tests passed (GREEN).
 - **Commit (GREEN)**: `feat: implement vehicles CRUD and search filtering endpoints`
+
+---
+
+## Module 4: Inventory Module (TDD Cycle 3)
+- **Prompt (RED Phase)**: Write failing unit tests for `/purchase` and `/restock` endpoints.
+- **AI Action**: Created `backend/tests/test_inventory.py` with 5 test cases covering stock decrement on purchase, stock depletion blocking at 0 quantity (HTTP 400), 404 handling, admin stock restocking, and regular user restocking prohibition (403 Forbidden). All 5 tests failed (RED).
+- **Commit (RED)**: `test: add failing unit tests for inventory purchase and restock endpoints`
+
+- **Prompt (GREEN Phase)**: Implement `/purchase` and `/restock` endpoints in `app/api/endpoints/vehicles.py`, enforce database & application level quantity guards, and verify full test suite passes.
+- **AI Action**: Implemented `purchase_vehicle` and `restock_vehicle` endpoints. Verified all 18 backend tests passed (GREEN).
+- **Commit (GREEN)**: `feat: implement vehicle purchase and restock inventory endpoints`
