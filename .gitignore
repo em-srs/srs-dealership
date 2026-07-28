@@ -18,6 +18,9 @@ backend/.env
 .coverage
 htmlcov/
 
+# Private Documentation (Not visible in GitHub)
+DEVELOPMENT_LOG.docx
+
 # Node / Frontend
 node_modules/
 dist/
