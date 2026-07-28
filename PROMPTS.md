@@ -227,6 +227,18 @@ This document provides a detailed, chronological record of all prompts, instruct
   3. Positioned `+ Add Vehicle` button above grid visible exclusively to administrators.
   4. Verified Vitest suite (`4/4 PASSED`) and Pytest suite (`18/18 PASSED`).
 
+### FIFTH ERROR: Context Disconnection Bug Resolved by AuthProvider Wrapping
+- **User Prompt**:
+  > "There is a critical bug: after a successful login (I see the 'Welcome back' toast appear), the UI does not update at all... commit and push with detailed feats"
+- **Error Observed**: UI did not update after login (Navbar still showed "Login / Register").
+- **Root Cause Analysis**: `main.jsx` rendered `<App />` directly without wrapping it in `<AuthProvider>`, causing `useContext(AuthContext)` to read from the static default fallback object `{ user: null, token: null }`.
+- **Fix Executed**:
+  1. Wrapped `<App />` in `<AuthProvider>` in `main.jsx`.
+  2. Updated `AuthContext.jsx` to update `user` and `token` state synchronously inside `login()`.
+  3. Verified immediate Navbar update and permission-gated card rendering for regular users and admins.
+  4. Verified Vitest suite (`4/4 PASSED`) and Pytest suite (`18/18 PASSED`).
+
+
 
 
 

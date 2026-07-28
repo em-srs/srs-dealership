@@ -26,7 +26,20 @@ const parseJwt = (token) => {
 
 export const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(() => localStorage.getItem('token') || null);
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState(() => {
+    const savedToken = localStorage.getItem('token');
+    if (savedToken) {
+      const payload = parseJwt(savedToken);
+      if (payload && payload.exp * 1000 > Date.now()) {
+        return {
+          email: payload.sub,
+          role: payload.role,
+          id: payload.id,
+        };
+      }
+    }
+    return null;
+  });
 
   useEffect(() => {
     if (token) {
@@ -59,6 +72,16 @@ export const AuthProvider = ({ children }) => {
 
     const data = await res.json();
     localStorage.setItem('token', data.access_token);
+    
+    // Parse payload and update state immediately upon successful response
+    const payload = parseJwt(data.access_token);
+    if (payload) {
+      setUser({
+        email: payload.sub,
+        role: payload.role,
+        id: payload.id,
+      });
+    }
     setToken(data.access_token);
     return data;
   };
