@@ -38,7 +38,7 @@ The application is deployed across production cloud infrastructure:
 
 ### Multi-AI Tool Attribution & Contributions
 
-#### 1. Claude 3.5 Sonnet (Anthropic) — Planning, Architecture & Strategy
+#### 1. Claude (Anthropic) — Planning, Architecture & Strategy
 - **Role**: High-level architectural collaborator, kata requirements analysis, tech stack planning, and prompt engineering.
 - **Contributions**:
   - Analyzed `TDD Kata for srs-dealership.docx` and structured the multi-phase implementation roadmap.
