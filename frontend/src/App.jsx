@@ -6,6 +6,7 @@ import RestockModal from './components/RestockModal';
 import AuthModal from './components/AuthModal';
 import ProfileModal from './components/ProfileModal';
 import AuthContext from './context/AuthContext';
+import { sortVehicles } from './utils/sort';
 import { Car, PlusCircle, AlertCircle, CheckCircle2, ShieldCheck, ArrowUp } from 'lucide-react';
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api';
@@ -20,6 +21,7 @@ function App() {
     category: '',
     min_price: '',
     max_price: '',
+    sort: 'default',
   });
 
   useEffect(() => {
@@ -97,6 +99,7 @@ function App() {
       category: '',
       min_price: '',
       max_price: '',
+      sort: 'default',
     });
   };
 
@@ -304,7 +307,7 @@ function App() {
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {vehicles.map((v) => (
+            {sortVehicles(vehicles, filters.sort).map((v) => (
               <VehicleCard
                 key={v.id}
                 vehicle={v}

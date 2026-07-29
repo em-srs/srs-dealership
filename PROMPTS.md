@@ -271,6 +271,16 @@ This document provides a detailed, chronological record of all prompts, instruct
 
 ---
 
+### Feature 2: Add Sorting to Vehicle List (TDD Cycle)
+- **User Prompt**:
+  > "FEATURE 2 — ADD SORTING TO THE VEHICLE LIST... RED (failing test) -> GREEN+REFACTOR (implement) -> STOP for confirmation -> commit."
+- **Implementation Delivered**:
+  1. **RED**: Created `src/test/sort.test.jsx` testing client-side sorting logic (`price_asc`, `price_desc`, `newest`) and `FilterBar` interaction before creating the sorting module. Vitest ran and failed (RED).
+  2. **GREEN & REFACTOR**: Implemented centralized sorting utility `src/utils/sort.js` (`sortVehicles`). Added `<select aria-label="Sort vehicles">` dropdown with `ArrowUpDown` icon to `FilterBar.jsx` and `Navbar.jsx`, and wired `sortVehicles` to vehicle grid mapping in `App.jsx`. All 11 frontend tests passed (11/11 PASSED across 3 test files).
+  3. Visual verification confirmed on dev server with screenshot showing reordered grid for `Price: Low to High`.
+
+---
+
 ## AI Usage & Ownership Disclosure
 
 - **Human Direction & Conceptual Ownership (sunnyrajsu)**:

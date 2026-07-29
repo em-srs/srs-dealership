@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import AuthContext from '../context/AuthContext';
-import { Car, Search, Filter, LogIn, LogOut, ShieldCheck, User as UserIcon, RotateCcw } from 'lucide-react';
+import { Car, Search, Filter, LogIn, LogOut, ShieldCheck, User as UserIcon, RotateCcw, ArrowUpDown } from 'lucide-react';
 
 const categories = ['All', 'Sedan', 'SUV', 'Truck', 'Electric', 'Coupe'];
 
@@ -51,6 +51,22 @@ const Navbar = ({ filters, onFilterChange, onResetFilters, onOpenAuth, onOpenPro
               ))}
             </select>
             <Filter className="absolute right-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-slate-400 pointer-events-none" />
+          </div>
+
+          {/* Sort Dropdown */}
+          <div className="relative min-w-[110px]">
+            <select
+              aria-label="Sort vehicles"
+              value={filters.sort || 'default'}
+              onChange={(e) => onFilterChange('sort', e.target.value)}
+              className="w-full bg-slate-950 border border-slate-800 rounded-xl pl-3 pr-7 py-1.5 text-xs text-white appearance-none focus:outline-none focus:border-cyan-500 cursor-pointer text-ellipsis overflow-hidden"
+            >
+              <option value="default" className="bg-slate-900 text-white">Sort: Default</option>
+              <option value="price_asc" className="bg-slate-900 text-white">Price: Low to High</option>
+              <option value="price_desc" className="bg-slate-900 text-white">Price: High to Low</option>
+              <option value="newest" className="bg-slate-900 text-white">Newest First</option>
+            </select>
+            <ArrowUpDown className="absolute right-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-slate-400 pointer-events-none" />
           </div>
 
           {/* Price Range */}

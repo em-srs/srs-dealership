@@ -1,12 +1,12 @@
 import React from 'react';
-import { Search, Filter, RotateCcw } from 'lucide-react';
+import { Search, Filter, RotateCcw, ArrowUpDown } from 'lucide-react';
 
 const categories = ['All', 'Sedan', 'SUV', 'Truck', 'Electric', 'Coupe'];
 
 const FilterBar = ({ filters, onFilterChange, onReset }) => {
   return (
     <div className="bg-slate-900/90 backdrop-blur-md border border-slate-800 rounded-2xl p-4 shadow-xl mb-8">
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
         {/* General Search input */}
         <div className="relative md:col-span-2">
           <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
@@ -33,6 +33,22 @@ const FilterBar = ({ filters, onFilterChange, onReset }) => {
             ))}
           </select>
           <Filter className="absolute right-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
+        </div>
+
+        {/* Sort Select */}
+        <div className="relative">
+          <select
+            aria-label="Sort vehicles"
+            value={filters.sort || 'default'}
+            onChange={(e) => onFilterChange('sort', e.target.value)}
+            className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-white appearance-none focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition-all cursor-pointer text-ellipsis overflow-hidden pr-9"
+          >
+            <option value="default" className="bg-slate-900 text-white">Sort By: Default</option>
+            <option value="price_asc" className="bg-slate-900 text-white">Price: Low to High</option>
+            <option value="price_desc" className="bg-slate-900 text-white">Price: High to Low</option>
+            <option value="newest" className="bg-slate-900 text-white">Newest First</option>
+          </select>
+          <ArrowUpDown className="absolute right-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
         </div>
 
         {/* Reset Button */}
