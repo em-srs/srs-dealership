@@ -4,11 +4,26 @@ A full-stack Car Dealership Inventory System built following strict **Test-Drive
 
 ---
 
-## 🌐 Live Production URLs
+## 🌐 Deployment & Live Production URLs
+
+The application is deployed across production cloud infrastructure:
 
 - 🚀 **Live Production Dashboard (Frontend SPA)**: [https://srs-dealership.vercel.app](https://srs-dealership.vercel.app)
 - ⚙️ **Live Production API (Backend Service)**: [https://drivehub-dealership.onrender.com](https://drivehub-dealership.onrender.com)
 - 🗄️ **Live Cloud Database**: **Neon Serverless PostgreSQL** (51 vehicles seeded + demo accounts)
+
+### Production Deployment Setup
+- **Database (Neon Cloud)**: Managed serverless PostgreSQL 16 instance. DDL (`schema.sql`) and 51 seed records loaded directly into Neon.
+- **Backend Service (Render)**: Python 3.13 service executing Gunicorn multi-worker ASGI process (`render.yaml`).
+- **Frontend SPA (Vercel)**: React 19 Vite application configured with single-page app rewrite rules (`frontend/vercel.json`) consuming `VITE_API_BASE_URL`.
+
+---
+
+## 💡 Design Decisions
+
+### Deliberate Column Rename: `make` $\rightarrow$ `maker`
+- **Context & Rationale**: During development, the user explicitly requested renaming the vehicle attribute `make` to `maker` to provide explicit clarity across the domain model, API query parameters, PostgreSQL schema, and frontend UI components.
+- **Confirmation**: This rename was a **deliberate human architectural choice** requested by the developer (`sunnyrajsu`), not an accidental AI-driven deviation. The entire codebase (`schema.sql`, SQLAlchemy models, Pydantic schemas, React components, and test fixtures) consistently enforces `maker`.
 
 ---
 
