@@ -32,7 +32,8 @@ def create_vehicle(
 
 @router.get("", response_model=List[VehicleResponse])
 def get_all_vehicles(
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
 ):
     return db.query(Vehicle).all()
 
@@ -44,7 +45,8 @@ def search_vehicles(
     category: Optional[str] = Query(None),
     min_price: Optional[float] = Query(None),
     max_price: Optional[float] = Query(None),
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
 ):
     query = db.query(Vehicle)
     if q:
