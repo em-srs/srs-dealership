@@ -12,19 +12,37 @@ A full-stack Car Dealership Inventory System built following strict **Test-Drive
 
 ---
 
-## 100% Honest AI Usage & Ownership Statement
+## My AI Usage & Ownership Disclosure
 
-> **Transparent Disclosure on Human vs. AI Contributions**
+> **Transparent & Detailed Disclosure on Human vs. Multi-AI Collaborations**
 
 ### Human Direction & Conceptual Ownership (sunnyrajsu)
 - **Architectural & Tech Stack Selection**: Conceptualized and selected the technology stack — FastAPI for high-performance Python microservices, PostgreSQL with relational domain `CHECK` constraints, and React 19 + Vite + Tailwind CSS for a modern single-page dashboard.
 - **UI/UX Design & Aesthetic Vision**: Designed the single-page permission-gated dashboard layout (sharing one unified grid for regular users and admins, with layered admin controls), modern dark-mode aesthetic, color palette (cyan/blue gradient accents, slate dark backgrounds), and stock status pills (green "In Stock" / red "Out of Stock").
 - **Implementation Strategy & Testing Process**: Designed the step-by-step TDD implementation roadmap (establishing the Red -> Green -> Refactor cycle, defining test-first boundaries for Auth, Vehicles, Inventory, and Frontend components, and setting up empirical report verification).
 
-### AI Contribution & Code Generation (Gemini 3.6 Flash / Copilot)
-- **Code Implementation**: Almost all backend Python code (`models`, `schemas`, `endpoints`, `security`), frontend React components (`Navbar`, `VehicleCard`, `FilterBar`, `AdminModal`, `RestockModal`, `AuthModal`, `ProfileModal`), and database seed scripts (`seed_data.py`) were written using AI code generation and inspiration.
-- **TDD Test Fixtures**: AI generated the comprehensive pytest test suite (`test_auth.py`, `test_vehicles.py`, `test_inventory.py`) and Vitest + React Testing Library component tests (`App.test.jsx`).
-- **Debugging & Cloud Deployment Setup**: AI diagnosed and fixed edge-case bugs encountered during audit (PostCSS v4 deprecation, OR-based search query logic, AuthProvider context state synchronization, Neon DB deployment scripts, Render `render.yaml` manifests, and Vercel `vercel.json` SPA configurations).
+### Multi-AI Tool Attribution & Contributions
+
+#### 1. Claude 3.5 Sonnet (Anthropic) — Planning, Architecture & Strategy
+- **Role**: High-level architectural collaborator, kata requirements analysis, tech stack planning, and prompt engineering.
+- **Contributions**:
+  - Analyzed `TDD Kata for srs-dealership.docx` and structured the multi-phase implementation roadmap.
+  - Recommended the technology stack: FastAPI microservices, PostgreSQL with domain `CHECK` constraints, and React 19 + Vite + Tailwind CSS.
+  - Designed the single-page permission-gated dashboard UX rules and structured the prompt sequences provided to the in-IDE coding agent.
+
+#### 2. Antigravity AI Agent (Google DeepMind) — Hands-On In-IDE Execution & TDD Coding
+- **Role**: Primary in-IDE pair programming agent for code generation, unit test writing, and bug resolutions.
+- **Contributions**:
+  - Implemented backend Python microservice code (`models`, `schemas`, `endpoints`, `security`, database connection pooling).
+  - Wrote TDD unit test suites (`test_auth.py`, `test_vehicles.py`, `test_inventory.py`) and Vitest RTL component tests (`App.test.jsx`).
+  - Implemented React 19 SPA components (`Navbar`, `VehicleCard`, `FilterBar`, `AdminModal`, `RestockModal`, `AuthModal`, `ProfileModal`).
+  - Diagnosed and resolved runtime errors (PostCSS v4 deprecation, OR-based search logic, AuthProvider context wiring, Neon DB scripts, Render `render.yaml`, Vercel `vercel.json`).
+
+### Note on Git Commit Co-Author Trailers
+- **Initial Commits (`Gemini AI`)**: The first two commit messages initially used a trailer labeled `Co-authored-by: Gemini AI <copilot@users.noreply.github.com>`.
+- **Trailer Standardization (`AI Assistant`)**: Following a directive to standardize commit trailers, a `git filter-branch` operation updated the trailer string across early commits to `Co-authored-by: AI Assistant <copilot@users.noreply.github.com>`. *(Note: The `copilot@` email string was a placeholder format; GitHub Copilot was not used)*.
+- **Corrected Standard (`Antigravity AI`)**: All new commits going forward use the accurate trailer:
+  `Co-authored-by: Antigravity AI <antigravity@google.com>`.
 
 ---
 
