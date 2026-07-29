@@ -57,7 +57,7 @@ const Navbar = ({ filters, onFilterChange, onResetFilters, onOpenAuth, onOpenPro
           <div className="flex items-center gap-1 min-w-[140px]">
             <input
               type="number"
-              placeholder="Min $"
+              placeholder="Min USD"
               value={filters.min_price || ''}
               onChange={(e) => onFilterChange('min_price', e.target.value)}
               className="w-16 bg-slate-950 border border-slate-800 rounded-xl px-2 py-1.5 text-xs text-white placeholder-slate-600 focus:outline-none focus:border-cyan-500"
@@ -65,7 +65,7 @@ const Navbar = ({ filters, onFilterChange, onResetFilters, onOpenAuth, onOpenPro
             <span className="text-slate-600 text-xs">-</span>
             <input
               type="number"
-              placeholder="Max $"
+              placeholder="Max USD"
               value={filters.max_price || ''}
               onChange={(e) => onFilterChange('max_price', e.target.value)}
               className="w-16 bg-slate-950 border border-slate-800 rounded-xl px-2 py-1.5 text-xs text-white placeholder-slate-600 focus:outline-none focus:border-cyan-500"

@@ -1,6 +1,7 @@
 import React, { useContext } from 'react';
 import AuthContext from '../context/AuthContext';
 import { ShoppingCart, Edit, Trash2, PlusCircle, Calendar, Tag } from 'lucide-react';
+import { formatINR } from '../utils/currency';
 
 const categoryImages = {
   Sedan: 'https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=600&auto=format&fit=crop&q=80',
@@ -64,7 +65,7 @@ const VehicleCard = ({ vehicle, onPurchase, onEdit, onDelete, onRestock }) => {
             <div>
               <span className="text-xs text-slate-400 block">Price</span>
               <span className="text-2xl font-extrabold text-white">
-                ${Number(vehicle.price).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                {formatINR(vehicle.price)}
               </span>
             </div>
           </div>

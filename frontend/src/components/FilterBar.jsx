@@ -48,7 +48,7 @@ const FilterBar = ({ filters, onFilterChange, onReset }) => {
       {/* Price Range inputs */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4 pt-4 border-t border-slate-800/80">
         <div>
-          <label className="block text-xs font-medium text-slate-400 mb-1">Min Price ($)</label>
+          <label className="block text-xs font-medium text-slate-400 mb-1">Min Price (USD)</label>
           <input
             type="number"
             placeholder="0"
@@ -58,7 +58,7 @@ const FilterBar = ({ filters, onFilterChange, onReset }) => {
           />
         </div>
         <div>
-          <label className="block text-xs font-medium text-slate-400 mb-1">Max Price ($)</label>
+          <label className="block text-xs font-medium text-slate-400 mb-1">Max Price (USD)</label>
           <input
             type="number"
             placeholder="No Limit"

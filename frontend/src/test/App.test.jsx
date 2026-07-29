@@ -24,7 +24,8 @@ describe('VehicleCard Component', () => {
     );
 
     expect(screen.getByText('Toyota Camry')).toBeInTheDocument();
-    expect(screen.getByText('$26,000.00')).toBeInTheDocument();
+    expect(screen.getByText('₹21,58,000')).toBeInTheDocument();
+    expect(screen.queryByText('$26,000.00')).not.toBeInTheDocument();
     expect(screen.getByText('5 Available')).toBeInTheDocument();
   });
 

@@ -261,6 +261,16 @@ This document provides a detailed, chronological record of all prompts, instruct
 
 ---
 
+### Feature 1: Display Prices in INR Instead of USD (TDD Cycle)
+- **User Prompt**:
+  > "FEATURE 1 — DISPLAY PRICES IN INR INSTEAD OF USD... RED (failing test) -> GREEN+REFACTOR (implement) -> STOP for confirmation -> commit."
+- **Implementation Delivered**:
+  1. **RED**: Created `src/test/currency.test.js` testing currency conversion unit logic and updated `src/test/App.test.jsx` to assert `₹21,58,000` price format with Lakh/Crore grouping instead of `$26,000.00`. Vitest ran and failed (RED).
+  2. **GREEN & REFACTOR**: Implemented centralized currency utility `src/utils/currency.js` using `Intl.NumberFormat('en-IN')` with USD->INR exchange multiplier (`83`). Updated `VehicleCard.jsx` to consume `formatINR(vehicle.price)` and updated filter/modal price labels (`Min Price (USD)`, `Max Price (USD)`, `Price (USD)`). All 7 frontend tests passed (7/7 PASSED).
+  3. Visual verification confirmed on dev server with screenshot.
+
+---
+
 ## AI Usage & Ownership Disclosure
 
 - **Human Direction & Conceptual Ownership (sunnyrajsu)**:
