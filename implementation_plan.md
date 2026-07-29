@@ -125,13 +125,18 @@ D:\CODINGBRO\srs-dealership\
 3. **REFACTOR** — consistent error response shape across endpoints.
 4. **COMMIT**.
 
-### Step 5: Frontend
+### Step 5: Frontend - [x] Completed
 1. Scaffold Vite + React + Tailwind.
 2. `AuthContext.jsx` — login/logout, JWT persisted, attached to requests.
 3. Components: `Navbar`, `VehicleCard` (Purchase button disabled at qty 0), `FilterBar`, admin CRUD forms.
 4. Vitest + RTL tests for key components.
 
-### Step 6: Documentation & Deliverables
+### Step 6: Additional Requested Feature Modules (TDD Cycles) - [x] Completed
+- **Feature 1 (INR Currency Display)**: Switch price formatting from USD `$` to INR `₹` with Lakh/Crore grouping using centralized `formatINR` utility (TDD RED -> GREEN -> REFACTOR).
+- **Feature 2 (Vehicle List Sorting)**: Add client-side sorting controls (`price_asc`, `price_desc`, `newest`, `default`) using `sortVehicles` utility (TDD RED -> GREEN -> REFACTOR).
+- **Feature 3 (Full Responsiveness)**: Mobile hamburger navigation toggle panel, responsive card grid (`grid-cols-1 sm:2 lg:3 xl:4`), touch target button grids, and scrollable responsive modal overlays (TDD RED -> GREEN -> REFACTOR).
+
+### Step 7: Documentation & Deliverables - [x] Completed
 1. Run `pytest -v --cov=app` and `npm test`, capture output for the README.
 2. Fill in `PROMPTS.md` with the real prompt history.
 3. Write `README.md`: setup instructions, API reference, screenshots, test report, mandatory **"My AI Usage"** section.

@@ -89,29 +89,30 @@ const VehicleCard = ({ vehicle, onPurchase, onEdit, onDelete, onRestock }) => {
 
           {/* Admin-Only Extra Controls — Layered conditionally on the card */}
           {user && user.role === 'admin' && (
-            <div className="flex items-center gap-2 mt-1">
+            <div className="grid grid-cols-3 gap-1.5 sm:gap-2 mt-1">
               <button
                 onClick={() => onRestock(vehicle)}
                 title="Restock Inventory"
-                className="flex-1 py-1.5 px-2 bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white border border-slate-700 text-xs font-medium rounded-lg transition-colors flex items-center justify-center gap-1 cursor-pointer"
+                className="py-1.5 px-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white border border-slate-700 text-[11px] sm:text-xs font-medium rounded-lg transition-colors flex items-center justify-center gap-1 cursor-pointer truncate"
               >
-                <PlusCircle className="w-3.5 h-3.5 text-emerald-400" />
-                Restock
+                <PlusCircle className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                <span className="truncate">Restock</span>
               </button>
               <button
                 onClick={() => onEdit(vehicle)}
                 title="Edit Vehicle Entry"
-                className="flex-1 py-1.5 px-2 bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white border border-slate-700 text-xs font-medium rounded-lg transition-colors flex items-center justify-center gap-1 cursor-pointer"
+                className="py-1.5 px-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white border border-slate-700 text-[11px] sm:text-xs font-medium rounded-lg transition-colors flex items-center justify-center gap-1 cursor-pointer truncate"
               >
-                <Edit className="w-3.5 h-3.5 text-cyan-400" />
-                Edit
+                <Edit className="w-3.5 h-3.5 text-cyan-400 shrink-0" />
+                <span className="truncate">Edit</span>
               </button>
               <button
                 onClick={() => onDelete(vehicle.id)}
                 title="Delete Vehicle Entry"
-                className="py-1.5 px-2.5 bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/20 text-xs font-medium rounded-lg transition-colors flex items-center justify-center cursor-pointer"
+                className="py-1.5 px-1.5 bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/20 text-[11px] sm:text-xs font-medium rounded-lg transition-colors flex items-center justify-center gap-1 cursor-pointer truncate"
               >
-                <Trash2 className="w-3.5 h-3.5" />
+                <Trash2 className="w-3.5 h-3.5 shrink-0" />
+                <span className="hidden xs:inline truncate">Delete</span>
               </button>
             </div>
           )}

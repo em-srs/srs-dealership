@@ -47,7 +47,7 @@ const AdminModal = ({ isOpen, onClose, onSubmit, vehicleToEdit }) => {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm animate-fade-in">
-      <div className="bg-slate-900 border border-slate-800 rounded-2xl w-full max-w-lg overflow-hidden shadow-2xl">
+      <div className="bg-slate-900 border border-slate-800 rounded-2xl w-[92vw] sm:w-full max-w-lg max-h-[90vh] overflow-y-auto shadow-2xl m-4">
         <div className="p-6 border-b border-slate-800 flex items-center justify-between">
           <h2 className="text-xl font-bold text-white">
             {vehicleToEdit ? 'Edit Vehicle Entry' : 'Add New Vehicle to Inventory'}

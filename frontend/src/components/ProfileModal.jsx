@@ -8,7 +8,7 @@ const ProfileModal = ({ isOpen, onClose, user }) => {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm animate-fade-in">
-      <div className="bg-slate-900 border border-slate-800 rounded-2xl w-full max-w-md overflow-hidden shadow-2xl">
+      <div className="bg-slate-900 border border-slate-800 rounded-2xl w-[92vw] sm:w-full max-w-md max-h-[90vh] overflow-y-auto shadow-2xl">
         {/* Header Banner */}
         <div className="bg-gradient-to-r from-cyan-600 via-blue-600 to-indigo-700 p-6 relative">
           <button

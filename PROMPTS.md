@@ -281,6 +281,16 @@ This document provides a detailed, chronological record of all prompts, instruct
 
 ---
 
+### Feature 3: Make the Frontend Fully Responsive (TDD Cycle)
+- **User Prompt**:
+  > "FEATURE 3 — MAKE THE FRONTEND FULLY RESPONSIVE... RED (failing test) -> GREEN+REFACTOR (implement) -> STOP for confirmation -> commit."
+- **Implementation Delivered**:
+  1. **RED**: Created `src/test/responsive.test.jsx` testing hamburger menu toggle existence and collapsible filter panel (`data-testid="mobile-filter-panel"`). Vitest ran and failed (RED).
+  2. **GREEN & REFACTOR**: Implemented stateful `isMobileMenuOpen` toggle in `Navbar.jsx`, collapsing search/filter/sort controls on `< md` screens behind a hamburger menu while keeping logo/title and login/profile actions visible on top row. Updated `VehicleCard.jsx` admin buttons into a responsive grid (`grid-cols-3`), and updated `AdminModal.jsx`, `AuthModal.jsx`, `ProfileModal.jsx`, `RestockModal.jsx` dialog containers to be scrollable and responsive (`w-[92vw] sm:w-full max-w-lg max-h-[90vh] overflow-y-auto`). All 12 frontend tests passed (12/12 PASSED across 4 test files).
+  3. Visual verification confirmed on dev server at ~375px (mobile), ~768px (tablet), and ~1024px+ (desktop) breakpoints with screenshots.
+
+---
+
 ## AI Usage & Ownership Disclosure
 
 - **Human Direction & Conceptual Ownership (sunnyrajsu)**:
