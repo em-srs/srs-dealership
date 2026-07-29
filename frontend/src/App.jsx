@@ -6,7 +6,7 @@ import RestockModal from './components/RestockModal';
 import AuthModal from './components/AuthModal';
 import ProfileModal from './components/ProfileModal';
 import AuthContext from './context/AuthContext';
-import { Car, PlusCircle, AlertCircle, CheckCircle2, ShieldCheck } from 'lucide-react';
+import { Car, PlusCircle, AlertCircle, CheckCircle2, ShieldCheck, ArrowUp } from 'lucide-react';
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api';
 
@@ -14,12 +14,30 @@ function App() {
   const { token, user } = useContext(AuthContext);
   const [vehicles, setVehicles] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [showScrollTop, setShowScrollTop] = useState(false);
   const [filters, setFilters] = useState({
     search: '',
     category: '',
     min_price: '',
     max_price: '',
   });
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 250) {
+        setShowScrollTop(true);
+      } else {
+        setShowScrollTop(false);
+      }
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
 
   const [isAdminModalOpen, setIsAdminModalOpen] = useState(false);
   const [isRestockModalOpen, setIsRestockModalOpen] = useState(false);
@@ -338,6 +356,18 @@ function App() {
         onClose={() => setIsProfileModalOpen(false)}
         user={user}
       />
+
+      {/* Floating Smooth Scroll to Top Button */}
+      {showScrollTop && (
+        <button
+          onClick={scrollToTop}
+          className="fixed bottom-6 left-6 z-40 p-3 bg-gradient-to-tr from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white rounded-2xl shadow-xl shadow-cyan-500/20 border border-cyan-400/30 transition-all duration-300 hover:scale-110 active:scale-95 cursor-pointer flex items-center justify-center"
+          title="Scroll to top"
+          aria-label="Scroll to top"
+        >
+          <ArrowUp className="w-5 h-5" />
+        </button>
+      )}
     </div>
   );
 }
