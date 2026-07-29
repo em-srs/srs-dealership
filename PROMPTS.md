@@ -251,6 +251,16 @@ This document provides a detailed, chronological record of all prompts, instruct
 
 ---
 
+### Feature: Smooth Scrolling & Floating Back-To-Top Button
+- **User Prompt**:
+  > "can you add smooth scrolling to the webage"
+- **Implementation Delivered**:
+  1. Configured CSS `scroll-behavior: smooth;` on `html` in `frontend/src/index.css`.
+  2. Implemented dynamic scroll position listener (`window.scrollY > 250`) and a floating Back-To-Top button in `frontend/src/App.jsx` using `lucide-react`'s `ArrowUp` icon and programmatic smooth scrolling (`window.scrollTo({ top: 0, behavior: 'smooth' })`).
+  3. Built and tested frontend (`npm run build` and `npm run test`, 4/4 Vitest tests passing).
+
+---
+
 ## AI Usage & Ownership Disclosure
 
 - **Human Direction & Conceptual Ownership (sunnyrajsu)**:

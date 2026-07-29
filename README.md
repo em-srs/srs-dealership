@@ -80,6 +80,7 @@ The application is deployed across production cloud infrastructure:
   - `admin` (Administrator): All user permissions + `+ Add Vehicle` button above grid, layered card controls (✏️ Edit, 🗑️ Delete with confirmation, ➕ Restock inventory).
 - **Dynamic Search & Filtering**: Live text search (`q` parameter filtering `maker` OR `model`), category dropdown (`Sedan`, `SUV`, `Truck`, `Electric`, `Coupe`), and price range (`min_price`, `max_price`).
 - **Real-Time Inventory Protection**: Purchasing decrements stock quantity by 1. Out-of-stock items (`quantity == 0`) render a greyed-out disabled Purchase button and are protected at DB level (`CHECK (quantity >= 0)`).
+- **Smooth Scrolling & Back-To-Top Button**: Modern CSS `scroll-behavior: smooth` integrated with a floating cyan/blue Back-To-Top button that appears dynamically on page scroll.
 - **Strict TDD Methodology**: Developed using Red -> Green -> Refactor cycle for both backend (`pytest`) and frontend (`Vitest` + RTL).
 
 ---

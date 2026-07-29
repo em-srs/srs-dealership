@@ -138,6 +138,7 @@ TOTAL                             253     18    93%
 - ✅ **DONE**: Admin-only controls (`+ Add Vehicle` button above grid, `Edit`, `Delete`, `Restock` on cards) render ONLY when `user.role === 'admin'`.
 - ✅ **DONE**: Purchase button disables and turns greyed-out when `quantity <= 0` ("Out of Stock").
 - ✅ **DONE**: Search & Filter bar calls `/search` endpoint and updates vehicle grid dynamically.
+- ✅ **DONE**: Smooth scrolling enabled globally (`index.css`) with dynamic floating Back-To-Top button (`App.jsx`).
 
 ---
 
