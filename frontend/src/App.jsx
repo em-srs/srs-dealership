@@ -8,7 +8,7 @@ import ProfileModal from './components/ProfileModal';
 import PurchaseModal from './components/PurchaseModal';
 import AuthContext from './context/AuthContext';
 import { sortVehicles } from './utils/sort';
-import { Car, PlusCircle, AlertCircle, CheckCircle2, ShieldCheck, ArrowUp, Award, Layers } from 'lucide-react';
+import { Car, PlusCircle, AlertCircle, CheckCircle2, ShieldCheck, ArrowUp, Award, Layers, Lock, LogIn } from 'lucide-react';
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api';
 
@@ -58,6 +58,11 @@ function App() {
   };
 
   const fetchVehicles = async () => {
+    if (!token) {
+      setVehicles([]);
+      setLoading(false);
+      return;
+    }
     setLoading(true);
     try {
       const params = new URLSearchParams();
@@ -280,23 +285,29 @@ function App() {
             <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
               Vehicle Inventory Catalog
             </h1>
-            <div className="mt-2.5 flex flex-wrap items-center gap-2 text-xs sm:text-sm">
-              <span className="text-slate-400 font-medium">Browse among</span>
-              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-cyan-950/80 border border-cyan-800/60 text-cyan-300 font-bold rounded-lg shadow-sm">
-                <Award className="w-3.5 h-3.5 text-cyan-400" />
-                {totalBrands} {totalBrands === 1 ? 'Brand' : 'Brands'}
-              </span>
-              <span className="text-slate-400 font-medium">in</span>
-              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-emerald-950/80 border border-emerald-800/60 text-emerald-300 font-bold rounded-lg shadow-sm">
-                <Car className="w-3.5 h-3.5 text-emerald-400" />
-                {totalVehicles} {totalVehicles === 1 ? 'Vehicle' : 'Vehicles'}
-              </span>
-              <span className="text-slate-400 font-medium">across</span>
-              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-purple-950/80 border border-purple-800/60 text-purple-300 font-bold rounded-lg shadow-sm">
-                <Layers className="w-3.5 h-3.5 text-purple-400" />
-                {totalCategories} {totalCategories === 1 ? 'Category' : 'Categories'}
-              </span>
-            </div>
+            {token && user ? (
+              <div className="mt-2.5 flex flex-wrap items-center gap-2 text-xs sm:text-sm">
+                <span className="text-slate-400 font-medium">Browse among</span>
+                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-cyan-950/80 border border-cyan-800/60 text-cyan-300 font-bold rounded-lg shadow-sm">
+                  <Award className="w-3.5 h-3.5 text-cyan-400" />
+                  {totalBrands} {totalBrands === 1 ? 'Brand' : 'Brands'}
+                </span>
+                <span className="text-slate-400 font-medium">in</span>
+                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-emerald-950/80 border border-emerald-800/60 text-emerald-300 font-bold rounded-lg shadow-sm">
+                  <Car className="w-3.5 h-3.5 text-emerald-400" />
+                  {totalVehicles} {totalVehicles === 1 ? 'Vehicle' : 'Vehicles'}
+                </span>
+                <span className="text-slate-400 font-medium">across</span>
+                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-purple-950/80 border border-purple-800/60 text-purple-300 font-bold rounded-lg shadow-sm">
+                  <Layers className="w-3.5 h-3.5 text-purple-400" />
+                  {totalCategories} {totalCategories === 1 ? 'Category' : 'Categories'}
+                </span>
+              </div>
+            ) : (
+              <p className="mt-1.5 text-slate-400 text-xs sm:text-sm">
+                Please log in to browse live vehicle inventory, check real-time stock availability, and place orders.
+              </p>
+            )}
           </div>
 
           {/* Admin-Only Control: "+ Add Vehicle" Button above the grid */}
@@ -314,8 +325,29 @@ function App() {
           )}
         </div>
 
-        {/* Vehicles Card Grid */}
-        {loading ? (
+        {/* Vehicles Content Area */}
+        {!token || !user ? (
+          <div className="bg-slate-900/60 border border-slate-800/80 rounded-3xl p-8 sm:p-12 text-center my-8 shadow-2xl backdrop-blur-sm max-w-2xl mx-auto">
+            <div className="w-16 h-16 bg-gradient-to-br from-cyan-500/20 to-blue-600/20 border border-cyan-500/30 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-inner">
+              <Lock className="w-8 h-8 text-cyan-400" />
+            </div>
+            <h2 className="text-xl sm:text-2xl font-bold text-white tracking-tight">
+              Authentication Required
+            </h2>
+            <p className="text-sm text-slate-400 mt-2.5 max-w-md mx-auto leading-relaxed">
+              Please log in or register a new account to browse our vehicle inventory, view real-time pricing, and initiate purchases.
+            </p>
+            <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">
+              <button
+                onClick={() => setIsAuthModalOpen(true)}
+                className="w-full sm:w-auto px-6 py-3 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white font-bold text-sm rounded-xl shadow-lg shadow-cyan-500/25 transition-all transform hover:-translate-y-0.5 cursor-pointer flex items-center justify-center gap-2"
+              >
+                <LogIn className="w-4 h-4" />
+                Login / Register
+              </button>
+            </div>
+          </div>
+        ) : loading ? (
           <div className="flex flex-col items-center justify-center py-20">
             <div className="w-10 h-10 border-4 border-cyan-500/30 border-t-cyan-500 rounded-full animate-spin"></div>
             <p className="mt-4 text-sm text-slate-400 font-medium">

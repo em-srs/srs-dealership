@@ -3,6 +3,7 @@ import { describe, it, expect } from 'vitest';
 import VehicleCard from '../components/VehicleCard';
 import Navbar from '../components/Navbar';
 import AuthContext from '../context/AuthContext';
+import App from '../App';
 
 describe('VehicleCard Component', () => {
   const sampleVehicle = {
@@ -70,3 +71,19 @@ describe('Navbar Component', () => {
     expect(screen.getByText('A')).toBeInTheDocument();
   });
 });
+
+describe('App Unauthenticated State', () => {
+  it('displays Authentication Required banner for unauthenticated guest users', () => {
+    const mockContext = { user: null, token: null, logout: () => {} };
+    render(
+      <AuthContext.Provider value={mockContext}>
+        <App />
+      </AuthContext.Provider>
+    );
+
+    expect(screen.getByText('Authentication Required')).toBeInTheDocument();
+    expect(screen.getByText(/Please log in or register a new account to browse/i)).toBeInTheDocument();
+    expect(screen.queryByText('No Vehicles Found')).not.toBeInTheDocument();
+  });
+});
+

@@ -7,7 +7,7 @@ A production-ready full-stack vehicle inventory management system built using **
 ![React](https://img.shields.io/badge/React-19-61DAFB)
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-Neon-336791)
 ![Coverage](https://img.shields.io/badge/Coverage-93%25-brightgreen)
-![Tests](https://img.shields.io/badge/Tests-36_Passing-success)
+![Tests](https://img.shields.io/badge/Tests-37_Passing-success)
 ![License](https://img.shields.io/badge/License-MIT-green)
 
 ---
@@ -190,14 +190,14 @@ npm run dev
 
 ---
 
-## 🧪 Testing & Code Coverage (36/36 Tests Passing — 93% Coverage)
+## 🧪 Testing & Code Coverage (37/37 Tests Passing — 93% Coverage)
 
 The project enforces a strict **Test-Driven Development (TDD)** methodology (Red -> Green -> Refactor) across both backend and frontend layers.
 
 ```text
-======================= 36 PASSED (100% Pass Rate) =======================
+======================= 37 PASSED (100% Pass Rate) =======================
 Backend Pytest Suite   : 21 / 21 Passed  (93% Code Coverage)
-Frontend Vitest Suite  : 15 / 15 Passed  (100% Component Pass Rate)
+Frontend Vitest Suite  : 16 / 16 Passed  (100% Component Pass Rate)
 ==========================================================================
 ```
 
@@ -212,7 +212,7 @@ Frontend Vitest Suite  : 15 / 15 Passed  (100% Component Pass Rate)
 | **Frontend Formatters** | `frontend/src/test/currency.test.js` | 3 | 100% | INR formatting (`₹`), Lakh/Crore grouping, exchange multiplier |
 | **Frontend Sorting** | `frontend/src/test/sort.test.jsx` | 4 | 100% | Client-side price & year sorting logic |
 | **Frontend Layout** | `frontend/src/test/responsive.test.jsx` | 1 | 100% | Mobile drawer navigation & breakpoint rendering |
-| **App Components** | `frontend/src/test/App.test.jsx` | 4 | 100% | VehicleCard stock guards, Navbar user/admin badge rendering |
+| **App Components** | `frontend/src/test/App.test.jsx` | 5 | 100% | VehicleCard stock guards, Navbar badges, Auth Required banner |
 | **Purchase Checkout** | `frontend/src/test/purchase.test.jsx` | 3 | 100% | PurchaseModal submission, ProfileModal purchase history tab |
 
 - Backend Pytest log saved in [`backend_test_report.txt`](backend_test_report.txt).
