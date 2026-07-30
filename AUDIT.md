@@ -62,8 +62,9 @@
 - ✅ **DONE**: `GET /api/vehicles/search` (Protected) — Searches vehicle catalog (`Depends(get_current_user)` with `q` OR-based search across maker/model, category, min/max price).
 - ✅ **DONE**: `PUT /api/vehicles/:id` (Protected) — Updates vehicle details (`Depends(get_current_user)`).
 - ✅ **DONE**: `DELETE /api/vehicles/:id` (Protected, Admin Only) — Deletes vehicle entry (`Depends(require_admin)`).
-- ✅ **DONE**: `POST /api/vehicles/:id/purchase` (Protected) — Decrements stock quantity by 1, blocks with 400 Bad Request when `quantity <= 0`.
+- ✅ **DONE**: `POST /api/vehicles/:id/purchase` (Protected) — Decrements stock quantity, records purchase history with buyer details (`buyer_name`, `buyer_phone`, `delivery_address`, `note`), price snapshot (`price_at_purchase`), and quantity. Blocks with 400 Bad Request when stock insufficient.
 - ✅ **DONE**: `POST /api/vehicles/:id/restock` (Protected, Admin Only) — Increments stock quantity by `amount` (`Depends(require_admin)`).
+- ✅ **DONE**: `GET /api/purchases/me` (Protected) — Returns logged-in user's own purchase history records in descending timestamp order.
 
 ---
 
@@ -73,7 +74,9 @@
 1. `backend/tests/test_auth.py`: 6 tests covering user registration, admin registration, duplicate email rejection, login success, invalid password rejection, and missing user rejection.
 2. `backend/tests/test_vehicles.py`: 7 tests covering vehicle creation, unauthenticated rejection, protected catalog view, protected search filters, vehicle update, admin deletion, and regular user deletion forbidden (403).
 3. `backend/tests/test_inventory.py`: 5 tests covering purchase success (quantity decrement), out-of-stock purchase rejection (400), non-existent vehicle purchase (404), admin restocking success, and regular user restocking forbidden (403).
-4. `frontend/src/test/App.test.jsx`: 4 Vitest component tests covering `VehicleCard` details rendering, disabled purchase button at 0 stock, `Navbar` guest state, and `Navbar` logged-in state.
+4. `backend/tests/test_purchases.py`: 3 tests covering purchase creation with full form details, user purchase history isolation (User A cannot see User B's purchases), and unauthenticated access rejection (401).
+5. `frontend/src/test/App.test.jsx`: 4 Vitest component tests covering `VehicleCard` details rendering, disabled purchase button at 0 stock, `Navbar` guest state, and `Navbar` logged-in state.
+
 
 ### Empirical Test Execution Output (`pytest -v --cov=app`)
 ```text

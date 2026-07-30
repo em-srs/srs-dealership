@@ -291,6 +291,18 @@ This document provides a detailed, chronological record of all prompts, instruct
 
 ---
 
+### Feature 4: Purchase History & Checkout Form Module (TDD Cycle)
+- **User Prompt**:
+  > "New feature request — this is a full module, treat it with the same rigor as Auth/Vehicles/Inventory: its own schema change, its own RED->GREEN->REFACTOR->confirm cycles, its own dedicated commit(s), separate from any other work in progress... IMPORTANT — LOCAL ONLY, DO NOT TOUCH PRODUCTION..."
+- **Implementation Progress**:
+  1. **Schema Step**: Added `purchase_history` DDL table definition to `schema.sql` with foreign keys to `users` and `vehicles`, price snapshot (`price_at_purchase`), quantity, buyer info (`buyer_name`, `buyer_phone`, `delivery_address`, `note`), timestamp, and indexing. Applied DDL to local `srs_dealership` database. Committed locally (`feat(schema): add purchase_history table and index`).
+  2. **Backend Step (RED -> GREEN -> REFACTOR)**:
+     - **RED**: Created `backend/tests/test_purchases.py` containing 3 failing tests (`test_purchase_vehicle_with_details_creates_history_record`, `test_get_user_purchase_history_isolation`, `test_get_purchases_unauthenticated_fails`). Ran `pytest` -> 3/3 failed with expected errors.
+     - **GREEN & REFACTOR**: Implemented `PurchaseHistory` SQLAlchemy model (`backend/app/models/purchase.py`), Pydantic schemas (`backend/app/schemas/purchase.py`), decoupled service layer `create_purchase_record` and `get_user_purchases` (`backend/app/services/purchase.py`), updated `POST /api/vehicles/{vehicle_id}/purchase` handler, created `GET /api/purchases/me` router (`backend/app/api/endpoints/purchases.py`), registered route in `main.py`, and updated test teardown fixture in `conftest.py`.
+     - **Verification**: Ran `pytest backend/tests/` -> **21/21 passed (100%)** including all 3 `test_purchases.py` tests.
+
+---
+
 ## AI Usage & Ownership Disclosure
 
 - **Human Direction & Conceptual Ownership (sunnyrajsu)**:

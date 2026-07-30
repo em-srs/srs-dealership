@@ -108,28 +108,23 @@ def delete_vehicle(
     db.commit()
     return {"message": "Vehicle deleted successfully"}
 
-@router.post("/{vehicle_id}/purchase", response_model=VehicleResponse)
+from app.schemas.purchase import PurchaseCreate, PurchaseResponse
+from app.services.purchase import create_purchase_record
+
+@router.post("/{vehicle_id}/purchase", response_model=PurchaseResponse)
 def purchase_vehicle(
     vehicle_id: int,
+    purchase_in: Optional[PurchaseCreate] = None,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
-    vehicle = db.query(Vehicle).filter(Vehicle.id == vehicle_id).first()
-    if not vehicle:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Vehicle not found"
-        )
-    if vehicle.quantity <= 0:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Vehicle out of stock"
-        )
-    
-    vehicle.quantity -= 1
-    db.commit()
-    db.refresh(vehicle)
-    return vehicle
+    return create_purchase_record(
+        db=db,
+        user=current_user,
+        vehicle_id=vehicle_id,
+        purchase_in=purchase_in
+    )
+
 
 @router.post("/{vehicle_id}/restock", response_model=VehicleResponse)
 def restock_vehicle(

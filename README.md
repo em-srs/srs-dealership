@@ -79,7 +79,8 @@ The application is deployed across production cloud infrastructure:
   - `user` (Customer): Browse inventory, live search across maker/model, filter by category/price, purchase vehicles.
   - `admin` (Administrator): All user permissions + `+ Add Vehicle` button above grid, layered card controls (✏️ Edit, 🗑️ Delete with confirmation, ➕ Restock inventory).
 - **Dynamic Search & Filtering**: Live text search (`q` parameter filtering `maker` OR `model`), category dropdown (`Sedan`, `SUV`, `Truck`, `Electric`, `Coupe`), and price range (`min_price`, `max_price`).
-- **Real-Time Inventory Protection**: Purchasing decrements stock quantity by 1. Out-of-stock items (`quantity == 0`) render a greyed-out disabled Purchase button and are protected at DB level (`CHECK (quantity >= 0)`).
+- **Purchase Checkout & History**: Clicking Purchase opens a checkout modal to submit buyer details (`buyer_name`, `buyer_phone`, `delivery_address`, `note`, `quantity`). Completed purchases snapshot the vehicle price and are recorded in `purchase_history` accessible via profile history (`GET /api/purchases/me`).
+- **Real-Time Inventory Protection**: Purchasing decrements stock quantity by the purchased amount. Out-of-stock items (`quantity == 0`) render a greyed-out disabled Purchase button and are protected at DB level (`CHECK (quantity >= 0)`).
 - **Smooth Scrolling & Back-To-Top Button**: Modern CSS `scroll-behavior: smooth` integrated with a floating cyan/blue Back-To-Top button that appears dynamically on page scroll.
 - **Strict TDD Methodology**: Developed using Red -> Green -> Refactor cycle for both backend (`pytest`) and frontend (`Vitest` + RTL).
 
@@ -118,18 +119,20 @@ npm run dev
 
 ---
 
-## Test Report Summary (22/22 Tests Passing)
+## Test Report Summary (25/25 Tests Passing)
 
-### Backend Pytest Suite — 18/18 Passed
+### Backend Pytest Suite — 21/21 Passed
 - **Auth Module**: 6 passed (`test_auth.py`)
 - **Vehicles Module**: 7 passed (`test_vehicles.py`)
 - **Inventory Module**: 5 passed (`test_inventory.py`)
+- **Purchases Module**: 3 passed (`test_purchases.py`)
 - Output log saved in [`backend_test_report.txt`](backend_test_report.txt).
 
 ### Frontend Vitest Suite — 4/4 Passed
 - **VehicleCard Component**: 2 passed (renders details, disables Purchase button at 0 stock)
 - **Navbar Component**: 2 passed (logged-out state, logged-in user state)
 - Output log saved in [`frontend_test_report.txt`](frontend_test_report.txt).
+
 
 ---
 

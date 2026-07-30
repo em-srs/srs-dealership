@@ -17,8 +17,9 @@ def db_session():
     session = TestingSessionLocal(bind=connection)
     
     # Delete rows from tables before test execution to guarantee clean state
-    session.execute(text("DELETE FROM vehicles; DELETE FROM users;"))
+    session.execute(text("DELETE FROM purchase_history; DELETE FROM vehicles; DELETE FROM users;"))
     session.commit()
+
 
     yield session
 
