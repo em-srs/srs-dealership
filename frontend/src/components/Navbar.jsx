@@ -13,8 +13,8 @@ const Navbar = ({ filters, onFilterChange, onResetFilters, onOpenAuth, onOpenPro
   return (
     <header className="bg-slate-900/90 backdrop-blur-md border-b border-slate-800 sticky top-0 z-50 px-4 sm:px-6 py-3.5 shadow-xl">
       <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
-        {/* Left: Logo & Nav Links */}
-        <div className="flex items-center gap-6 shrink-0">
+        {/* Left: Logo */}
+        <div className="flex items-center gap-3 shrink-0">
           <div
             onClick={() => setActiveTab && setActiveTab('catalog')}
             className="flex items-center gap-3 cursor-pointer group"
@@ -27,26 +27,6 @@ const Navbar = ({ filters, onFilterChange, onResetFilters, onOpenAuth, onOpenPro
               <p className="text-[10px] sm:text-[11px] text-slate-400">DriveHub Dealership</p>
             </div>
           </div>
-
-          {/* Navigation Links */}
-          {user && (
-            <div className="hidden md:flex items-center gap-4 text-xs font-semibold text-slate-400">
-              <button
-                onClick={() => setActiveTab && setActiveTab('catalog')}
-                className={`hover:text-white transition-colors cursor-pointer ${
-                  activeTab === 'catalog' ? 'text-white font-bold underline underline-offset-8 decoration-indigo-500' : ''
-                }`}
-              >
-                Catalog
-              </button>
-              <button
-                onClick={onOpenProfile}
-                className="hover:text-white transition-colors cursor-pointer"
-              >
-                My Purchases
-              </button>
-            </div>
-          )}
         </div>
 
         {/* Right: User Profile & Manage Inventory & Logout Controls */}
