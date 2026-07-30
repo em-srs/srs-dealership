@@ -23,8 +23,8 @@ const Navbar = ({ filters, onFilterChange, onResetFilters, onOpenAuth, onOpenPro
               <Car className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
             </div>
             <div>
-              <h1 className="text-base sm:text-lg font-bold text-white tracking-tight leading-tight">AutoVault Motors</h1>
-              <p className="text-[10px] sm:text-[11px] text-slate-400">DriveHub Dealership</p>
+              <h1 className="text-base sm:text-lg font-bold text-white tracking-tight leading-tight">DriveHub Dealership</h1>
+              <p className="text-[10px] sm:text-[11px] text-slate-400">Inventory Catalog</p>
             </div>
           </div>
         </div>
