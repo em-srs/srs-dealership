@@ -16,7 +16,7 @@ A production-ready full-stack vehicle inventory management system built using **
 
 - **Live Application:** [https://srs-dealership.vercel.app](https://srs-dealership.vercel.app)
 - **Backend API:** [https://drivehub-dealership.onrender.com](https://drivehub-dealership.onrender.com)
-- **Video Walkthrough (2–3 minutes):** [https://drive.google.com/file/d/1DKW8sRqNYMx0oeQTn5PxvSK0mQPkqPs7/view?usp=drive_link](https://drive.google.com/file/d/1DKW8sRqNYMx0oeQTn5PxvSK0mQPkqPs7/view?usp=drive_link)
+- **Video Walkthrough (2–3 minutes):** [https://drive.google.com/file/d/1DKW8sRqNYMx0oeQTn5PxvSK0mQPkqPs7/view?usp=drive_link](https://drive.google.com/file/d/1tpiJn5c21oQO9OwF0w10JjRMPwBev-ja/view?usp=sharing)
 - **Live Cloud Database:** **Neon Serverless PostgreSQL** (51 vehicles seeded + demo accounts)
 
 ### 🔑 Demo Credentials
