@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import Navbar from './components/Navbar';
+import FilterBar from './components/FilterBar';
 import VehicleCard from './components/VehicleCard';
 import AdminModal from './components/AdminModal';
 import RestockModal from './components/RestockModal';
@@ -324,6 +325,15 @@ function App() {
             </button>
           )}
         </div>
+
+        {/* Dedicated Search & Filter Bar Section */}
+        {token && user && (
+          <FilterBar
+            filters={filters}
+            onFilterChange={handleFilterChange}
+            onReset={handleResetFilters}
+          />
+        )}
 
         {/* Vehicles Content Area */}
         {!token || !user ? (
