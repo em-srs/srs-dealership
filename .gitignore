@@ -11,17 +11,26 @@ env/
 
 # Environment variables & secrets
 .env
+*.env
+*.env.local
+*.env.*
 backend/.env
+
+# Private Documentation & Log Files
+DEVELOPMENT_LOG.docx
+DEVELOPMENT_LOG_CLOUD.docx
+*chat_history*
+*CHAT_HISTORY*
+*_LOG.md
+PROMPTS.md
 
 # Testing & Coverage
 .pytest_cache/
 .coverage
 htmlcov/
 
-# Private Documentation (Not visible in GitHub)
-DEVELOPMENT_LOG.docx
-
 # Node / Frontend
 node_modules/
 dist/
 .DS_Store
+
