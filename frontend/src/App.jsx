@@ -7,6 +7,7 @@ import RestockModal from './components/RestockModal';
 import AuthModal from './components/AuthModal';
 import ProfileModal from './components/ProfileModal';
 import PurchaseModal from './components/PurchaseModal';
+import LandingPage from './components/LandingPage';
 import AuthContext from './context/AuthContext';
 import { sortVehicles } from './utils/sort';
 import { formatINR } from './utils/currency';
@@ -25,7 +26,6 @@ function App() {
     category: '',
     min_price: '',
     max_price: '',
-    sort: 'default',
   });
 
   useEffect(() => {
@@ -36,6 +36,7 @@ function App() {
         setShowScrollTop(false);
       }
     };
+
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
@@ -246,6 +247,31 @@ function App() {
   const totalBrands = new Set(vehicles.map((v) => v.maker || v.make).filter(Boolean)).size;
   const totalVehicles = vehicles.length;
   const totalCategories = new Set(vehicles.map((v) => v.category).filter(Boolean)).size;
+
+  if (!token || !user) {
+    return (
+      <div className="min-h-screen bg-[#050C1B] text-slate-100 flex flex-col font-sans">
+        {toast && (
+          <div
+            className={`fixed top-4 right-4 z-50 px-4 py-3 rounded-xl border shadow-2xl flex items-center gap-3 backdrop-blur-md transition-all ${
+              toast.type === 'error'
+                ? 'bg-rose-950/90 border-rose-800 text-rose-200'
+                : 'bg-emerald-950/90 border-emerald-800 text-emerald-200'
+            }`}
+          >
+            {toast.type === 'error' ? (
+              <AlertCircle className="w-5 h-5 text-rose-400" />
+            ) : (
+              <CheckCircle2 className="w-5 h-5 text-emerald-400" />
+            )}
+            <span className="text-sm font-semibold">{toast.message}</span>
+          </div>
+        )}
+
+        <LandingPage onSuccess={(msg) => showToast(msg)} />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col font-sans">
