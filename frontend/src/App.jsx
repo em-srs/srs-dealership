@@ -9,6 +9,7 @@ import ProfileModal from './components/ProfileModal';
 import PurchaseModal from './components/PurchaseModal';
 import AuthContext from './context/AuthContext';
 import { sortVehicles } from './utils/sort';
+import { formatINR } from './utils/currency';
 import { Car, PlusCircle, AlertCircle, CheckCircle2, ShieldCheck, ArrowUp, Award, Layers, Lock, LogIn } from 'lucide-react';
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api';
@@ -18,6 +19,7 @@ function App() {
   const [vehicles, setVehicles] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showScrollTop, setShowScrollTop] = useState(false);
+  const [activeTab, setActiveTab] = useState('catalog');
   const [filters, setFilters] = useState({
     search: '',
     category: '',
@@ -272,133 +274,220 @@ function App() {
         onResetFilters={handleResetFilters}
         onOpenAuth={() => setIsAuthModalOpen(true)}
         onOpenAddVehicle={() => {
-          setVehicleToEdit(null);
-          setIsAdminModalOpen(true);
+          setActiveTab('admin');
         }}
         onOpenProfile={() => setIsProfileModalOpen(true)}
+        activeTab={activeTab}
+        setActiveTab={setActiveTab}
       />
 
       {/* Main Dashboard Grid Area */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-1 w-full">
-        {/* Header Hero Area */}
-        <div className="mb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-          <div>
-            <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
-              Vehicle Inventory Catalog
-            </h1>
-            {token && user ? (
-              <div className="mt-2.5 flex flex-wrap items-center gap-2 text-xs sm:text-sm">
-                <span className="text-slate-400 font-medium">Browse among</span>
-                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-cyan-950/80 border border-cyan-800/60 text-cyan-300 font-bold rounded-lg shadow-sm">
-                  <Award className="w-3.5 h-3.5 text-cyan-400" />
-                  {totalBrands} {totalBrands === 1 ? 'Brand' : 'Brands'}
-                </span>
-                <span className="text-slate-400 font-medium">in</span>
-                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-emerald-950/80 border border-emerald-800/60 text-emerald-300 font-bold rounded-lg shadow-sm">
-                  <Car className="w-3.5 h-3.5 text-emerald-400" />
-                  {totalVehicles} {totalVehicles === 1 ? 'Vehicle' : 'Vehicles'}
-                </span>
-                <span className="text-slate-400 font-medium">across</span>
-                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-purple-950/80 border border-purple-800/60 text-purple-300 font-bold rounded-lg shadow-sm">
-                  <Layers className="w-3.5 h-3.5 text-purple-400" />
-                  {totalCategories} {totalCategories === 1 ? 'Category' : 'Categories'}
-                </span>
-              </div>
-            ) : (
-              <p className="mt-1.5 text-slate-400 text-xs sm:text-sm">
-                Please log in to browse live vehicle inventory, check real-time stock availability, and place orders.
-              </p>
-            )}
-          </div>
-
-          {/* Admin-Only Control: "Manage Inventory" Button on the right side of this section */}
-          {user && user.role === 'admin' && (
-            <button
-              onClick={() => {
-                setVehicleToEdit(null);
-                setIsAdminModalOpen(true);
-              }}
-              className="px-4 py-2.5 bg-emerald-400 hover:bg-emerald-300 text-slate-950 font-extrabold text-xs rounded-xl shadow-lg shadow-emerald-400/25 flex items-center gap-2 cursor-pointer shrink-0 transition-all transform hover:-translate-y-0.5"
-            >
-              <PlusCircle className="w-4 h-4 text-slate-950 stroke-[2.5]" />
-              <span>+ Manage Inventory</span>
-            </button>
-          )}
-        </div>
-
-        {/* Dedicated Search & Filter Bar Section */}
-        {token && user && (
-          <FilterBar
-            filters={filters}
-            onFilterChange={handleFilterChange}
-            onReset={handleResetFilters}
-          />
-        )}
-
         {/* Vehicles Content Area */}
-        {!token || !user ? (
-          <div className="bg-slate-900/60 border border-slate-800/80 rounded-3xl p-8 sm:p-12 text-center my-8 shadow-2xl backdrop-blur-sm max-w-2xl mx-auto">
-            <div className="w-16 h-16 bg-gradient-to-br from-cyan-500/20 to-blue-600/20 border border-cyan-500/30 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-inner">
-              <Lock className="w-8 h-8 text-cyan-400" />
-            </div>
-            <h2 className="text-xl sm:text-2xl font-bold text-white tracking-tight">
-              Authentication Required
-            </h2>
-            <p className="text-sm text-slate-400 mt-2.5 max-w-md mx-auto leading-relaxed">
-              Please log in or register a new account to browse our vehicle inventory, view real-time pricing, and initiate purchases.
-            </p>
-            <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">
+        {activeTab === 'admin' && user && user.role === 'admin' ? (
+          <div className="space-y-6">
+            {/* Header Area matching user screenshot */}
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+              <div>
+                <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
+                  Admin Inventory Controls
+                </h1>
+                <p className="mt-1.5 text-slate-400 text-xs sm:text-sm">
+                  Add, edit, restock, and delete vehicles in the inventory system.
+                </p>
+              </div>
+
               <button
-                onClick={() => setIsAuthModalOpen(true)}
-                className="w-full sm:w-auto px-6 py-3 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white font-bold text-sm rounded-xl shadow-lg shadow-cyan-500/25 transition-all transform hover:-translate-y-0.5 cursor-pointer flex items-center justify-center gap-2"
-              >
-                <LogIn className="w-4 h-4" />
-                Login / Register
-              </button>
-            </div>
-          </div>
-        ) : loading ? (
-          <div className="flex flex-col items-center justify-center py-20">
-            <div className="w-10 h-10 border-4 border-cyan-500/30 border-t-cyan-500 rounded-full animate-spin"></div>
-            <p className="mt-4 text-sm text-slate-400 font-medium">
-              Loading vehicle inventory...
-            </p>
-          </div>
-        ) : vehicles.length === 0 ? (
-          <div className="bg-slate-900/50 border border-slate-800 rounded-2xl p-12 text-center my-8">
-            <Car className="w-12 h-12 text-slate-600 mx-auto mb-4" />
-            <h3 className="text-lg font-bold text-slate-300">
-              No Vehicles Found
-            </h3>
-            <p className="text-sm text-slate-500 mt-1 max-w-md mx-auto">
-              No inventory entries match your search criteria. Try resetting your search filters or add a new vehicle entry.
-            </p>
-            <button
-              onClick={handleResetFilters}
-              className="mt-6 px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold rounded-lg border border-slate-700 transition-colors cursor-pointer"
-            >
-              Clear All Filters
-            </button>
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {sortVehicles(vehicles, filters.sort).map((v) => (
-              <VehicleCard
-                key={v.id}
-                vehicle={v}
-                onPurchase={() => handleInitiatePurchase(v)}
-                onEdit={(veh) => {
-                  setVehicleToEdit(veh);
+                onClick={() => {
+                  setVehicleToEdit(null);
                   setIsAdminModalOpen(true);
                 }}
-                onRestock={(veh) => {
-                  setVehicleToRestock(veh);
-                  setIsRestockModalOpen(true);
-                }}
-                onDelete={handleDelete}
-              />
-            ))}
+                className="px-4 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs rounded-xl shadow-lg shadow-indigo-600/30 flex items-center gap-2 cursor-pointer shrink-0 transition-all transform hover:-translate-y-0.5"
+              >
+                <PlusCircle className="w-4 h-4 text-white" />
+                <span>+ Add New Vehicle</span>
+              </button>
+            </div>
+
+            {/* Inventory Table matching user screenshot */}
+            <div className="bg-slate-900/90 border border-slate-800 rounded-2xl overflow-hidden shadow-2xl backdrop-blur-md">
+              <div className="overflow-x-auto">
+                <table className="w-full text-left text-xs border-collapse">
+                  <thead>
+                    <tr className="border-b border-slate-800 bg-slate-950/60 text-slate-400 font-bold uppercase tracking-wider">
+                      <th className="py-4 px-5">Maker</th>
+                      <th className="py-4 px-5">Model</th>
+                      <th className="py-4 px-5">Year</th>
+                      <th className="py-4 px-5">Category</th>
+                      <th className="py-4 px-5">Price</th>
+                      <th className="py-4 px-5">Quantity</th>
+                      <th className="py-4 px-5 text-center">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-800/80 text-slate-200">
+                    {vehicles.length === 0 ? (
+                      <tr>
+                        <td colSpan="7" className="py-12 text-center text-slate-500 font-medium">
+                          No vehicles in inventory. Click "+ Add New Vehicle" to add one.
+                        </td>
+                      </tr>
+                    ) : (
+                      vehicles.map((v) => (
+                        <tr key={v.id} className="hover:bg-slate-800/40 transition-colors">
+                          <td className="py-4 px-5 font-bold text-white">{v.maker || v.make}</td>
+                          <td className="py-4 px-5 font-semibold text-slate-200">{v.model}</td>
+                          <td className="py-4 px-5 text-slate-400 font-medium">{v.year}</td>
+                          <td className="py-4 px-5 text-slate-400 font-medium">{v.category}</td>
+                          <td className="py-4 px-5 font-bold text-emerald-400">
+                            {formatINR(v.price)}
+                          </td>
+                          <td className="py-4 px-5 font-semibold text-emerald-400">
+                            {v.quantity} units
+                          </td>
+                          <td className="py-4 px-5">
+                            <div className="flex items-center justify-center gap-2">
+                              <button
+                                onClick={() => {
+                                  setVehicleToEdit(v);
+                                  setIsAdminModalOpen(true);
+                                }}
+                                className="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold rounded-lg border border-slate-700 transition-colors cursor-pointer"
+                              >
+                                Edit
+                              </button>
+                              <button
+                                onClick={() => {
+                                  setVehicleToRestock(v);
+                                  setIsRestockModalOpen(true);
+                                }}
+                                className="px-3 py-1.5 bg-emerald-950/80 hover:bg-emerald-900 text-emerald-400 text-xs font-semibold rounded-lg border border-emerald-800/80 transition-colors cursor-pointer"
+                              >
+                                Restock
+                              </button>
+                              <button
+                                onClick={() => handleDelete(v.id)}
+                                className="px-3 py-1.5 bg-rose-950/80 hover:bg-rose-900 text-rose-400 text-xs font-semibold rounded-lg border border-rose-800/80 transition-colors cursor-pointer"
+                              >
+                                Delete
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
+                      ))
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            </div>
           </div>
+        ) : (
+          <>
+            {/* Header Hero Area */}
+            <div className="mb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+              <div>
+                <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
+                  Vehicle Inventory Catalog
+                </h1>
+                {token && user ? (
+                  <div className="mt-2.5 flex flex-wrap items-center gap-2 text-xs sm:text-sm">
+                    <span className="text-slate-400 font-medium">Browse among</span>
+                    <span className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-cyan-950/80 border border-cyan-800/60 text-cyan-300 font-bold rounded-lg shadow-sm">
+                      <Award className="w-3.5 h-3.5 text-cyan-400" />
+                      {totalBrands} {totalBrands === 1 ? 'Brand' : 'Brands'}
+                    </span>
+                    <span className="text-slate-400 font-medium">in</span>
+                    <span className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-emerald-950/80 border border-emerald-800/60 text-emerald-300 font-bold rounded-lg shadow-sm">
+                      <Car className="w-3.5 h-3.5 text-emerald-400" />
+                      {totalVehicles} {totalVehicles === 1 ? 'Vehicle' : 'Vehicles'}
+                    </span>
+                    <span className="text-slate-400 font-medium">across</span>
+                    <span className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-purple-950/80 border border-purple-800/60 text-purple-300 font-bold rounded-lg shadow-sm">
+                      <Layers className="w-3.5 h-3.5 text-purple-400" />
+                      {totalCategories} {totalCategories === 1 ? 'Category' : 'Categories'}
+                    </span>
+                  </div>
+                ) : (
+                  <p className="mt-1.5 text-slate-400 text-xs sm:text-sm">
+                    Please log in to browse live vehicle inventory, check real-time stock availability, and place orders.
+                  </p>
+                )}
+              </div>
+            </div>
+
+            {/* Dedicated Search & Filter Bar Section */}
+            {token && user && (
+              <FilterBar
+                filters={filters}
+                onFilterChange={handleFilterChange}
+                onReset={handleResetFilters}
+              />
+            )}
+
+            {!token || !user ? (
+              <div className="bg-slate-900/60 border border-slate-800/80 rounded-3xl p-8 sm:p-12 text-center my-8 shadow-2xl backdrop-blur-sm max-w-2xl mx-auto">
+                <div className="w-16 h-16 bg-gradient-to-br from-cyan-500/20 to-blue-600/20 border border-cyan-500/30 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-inner">
+                  <Lock className="w-8 h-8 text-cyan-400" />
+                </div>
+                <h2 className="text-xl sm:text-2xl font-bold text-white tracking-tight">
+                  Authentication Required
+                </h2>
+                <p className="text-sm text-slate-400 mt-2.5 max-w-md mx-auto leading-relaxed">
+                  Please log in or register a new account to browse our vehicle inventory, view real-time pricing, and initiate purchases.
+                </p>
+                <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">
+                  <button
+                    onClick={() => setIsAuthModalOpen(true)}
+                    className="w-full sm:w-auto px-6 py-3 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white font-bold text-sm rounded-xl shadow-lg shadow-cyan-500/25 transition-all transform hover:-translate-y-0.5 cursor-pointer flex items-center justify-center gap-2"
+                  >
+                    <LogIn className="w-4 h-4" />
+                    Login / Register
+                  </button>
+                </div>
+              </div>
+            ) : loading ? (
+              <div className="flex flex-col items-center justify-center py-20">
+                <div className="w-10 h-10 border-4 border-cyan-500/30 border-t-cyan-500 rounded-full animate-spin"></div>
+                <p className="mt-4 text-sm text-slate-400 font-medium">
+                  Loading vehicle inventory...
+                </p>
+              </div>
+            ) : vehicles.length === 0 ? (
+              <div className="bg-slate-900/50 border border-slate-800 rounded-2xl p-12 text-center my-8">
+                <Car className="w-12 h-12 text-slate-600 mx-auto mb-4" />
+                <h3 className="text-lg font-bold text-slate-300">
+                  No Vehicles Found
+                </h3>
+                <p className="text-sm text-slate-500 mt-1 max-w-md mx-auto">
+                  No inventory entries match your search criteria. Try resetting your search filters or add a new vehicle entry.
+                </p>
+                <button
+                  onClick={handleResetFilters}
+                  className="mt-6 px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold rounded-lg border border-slate-700 transition-colors cursor-pointer"
+                >
+                  Clear All Filters
+                </button>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                {sortVehicles(vehicles, filters.sort).map((v) => (
+                  <VehicleCard
+                    key={v.id}
+                    vehicle={v}
+                    onPurchase={() => handleInitiatePurchase(v)}
+                    onEdit={(veh) => {
+                      setVehicleToEdit(veh);
+                      setIsAdminModalOpen(true);
+                    }}
+                    onRestock={(veh) => {
+                      setVehicleToRestock(veh);
+                      setIsRestockModalOpen(true);
+                    }}
+                    onDelete={handleDelete}
+                  />
+                ))}
+              </div>
+            )}
+          </>
         )}
       </main>
 
