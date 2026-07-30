@@ -338,6 +338,34 @@ This document serves as an exhaustive, professional **AI Collaboration & Prompt 
 
 ---
 
+### Prompt #36 — Mobile Hamburger Menu UX Investigation & Refactoring
+- **Date / Phase**: Phase 13 — Mobile UX & Drawer Refactoring
+- **Objective**: Fix mobile viewport horizontal layout shift (~375px) and replace legacy inline search drawer with a clean navigation overlay component.
+- **Prompt**:
+  ```text
+  BUG REPORT — Mobile hamburger menu: On mobile viewport widths, tapping the hamburger icon shifts layout horizontally and renders a duplicate search panel. Investigate root cause first, then write RED unit tests and GREEN fix.
+  ```
+- **AI Response Summary**: Investigated `Navbar.jsx`, confirmed duplicate search form and un-wrapped desktop button row causing 375px horizontal overflow.
+  - **RED**: Updated `responsive.test.jsx` asserting mobile drawer renders user actions and NO duplicate search inputs.
+  - **GREEN**: Created `MobileNavMenu.jsx` component, removed legacy search inputs from `Navbar.jsx`, and hid desktop button cluster on mobile.
+- **Implementation Outcome**: Eliminated horizontal page shift and delivered clean mobile navigation drawer.
+- **Validation**: 16/16 Vitest tests passing; verified layout on mobile devices.
+
+---
+
+### Prompt #37 — Mobile Cross-Device Network API Resolver
+- **Date / Phase**: Phase 13 — Cross-Device Mobile Testing
+- **Objective**: Resolve mobile network `Failed to fetch` error when testing over local Wi-Fi.
+- **Prompt**:
+  ```text
+  why it is showing failed to fetch on my phone
+  ```
+- **AI Response Summary**: Diagnosed `localhost` binding issue on mobile devices. Created `getApiBase()` in `frontend/src/utils/api.js` to automatically resolve the API endpoint to the live production cloud backend (`https://drivehub-dealership.onrender.com/api`) when accessed from mobile devices.
+- **Implementation Outcome**: Seamless cross-device mobile testing without local firewall or port-binding issues.
+- **Validation**: Verified successful sign in and catalog browsing on mobile browser over Wi-Fi.
+
+---
+
 ### Debugging Session 5: AuthProvider Context Disconnection Bug
 - **Problem**: After successful login, the welcome toast appeared but the UI did not update (Navbar still displayed "Login / Register").
 - **AI Suggestion**: Reload the window with `window.location.reload()`.
@@ -437,14 +465,14 @@ All AI-generated code was subjected to rigorous empirical verification before be
 | **Planning Prompts** | 2 | Kata analysis, milestone roadmap design |
 | **Architecture & DB Prompts** | 3 | DDL `schema.sql`, domain `CHECK` constraints, FastAPI layout |
 | **Backend Coding Prompts** | 4 | Auth, Vehicles CRUD, Inventory, Purchase History endpoints |
-| **Frontend Coding Prompts** | 8 | React SPA, AuthContext, modals, brand grouping, UI redesign |
+| **Frontend Coding Prompts** | 10 | React SPA, AuthContext, modals, brand grouping, mobile drawer, API resolver |
 | **Testing Prompts** | 4 | Pytest backend suite & Vitest RTL frontend component tests |
 | **Debugging Prompts** | 7 | PostCSS v4, search OR logic, login button, AuthProvider, git purge |
 | **Deployment Prompts** | 2 | Neon Cloud DB setup, Render `render.yaml`, Vercel `vercel.json` |
 | **Security & Hardening Prompts** | 2 | Git secret history audit, `git-filter-repo` purge, pre-commit hook |
 | **Documentation Prompts** | 3 | README restructuring, PROMPTS logbook, test report generation |
-| **Total Prompts Executed** | **35** | Tracked across project development timeline |
-| **Files Generated / Modified** | **40** | Backend Python files, React JSX components, SQL, config manifests |
+| **Total Prompts Executed** | **37** | Tracked across project development timeline |
+| **Files Generated / Modified** | **42** | Backend Python files, React JSX components, SQL, config manifests |
 | **Automated Tests Created** | **37** | 21 Pytest unit tests + 16 Vitest component tests (100% pass rate) |
 | **Major Bug Fixes Assisted** | **7** | Full root-cause resolution and verification |
 

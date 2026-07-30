@@ -1,4 +1,5 @@
 import React, { createContext, useState, useEffect } from 'react';
+import { getApiBase } from '../utils/api';
 
 export const AuthContext = createContext({
   user: null,
@@ -58,7 +59,7 @@ export const AuthProvider = ({ children }) => {
     }
   }, [token]);
 
-  const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api';
+  const API_BASE = getApiBase();
 
   const login = async (email, password) => {
     const res = await fetch(`${API_BASE}/auth/login`, {

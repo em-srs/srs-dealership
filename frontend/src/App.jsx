@@ -9,11 +9,12 @@ import ProfileModal from './components/ProfileModal';
 import PurchaseModal from './components/PurchaseModal';
 import LandingPage from './components/LandingPage';
 import AuthContext from './context/AuthContext';
+import { getApiBase } from './utils/api';
 import { sortVehicles } from './utils/sort';
 import { formatINR } from './utils/currency';
 import { Car, PlusCircle, AlertCircle, CheckCircle2, ShieldCheck, ArrowUp, Award, Layers, Lock, LogIn } from 'lucide-react';
 
-const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api';
+const API_BASE = getApiBase();
 
 function App() {
   const { token, user } = useContext(AuthContext);
