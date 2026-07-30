@@ -5,6 +5,7 @@ import AdminModal from './components/AdminModal';
 import RestockModal from './components/RestockModal';
 import AuthModal from './components/AuthModal';
 import ProfileModal from './components/ProfileModal';
+import PurchaseModal from './components/PurchaseModal';
 import AuthContext from './context/AuthContext';
 import { sortVehicles } from './utils/sort';
 import { Car, PlusCircle, AlertCircle, CheckCircle2, ShieldCheck, ArrowUp } from 'lucide-react';
@@ -103,14 +104,24 @@ function App() {
     });
   };
 
-  // Purchase vehicle endpoint
-  const handlePurchase = async (vehicleId) => {
+
+
+  const [isPurchaseModalOpen, setIsPurchaseModalOpen] = useState(false);
+  const [vehicleToPurchase, setVehicleToPurchase] = useState(null);
+
+  // Initiate purchase modal flow
+  const handleInitiatePurchase = (vehicle) => {
     if (!token) {
       setIsAuthModalOpen(true);
       showToast('Please log in to purchase vehicles.', 'error');
       return;
     }
+    setVehicleToPurchase(vehicle);
+    setIsPurchaseModalOpen(true);
+  };
 
+  // Submit purchase checkout form
+  const handlePurchaseSubmit = async (vehicleId, purchaseData) => {
     try {
       const res = await fetch(`${API_BASE}/vehicles/${vehicleId}/purchase`, {
         method: 'POST',
@@ -118,10 +129,13 @@ function App() {
           Authorization: `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
+        body: JSON.stringify(purchaseData),
       });
 
       if (res.ok) {
         showToast('Vehicle purchased successfully!', 'success');
+        setIsPurchaseModalOpen(false);
+        setVehicleToPurchase(null);
         fetchVehicles();
       } else {
         const errData = await res.json();
@@ -131,6 +145,7 @@ function App() {
       showToast('Network error during purchase.', 'error');
     }
   };
+
 
   // Add / Edit vehicle endpoint
   const handleAdminSubmit = async (vehicleData) => {
@@ -311,7 +326,7 @@ function App() {
               <VehicleCard
                 key={v.id}
                 vehicle={v}
-                onPurchase={handlePurchase}
+                onPurchase={() => handleInitiatePurchase(v)}
                 onEdit={(veh) => {
                   setVehicleToEdit(veh);
                   setIsAdminModalOpen(true);
@@ -328,6 +343,16 @@ function App() {
       </main>
 
       {/* Modals */}
+      <PurchaseModal
+        isOpen={isPurchaseModalOpen}
+        onClose={() => {
+          setIsPurchaseModalOpen(false);
+          setVehicleToPurchase(null);
+        }}
+        onSubmit={handlePurchaseSubmit}
+        vehicle={vehicleToPurchase}
+      />
+
       <AdminModal
         isOpen={isAdminModalOpen}
         onClose={() => {
@@ -337,6 +362,7 @@ function App() {
         onSubmit={handleAdminSubmit}
         vehicleToEdit={vehicleToEdit}
       />
+
 
       <RestockModal
         isOpen={isRestockModalOpen}

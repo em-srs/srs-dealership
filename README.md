@@ -119,7 +119,7 @@ npm run dev
 
 ---
 
-## Test Report Summary (25/25 Tests Passing)
+## Test Report Summary (36/36 Tests Passing)
 
 ### Backend Pytest Suite — 21/21 Passed
 - **Auth Module**: 6 passed (`test_auth.py`)
@@ -128,10 +128,14 @@ npm run dev
 - **Purchases Module**: 3 passed (`test_purchases.py`)
 - Output log saved in [`backend_test_report.txt`](backend_test_report.txt).
 
-### Frontend Vitest Suite — 4/4 Passed
-- **VehicleCard Component**: 2 passed (renders details, disables Purchase button at 0 stock)
-- **Navbar Component**: 2 passed (logged-out state, logged-in user state)
+### Frontend Vitest Suite — 15/15 Passed
+- **Currency Formatters**: 3 passed (`currency.test.js`)
+- **Vehicle Sorting**: 4 passed (`sort.test.js`)
+- **Responsive Layout**: 1 passed (`responsive.test.js`)
+- **App Dashboard Components**: 4 passed (`App.test.jsx`)
+- **Purchase Checkout & History Flow**: 3 passed (`purchase.test.jsx`)
 - Output log saved in [`frontend_test_report.txt`](frontend_test_report.txt).
+
 
 
 ---

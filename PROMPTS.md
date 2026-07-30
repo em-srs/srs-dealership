@@ -300,6 +300,11 @@ This document provides a detailed, chronological record of all prompts, instruct
      - **RED**: Created `backend/tests/test_purchases.py` containing 3 failing tests (`test_purchase_vehicle_with_details_creates_history_record`, `test_get_user_purchase_history_isolation`, `test_get_purchases_unauthenticated_fails`). Ran `pytest` -> 3/3 failed with expected errors.
      - **GREEN & REFACTOR**: Implemented `PurchaseHistory` SQLAlchemy model (`backend/app/models/purchase.py`), Pydantic schemas (`backend/app/schemas/purchase.py`), decoupled service layer `create_purchase_record` and `get_user_purchases` (`backend/app/services/purchase.py`), updated `POST /api/vehicles/{vehicle_id}/purchase` handler, created `GET /api/purchases/me` router (`backend/app/api/endpoints/purchases.py`), registered route in `main.py`, and updated test teardown fixture in `conftest.py`.
      - **Verification**: Ran `pytest backend/tests/` -> **21/21 passed (100%)** including all 3 `test_purchases.py` tests.
+  3. **Frontend Step (RED -> GREEN -> REFACTOR)**:
+     - **RED**: Created `frontend/src/test/purchase.test.jsx` testing `PurchaseModal` rendering, form submission callback payload, and `ProfileModal` purchase history rendering. Ran Vitest -> failed with missing component error.
+     - **GREEN & REFACTOR**: Built `PurchaseModal.jsx` with glassmorphic dark mode styling, vehicle item summary, buyer name/phone/address/note/quantity form controls, total cost calculation, and submit handler. Wired `App.jsx` to open `PurchaseModal` on purchase click, submit payload to `/api/vehicles/{id}/purchase`, and display success toast. Updated `ProfileModal.jsx` with a dedicated "Purchase History" tab fetching `/api/purchases/me` and displaying ordered vehicle name, quantity, formatted INR price, and order timestamp.
+     - **Verification**: Ran `npx vitest run` -> **15/15 passed (100%)** across all 5 frontend test suites.
+
 
 ---
 

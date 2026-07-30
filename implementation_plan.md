@@ -141,10 +141,11 @@ D:\CODINGBRO\srs-dealership\
 2. Fill in `PROMPTS.md` with the real prompt history.
 3. Write `README.md`: setup instructions, API reference, screenshots, test report, mandatory **"My AI Usage"** section.
 
-### Step 8: Purchase History & Checkout Form Module (TDD Cycle) - [In Progress]
+### Step 8: Purchase History & Checkout Form Module (TDD Cycle) - [x] Completed
 1. **Schema** - [x] Added `purchase_history` table with `user_id`, `vehicle_id`, `quantity`, `price_at_purchase` snapshot, buyer details, timestamp, and index.
 2. **Backend (RED -> GREEN -> REFACTOR)** - [x] Created `backend/tests/test_purchases.py` (RED), implemented `PurchaseHistory` model, Pydantic schemas, `app/services/purchase.py` service layer, updated `POST /api/vehicles/{id}/purchase` to handle form payload, and added `GET /api/purchases/me` endpoint (GREEN/REFACTOR). Verified with 21/21 passing backend tests.
-3. **Frontend (RED -> GREEN -> REFACTOR)** - [Pending] Create PurchaseModal form component, update purchase flow, add Purchase History tab/section in user profile.
+3. **Frontend (RED -> GREEN -> REFACTOR)** - [x] Created `frontend/src/test/purchase.test.jsx` (RED), built `PurchaseModal.jsx` form component, wired purchase checkout flow in `App.jsx`, and added a dedicated Purchase History tab in `ProfileModal.jsx` (GREEN/REFACTOR). Verified with 15/15 passing frontend tests.
+
 
 
 ---
