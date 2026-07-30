@@ -8,7 +8,7 @@ import ProfileModal from './components/ProfileModal';
 import PurchaseModal from './components/PurchaseModal';
 import AuthContext from './context/AuthContext';
 import { sortVehicles } from './utils/sort';
-import { Car, PlusCircle, AlertCircle, CheckCircle2, ShieldCheck, ArrowUp } from 'lucide-react';
+import { Car, PlusCircle, AlertCircle, CheckCircle2, ShieldCheck, ArrowUp, Award, Layers } from 'lucide-react';
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api';
 
@@ -235,6 +235,10 @@ function App() {
     }
   };
 
+  const totalBrands = new Set(vehicles.map((v) => v.maker || v.make).filter(Boolean)).size;
+  const totalVehicles = vehicles.length;
+  const totalCategories = new Set(vehicles.map((v) => v.category).filter(Boolean)).size;
+
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col font-sans">
       {/* Toast Notification */}
@@ -276,9 +280,23 @@ function App() {
             <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
               Vehicle Inventory Catalog
             </h1>
-            <p className="mt-1 text-slate-400 text-xs sm:text-sm">
-              Browse and manage vehicle inventory with real-time stock protection.
-            </p>
+            <div className="mt-2.5 flex flex-wrap items-center gap-2 text-xs sm:text-sm">
+              <span className="text-slate-400 font-medium">Browse among</span>
+              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-cyan-950/80 border border-cyan-800/60 text-cyan-300 font-bold rounded-lg shadow-sm">
+                <Award className="w-3.5 h-3.5 text-cyan-400" />
+                {totalBrands} {totalBrands === 1 ? 'Brand' : 'Brands'}
+              </span>
+              <span className="text-slate-400 font-medium">in</span>
+              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-emerald-950/80 border border-emerald-800/60 text-emerald-300 font-bold rounded-lg shadow-sm">
+                <Car className="w-3.5 h-3.5 text-emerald-400" />
+                {totalVehicles} {totalVehicles === 1 ? 'Vehicle' : 'Vehicles'}
+              </span>
+              <span className="text-slate-400 font-medium">across</span>
+              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-purple-950/80 border border-purple-800/60 text-purple-300 font-bold rounded-lg shadow-sm">
+                <Layers className="w-3.5 h-3.5 text-purple-400" />
+                {totalCategories} {totalCategories === 1 ? 'Category' : 'Categories'}
+              </span>
+            </div>
           </div>
 
           {/* Admin-Only Control: "+ Add Vehicle" Button above the grid */}
