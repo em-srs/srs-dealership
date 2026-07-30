@@ -41,6 +41,48 @@ A production-ready full-stack vehicle inventory management system built using **
 
 ---
 
+## 📸 Application Screenshots
+
+A walkthrough of the live production app ([srs-dealership.vercel.app](https://srs-dealership.vercel.app)), from a guest's first visit through customer purchase flow and admin inventory management.
+
+### Guest Access & Authentication
+
+| | |
+| :---: | :---: |
+| ![Guest view - authentication required](images/01-guest-authentication-required.png) | ![Login modal](images/02-login-modal.png) |
+| **Guarded Dashboard (Guest State)** — Before logging in, the catalog is locked behind an "Authentication Required" panel. Guests see the `Login / Register` control in the navbar but no vehicle data, pricing, or search is exposed until authenticated. | **Login Modal** — The "Welcome Back" login form, here mid-entry with the demo customer account (`user@dealership.com`). |
+
+![Guest view - authentication required (catalog empty state)](images/03-guest-authentication-required-alt.png)
+
+*The same locked catalog state shown again immediately before login — confirming no vehicle cards, prices, or filters render for unauthenticated visitors.*
+
+### Customer Experience
+
+![Customer dashboard after login](images/04-customer-dashboard.png)
+
+**Customer Dashboard (Logged In as Customer)** — Once authenticated, the full Vehicle Inventory Catalog unlocks: the stats banner ("Browse among Brands, Vehicles, and Categories"), live search/filter/sort controls, and a grid of vehicle cards with INR-formatted pricing and stock-availability pills. Regular users see only a **Purchase Vehicle** button per card — no Edit, Delete, or Restock controls, since those are admin-gated.
+
+![Purchase checkout modal](images/08-purchase-checkout-modal.png)
+
+**Purchase Checkout Modal** — Clicking "Purchase Vehicle" opens the checkout form, showing the selected vehicle's unit price and total cost, with fields for full name, phone number, quantity (capped at available stock), delivery address, and an optional delivery note. Submitting calls `POST /api/vehicles/{id}/purchase`, which snapshots `price_at_purchase` and decrements stock.
+
+![Profile modal with purchase history tab](images/05-profile-modal.png)
+
+**Profile Modal — Purchase History** — The account profile shows the logged-in user's email, assigned role (`User`), and security status, alongside an **Account Info** / **Purchase History** tab toggle so customers can review their own past orders in isolation from other users.
+
+### Administrator Experience
+
+![Admin dashboard with elevated controls](images/06-admin-dashboard.png)
+
+**Admin Dashboard (Logged In as Admin)** — The same catalog view, but with elevated permissions rendered dynamically from `user.role`: a **+ Add Vehicle** action above the grid, and per-card **Restock**, **Edit**, and **Delete** controls that are completely absent from the customer view above.
+
+| | |
+| :---: | :---: |
+| ![Add new vehicle modal](images/07-add-vehicle-modal.png) | ![Restock inventory modal](images/09-restock-modal.png) |
+| **Add New Vehicle Modal** — Admin-only form (`Maker/Brand`, `Model`, `Year`, `Category`, `Price`, `Initial Stock Quantity`) that calls `POST /api/vehicles` to create a new catalog entry. | **Restock Inventory Modal** — Admin-only form showing the current stock quantity for a selected vehicle with an input for additional units, calling `POST /api/vehicles/{id}/restock`. |
+
+---
+
 ## 🏗️ Architecture
 
 ### System Flow
