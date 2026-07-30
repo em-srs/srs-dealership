@@ -310,6 +310,20 @@ function App() {
               </p>
             )}
           </div>
+
+          {/* Admin-Only Control: "Manage Inventory" Button on the right side of this section */}
+          {user && user.role === 'admin' && (
+            <button
+              onClick={() => {
+                setVehicleToEdit(null);
+                setIsAdminModalOpen(true);
+              }}
+              className="px-4 py-2.5 bg-emerald-400 hover:bg-emerald-300 text-slate-950 font-extrabold text-xs rounded-xl shadow-lg shadow-emerald-400/25 flex items-center gap-2 cursor-pointer shrink-0 transition-all transform hover:-translate-y-0.5"
+            >
+              <PlusCircle className="w-4 h-4 text-slate-950 stroke-[2.5]" />
+              <span>+ Manage Inventory</span>
+            </button>
+          )}
         </div>
 
         {/* Dedicated Search & Filter Bar Section */}

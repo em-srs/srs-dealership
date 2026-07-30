@@ -50,17 +50,6 @@ const Navbar = ({ filters, onFilterChange, onResetFilters, onOpenAuth, onOpenPro
                 </div>
               </button>
 
-              {user.role === 'admin' && (
-                <button
-                  onClick={onOpenAddVehicle}
-                  aria-label="Manage Inventory"
-                  className="px-3.5 py-1.5 bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-500 hover:to-blue-500 text-white font-bold text-xs rounded-xl shadow-md shadow-indigo-600/30 transition-all flex items-center gap-1.5 cursor-pointer shrink-0"
-                >
-                  <PlusCircle className="w-3.5 h-3.5 text-white" />
-                  <span>Manage Inventory</span>
-                </button>
-              )}
-
               <button
                 onClick={logout}
                 aria-label="Logout"
