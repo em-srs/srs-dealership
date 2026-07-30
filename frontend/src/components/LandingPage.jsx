@@ -63,12 +63,12 @@ const LandingPage = ({ onSuccess }) => {
         {/* Center Hero Content */}
         <div className="my-12 lg:my-auto max-w-xl">
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight leading-[1.15] mb-6">
-            Manage dealership <br className="hidden sm:inline" />
-            inventory with <br className="hidden sm:inline" />
+            Drive your ambition <br className="hidden sm:inline" />
+            with complete <br className="hidden sm:inline" />
             confidence.
           </h2>
           <p className="text-sm sm:text-base text-slate-400 leading-relaxed max-w-md">
-            Search inventory, track stock, purchase vehicles and manage dealership operations from one dashboard.
+            Browse our premium vehicle catalog, track real-time stock availability, and place orders directly from your unified dashboard.
           </p>
           {/* Accessible text nodes for test coverage compatibility */}
           <span className="sr-only">Authentication Required</span>
