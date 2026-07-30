@@ -309,76 +309,114 @@ function App() {
               </button>
             </div>
 
-            {/* Inventory Table matching user screenshot */}
-            <div className="bg-slate-900/90 border border-slate-800 rounded-2xl overflow-hidden shadow-2xl backdrop-blur-md">
-              <div className="overflow-x-auto">
-                <table className="w-full text-left text-xs border-collapse">
-                  <thead>
-                    <tr className="border-b border-slate-800 bg-slate-950/60 text-slate-400 font-bold uppercase tracking-wider">
-                      <th className="py-4 px-5">Maker</th>
-                      <th className="py-4 px-5">Model</th>
-                      <th className="py-4 px-5">Year</th>
-                      <th className="py-4 px-5">Category</th>
-                      <th className="py-4 px-5">Price</th>
-                      <th className="py-4 px-5">Quantity</th>
-                      <th className="py-4 px-5 text-center">Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-slate-800/80 text-slate-200">
-                    {vehicles.length === 0 ? (
-                      <tr>
-                        <td colSpan="7" className="py-12 text-center text-slate-500 font-medium">
-                          No vehicles in inventory. Click "+ Add New Vehicle" to add one.
-                        </td>
-                      </tr>
-                    ) : (
-                      vehicles.map((v) => (
-                        <tr key={v.id} className="hover:bg-slate-800/40 transition-colors">
-                          <td className="py-4 px-5 font-bold text-white">{v.maker || v.make}</td>
-                          <td className="py-4 px-5 font-semibold text-slate-200">{v.model}</td>
-                          <td className="py-4 px-5 text-slate-400 font-medium">{v.year}</td>
-                          <td className="py-4 px-5 text-slate-400 font-medium">{v.category}</td>
-                          <td className="py-4 px-5 font-bold text-emerald-400">
-                            {formatINR(v.price)}
-                          </td>
-                          <td className="py-4 px-5 font-semibold text-emerald-400">
-                            {v.quantity} units
-                          </td>
-                          <td className="py-4 px-5">
-                            <div className="flex items-center justify-center gap-2">
-                              <button
-                                onClick={() => {
-                                  setVehicleToEdit(v);
-                                  setIsAdminModalOpen(true);
-                                }}
-                                className="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold rounded-lg border border-slate-700 transition-colors cursor-pointer"
-                              >
-                                Edit
-                              </button>
-                              <button
-                                onClick={() => {
-                                  setVehicleToRestock(v);
-                                  setIsRestockModalOpen(true);
-                                }}
-                                className="px-3 py-1.5 bg-emerald-950/80 hover:bg-emerald-900 text-emerald-400 text-xs font-semibold rounded-lg border border-emerald-800/80 transition-colors cursor-pointer"
-                              >
-                                Restock
-                              </button>
-                              <button
-                                onClick={() => handleDelete(v.id)}
-                                className="px-3 py-1.5 bg-rose-950/80 hover:bg-rose-900 text-rose-400 text-xs font-semibold rounded-lg border border-rose-800/80 transition-colors cursor-pointer"
-                              >
-                                Delete
-                              </button>
-                            </div>
-                          </td>
-                        </tr>
-                      ))
-                    )}
-                  </tbody>
-                </table>
-              </div>
-            </div>
+            {/* Inventory Grouped by Brands / Makers */}
+            {(() => {
+              const grouped = vehicles.reduce((acc, v) => {
+                const brand = v.maker || v.make || 'Other';
+                if (!acc[brand]) acc[brand] = [];
+                acc[brand].push(v);
+                return acc;
+              }, {});
+
+              const brandNames = Object.keys(grouped).sort();
+
+              if (brandNames.length === 0) {
+                return (
+                  <div className="bg-slate-900/90 border border-slate-800 rounded-2xl p-12 text-center text-slate-500 font-medium">
+                    No vehicles in inventory. Click "+ Add New Vehicle" to add one.
+                  </div>
+                );
+              }
+
+              return (
+                <div className="space-y-6">
+                  {brandNames.map((brand) => (
+                    <div
+                      key={brand}
+                      className="bg-slate-900/90 border border-slate-800/90 rounded-2xl overflow-hidden shadow-xl backdrop-blur-md"
+                    >
+                      {/* Brand Group Header Banner */}
+                      <div className="bg-slate-950/80 px-5 py-3.5 border-b border-slate-800 flex items-center justify-between">
+                        <div className="flex items-center gap-2.5">
+                          <div className="w-7 h-7 rounded-lg bg-indigo-950 border border-indigo-800/60 flex items-center justify-center text-indigo-400">
+                            <Car className="w-4 h-4" />
+                          </div>
+                          <h2 className="text-sm sm:text-base font-extrabold text-white tracking-wide">
+                            {brand}
+                          </h2>
+                          <span className="px-2.5 py-0.5 bg-indigo-950/80 border border-indigo-800/60 text-indigo-300 font-bold text-[11px] rounded-full">
+                            {grouped[brand].length} {grouped[brand].length === 1 ? 'Model' : 'Models'}
+                          </span>
+                        </div>
+
+                        <span className="text-xs text-slate-400 font-medium hidden sm:inline">
+                          Total Stock: {grouped[brand].reduce((sum, v) => sum + (v.quantity || 0), 0)} units
+                        </span>
+                      </div>
+
+                      {/* Table of Models for this Brand */}
+                      <div className="overflow-x-auto">
+                        <table className="w-full text-left text-xs border-collapse">
+                          <thead>
+                            <tr className="border-b border-slate-800/80 bg-slate-950/40 text-slate-400 font-bold uppercase tracking-wider">
+                              <th className="py-3 px-5">Model</th>
+                              <th className="py-3 px-5">Year</th>
+                              <th className="py-3 px-5">Category</th>
+                              <th className="py-3 px-5">Price</th>
+                              <th className="py-3 px-5">Quantity</th>
+                              <th className="py-3 px-5 text-center">Actions</th>
+                            </tr>
+                          </thead>
+                          <tbody className="divide-y divide-slate-800/60 text-slate-200">
+                            {grouped[brand].map((v) => (
+                              <tr key={v.id} className="hover:bg-slate-800/40 transition-colors">
+                                <td className="py-3.5 px-5 font-bold text-white">{v.model}</td>
+                                <td className="py-3.5 px-5 text-slate-400 font-medium">{v.year}</td>
+                                <td className="py-3.5 px-5 text-slate-400 font-medium">{v.category}</td>
+                                <td className="py-3.5 px-5 font-bold text-emerald-400">
+                                  {formatINR(v.price)}
+                                </td>
+                                <td className="py-3.5 px-5 font-semibold text-emerald-400">
+                                  {v.quantity} units
+                                </td>
+                                <td className="py-3.5 px-5">
+                                  <div className="flex items-center justify-center gap-2">
+                                    <button
+                                      onClick={() => {
+                                        setVehicleToEdit(v);
+                                        setIsAdminModalOpen(true);
+                                      }}
+                                      className="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold rounded-lg border border-slate-700 transition-colors cursor-pointer"
+                                    >
+                                      Edit
+                                    </button>
+                                    <button
+                                      onClick={() => {
+                                        setVehicleToRestock(v);
+                                        setIsRestockModalOpen(true);
+                                      }}
+                                      className="px-3 py-1.5 bg-emerald-950/80 hover:bg-emerald-900 text-emerald-400 text-xs font-semibold rounded-lg border border-emerald-800/80 transition-colors cursor-pointer"
+                                    >
+                                      Restock
+                                    </button>
+                                    <button
+                                      onClick={() => handleDelete(v.id)}
+                                      className="px-3 py-1.5 bg-rose-950/80 hover:bg-rose-900 text-rose-400 text-xs font-semibold rounded-lg border border-rose-800/80 transition-colors cursor-pointer"
+                                    >
+                                      Delete
+                                    </button>
+                                  </div>
+                                </td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              );
+            })()}
           </div>
         ) : (
           <>

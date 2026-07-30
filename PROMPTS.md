@@ -299,6 +299,45 @@ This document serves as an exhaustive, professional **AI Collaboration & Prompt 
 
 ---
 
+### Prompt #33 — Search & Filter Bar Redesign & Navbar Updates
+- **Date / Phase**: Phase 12 — UI Redesign & Search Bar Enhancements
+- **Objective**: Redesign the Search & Filter Bar into a dedicated dark glassmorphism card grid and align top Navbar header layout.
+- **Prompt**:
+  ```text
+  remove this exchange rate, instead of add vehicle- change it to manage inventory like in this image, manage inventory should not be on the top of page like in this
+  ```
+- **AI Response Summary**: Updated `FilterBar.jsx` to render a 6-column dark glassmorphic grid (`Maker / Brand`, `Model`, `Category`, `Year`, `Sort By`, and `Filter & Sort` button), removed exchange rate label, and updated `Navbar.jsx` header layout.
+- **Implementation Outcome**: Delivered dedicated search filter card and updated navbar.
+- **Validation**: Verified layout against user mockups and executed `npm test -- --run` $\rightarrow$ 16/16 Vitest tests passed.
+
+---
+
+### Prompt #34 — Admin Inventory Controls Dashboard View
+- **Date / Phase**: Phase 12 — Admin Inventory Controls View
+- **Objective**: Render dedicated `Admin Inventory Controls` table view when `activeTab === 'admin'`.
+- **Prompt**:
+  ```text
+  manage inventory should look like this (with attached mockup screenshot of http://localhost:5176/admin)
+  ```
+- **AI Response Summary**: Created state-driven tab switching (`activeTab`) in `App.jsx`, rendered header banner (`Admin Inventory Controls`), `+ Add New Vehicle` indigo button, and glassmorphism table displaying Maker, Model, Year, Category, Price in INR, Quantity, and Actions (`Edit`, `Restock`, `Delete`).
+- **Implementation Outcome**: Delivered dedicated Admin Inventory Controls dashboard.
+- **Validation**: All 16 Vitest frontend tests and 21 Pytest backend tests passed.
+
+---
+
+### Prompt #35 — Brand-Grouped Admin Inventory Controls
+- **Date / Phase**: Phase 12 — Brand-Grouped Inventory Controls
+- **Objective**: Organize admin inventory entries into groups based on vehicle brand/maker.
+- **Prompt**:
+  ```text
+  manage inventory section should show the inventory in groups based on brands/makers, do not commit to production, keep it local
+  ```
+- **AI Response Summary**: Updated `App.jsx` to dynamically group vehicles by brand/maker (`reduce`), render brand group header banners with model count and total stock badges, and render dedicated model tables per brand group.
+- **Implementation Outcome**: Enhanced inventory readability and organization for administrators.
+- **Validation**: Executed `npm test -- --run` (16/16 passed) and `python -m pytest backend/tests` (21/21 passed). Kept local until user requested push.
+
+---
+
 ### Debugging Session 5: AuthProvider Context Disconnection Bug
 - **Problem**: After successful login, the welcome toast appeared but the UI did not update (Navbar still displayed "Login / Register").
 - **AI Suggestion**: Reload the window with `window.location.reload()`.
@@ -398,15 +437,15 @@ All AI-generated code was subjected to rigorous empirical verification before be
 | **Planning Prompts** | 2 | Kata analysis, milestone roadmap design |
 | **Architecture & DB Prompts** | 3 | DDL `schema.sql`, domain `CHECK` constraints, FastAPI layout |
 | **Backend Coding Prompts** | 4 | Auth, Vehicles CRUD, Inventory, Purchase History endpoints |
-| **Frontend Coding Prompts** | 5 | React SPA components, AuthContext, modals, sorting, responsiveness |
+| **Frontend Coding Prompts** | 8 | React SPA, AuthContext, modals, brand grouping, UI redesign |
 | **Testing Prompts** | 4 | Pytest backend suite & Vitest RTL frontend component tests |
 | **Debugging Prompts** | 7 | PostCSS v4, search OR logic, login button, AuthProvider, git purge |
 | **Deployment Prompts** | 2 | Neon Cloud DB setup, Render `render.yaml`, Vercel `vercel.json` |
 | **Security & Hardening Prompts** | 2 | Git secret history audit, `git-filter-repo` purge, pre-commit hook |
 | **Documentation Prompts** | 3 | README restructuring, PROMPTS logbook, test report generation |
-| **Total Prompts Executed** | **32** | Tracked across project development timeline |
-| **Files Generated / Modified** | **38** | Backend Python files, React JSX components, SQL, config manifests |
-| **Automated Tests Created** | **36** | 21 Pytest unit tests + 15 Vitest component tests (100% pass rate) |
+| **Total Prompts Executed** | **35** | Tracked across project development timeline |
+| **Files Generated / Modified** | **40** | Backend Python files, React JSX components, SQL, config manifests |
+| **Automated Tests Created** | **37** | 21 Pytest unit tests + 16 Vitest component tests (100% pass rate) |
 | **Major Bug Fixes Assisted** | **7** | Full root-cause resolution and verification |
 
 ---

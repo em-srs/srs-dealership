@@ -29,10 +29,12 @@ A production-ready full-stack vehicle inventory management system built using **
 
 - **Permission-Gated Single-Page Dashboard**: Customers and administrators share the same single-page dashboard. Controls render dynamically based on `user.role` from `AuthContext`.
 - **JWT Authentication & Security**: Password hashing with `bcrypt`, token expiration, and role authorization.
+- **Dedicated Search & Filter Bar**: Sleek dark glassmorphism card featuring Maker/Brand, Model, Category, Year, Sort By, and an indigo/blue **Filter & Sort** action button.
+- **Brand-Grouped Admin Inventory Controls**: For administrators, clicking **`Manage Inventory`** opens a dedicated inventory management view grouping vehicles by their Brand/Maker (e.g., `Mercedes-Benz`, `Honda`, `BMW`, `Audi`, `Toyota`, etc.), complete with stock summaries and inline `Edit`, `Restock`, and `Delete` action controls.
 - **Dynamic E-Commerce Catalog Metrics Banner**: Real-time stats header displaying total Brands, Vehicle Models, and Categories (`Browse among X Brands in Y Vehicles across Z Categories`).
 - **Role-Based Permissions**:
-  - `user` (Customer): Browse inventory, live search across maker/model, filter by category/price range, purchase vehicles, view personal purchase history.
-  - `admin` (Administrator): All customer capabilities + `+ Add Vehicle` control, card edit (✏️), card delete with confirmation (🗑️), and inventory restock (➕).
+  - `user` (Customer): Browse inventory, live search across maker/model, filter by category/price range, purchase vehicles, view personal purchase history in profile.
+  - `admin` (Administrator): All customer capabilities + **`Manage Inventory`** view toggle, `+ Add New Vehicle` modal, vehicle editing, stock restocking, and deletion with confirmation.
 - **INR Currency Formatting**: All vehicle prices formatted in **INR (₹)** with Lakhs/Crores grouping logic (`Intl.NumberFormat('en-IN')`).
 - **Client-Side Vehicle Sorting**: Interactive sorting dropdown by price (Low to High, High to Low), year, and model name.
 - **Purchase Checkout & History Module**: Interactive checkout modal taking buyer details (`buyer_name`, `buyer_phone`, `delivery_address`, `note`), price snapshotting (`price_at_purchase`), and purchase history log accessible via profile.
