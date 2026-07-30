@@ -296,6 +296,11 @@ Frontend Vitest Suite  : 16 / 16 Passed  (100% Component Pass Rate)
   - Implemented React 19 SPA components (`Navbar`, `VehicleCard`, `FilterBar`, `AdminModal`, `RestockModal`, `AuthModal`, `ProfileModal`, `PurchaseModal`).
   - Diagnosed and resolved runtime errors (PostCSS v4 deprecation, OR-based search logic, AuthProvider context wiring, Neon DB scripts, Render `render.yaml`, Vercel `vercel.json`, secret audit history purge).
 
+#### 3. Co-Author Trailer Attribution Standard
+All AI-assisted commits retain explicit `Co-authored-by:` trailers in compliance with kata requirements. To guarantee GitHub does not misattribute AI trailers to third-party user accounts, all AI trailers use the IANA-reserved top-level domain (`.invalid`):
+- `Co-authored-by: Antigravity AI <antigravity-agent@noreply.invalid>`
+- `Co-authored-by: Claude AI <claude-agent@noreply.invalid>`
+
 ---
 
 ## 📑 Documentation & Deliverables
