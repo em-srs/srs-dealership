@@ -257,9 +257,6 @@ Frontend Vitest Suite  : 16 / 16 Passed  (100% Component Pass Rate)
 | **App Components** | `frontend/src/test/App.test.jsx` | 5 | 100% | VehicleCard stock guards, Navbar badges, Auth Required banner |
 | **Purchase Checkout** | `frontend/src/test/purchase.test.jsx` | 3 | 100% | PurchaseModal submission, ProfileModal purchase history tab |
 
-- Backend Pytest log saved in [`backend_test_report.txt`](backend_test_report.txt).
-- Frontend Vitest log saved in [`frontend_test_report.txt`](frontend_test_report.txt).
-
 ---
 
 ## 🚀 Cloud Deployment Architecture
@@ -303,8 +300,6 @@ Frontend Vitest Suite  : 16 / 16 Passed  (100% Component Pass Rate)
 - [`PROMPTS.md`](PROMPTS.md): Complete interactive prompt logbook & Phase 8 security audit summary.
 - [`schema.sql`](schema.sql): PostgreSQL DDL relational tables, foreign keys, and `CHECK` constraints.
 - [`DEVELOPMENT_LOG.docx`](DEVELOPMENT_LOG.docx): Detailed local logbook with styled IDE code blocks and troubleshooting logs.
-- [`backend_test_report.txt`](backend_test_report.txt): Empirical execution output for Pytest suite.
-- [`frontend_test_report.txt`](frontend_test_report.txt): Empirical execution output for Vitest suite.
 - [`render.yaml`](render.yaml): Infrastructure-as-code deployment manifest for Render backend.
 - [`frontend/vercel.json`](frontend/vercel.json): SPA routing manifest for Vercel frontend.
 
