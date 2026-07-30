@@ -1,10 +1,10 @@
 import React, { useState, useContext } from 'react';
 import AuthContext from '../context/AuthContext';
-import { Car, Search, Filter, LogIn, LogOut, ShieldCheck, User as UserIcon, RotateCcw, ArrowUpDown, Menu, X } from 'lucide-react';
+import { Car, Search, Filter, LogIn, LogOut, ShieldCheck, User as UserIcon, RotateCcw, ArrowUpDown, Menu, X, PlusCircle } from 'lucide-react';
 
 const categories = ['All', 'Sedan', 'SUV', 'Truck', 'Electric', 'Coupe'];
 
-const Navbar = ({ filters, onFilterChange, onResetFilters, onOpenAuth, onOpenProfile }) => {
+const Navbar = ({ filters, onFilterChange, onResetFilters, onOpenAuth, onOpenProfile, onOpenAddVehicle }) => {
   const { user, logout } = useContext(AuthContext);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const username = user ? user.email.split('@')[0] : '';
@@ -27,7 +27,7 @@ const Navbar = ({ filters, onFilterChange, onResetFilters, onOpenAuth, onOpenPro
         {/* Right: User Profile & Logout Controls */}
         <div className="flex items-center gap-3">
           {user ? (
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2.5">
               <button
                 onClick={onOpenProfile}
                 aria-label="View user profile"
@@ -49,6 +49,17 @@ const Navbar = ({ filters, onFilterChange, onResetFilters, onOpenAuth, onOpenPro
                   {initial}
                 </div>
               </button>
+
+              {user.role === 'admin' && (
+                <button
+                  onClick={onOpenAddVehicle}
+                  aria-label="Manage Inventory"
+                  className="px-3.5 py-1.5 bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-500 hover:to-blue-500 text-white font-bold text-xs rounded-xl shadow-md shadow-indigo-600/30 transition-all flex items-center gap-1.5 cursor-pointer shrink-0"
+                >
+                  <PlusCircle className="w-3.5 h-3.5 text-white" />
+                  <span>Manage Inventory</span>
+                </button>
+              )}
 
               <button
                 onClick={logout}

@@ -310,20 +310,6 @@ function App() {
               </p>
             )}
           </div>
-
-          {/* Admin-Only Control: "+ Add Vehicle" Button above the grid */}
-          {user && user.role === 'admin' && (
-            <button
-              onClick={() => {
-                setVehicleToEdit(null);
-                setIsAdminModalOpen(true);
-              }}
-              className="px-4 py-2.5 bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white font-semibold text-xs rounded-xl shadow-lg shadow-emerald-500/20 flex items-center gap-2 cursor-pointer shrink-0"
-            >
-              <PlusCircle className="w-4 h-4" />
-              + Add Vehicle
-            </button>
-          )}
         </div>
 
         {/* Dedicated Search & Filter Bar Section */}

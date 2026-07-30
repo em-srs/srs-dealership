@@ -7,15 +7,10 @@ const FilterBar = ({ filters, onFilterChange, onReset }) => {
   return (
     <div className="bg-slate-900/90 backdrop-blur-md border border-slate-800/80 rounded-2xl p-5 shadow-2xl mb-8">
       {/* Upper Sub-Header Bar */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 pb-3 mb-4 border-b border-slate-800/80">
-        <div className="flex items-center gap-2">
-          <SlidersHorizontal className="w-4 h-4 text-indigo-400" />
-          <span className="text-[11px] font-extrabold tracking-wider text-indigo-400 uppercase">
-            SEARCH & FILTER INVENTORY (PRICES IN INR ₹)
-          </span>
-        </div>
-        <span className="text-xs text-slate-400 font-medium">
-          Exchange Rate: ₹85 = $1 USD
+      <div className="flex items-center gap-2 pb-3 mb-4 border-b border-slate-800/80">
+        <SlidersHorizontal className="w-4 h-4 text-indigo-400" />
+        <span className="text-[11px] font-extrabold tracking-wider text-indigo-400 uppercase">
+          SEARCH & FILTER INVENTORY (PRICES IN INR ₹)
         </span>
       </div>
 
