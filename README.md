@@ -113,31 +113,31 @@ car_dealing/
 ├── backend/
 │   ├── app/
 │   │   ├── api/
-│   │   │   ├── deps.py                        # Auth & RBAC Dependency Injections
-│   │   │   └── endpoints/                     # Auth, Vehicles, Purchases Routers
-│   │   ├── core/                              # Security & Config Settings
-│   │   ├── db/                                # SQLAlchemy Session Builder & Neon DB Pool
-│   │   ├── models/                            # User, Vehicle, Purchase Models
-│   │   └── schemas/                           # Pydantic Validation Schemas
-│   ├── tests/                                 # Pytest Backend Unit Test Suite
+│   │   │   ├── deps.py              # Auth & RBAC Dependency Injections
+│   │   │   └── endpoints/         # Auth, Vehicles, Purchases Routers
+│   │   ├── core/                  # Security & Config Settings
+│   │   ├── db/                    # SQLAlchemy Session Builder
+│   │   ├── models/                # User, Vehicle, Purchase Models
+│   │   └── schemas/               # Pydantic Validation Schemas
+│   ├── tests/                     # Pytest Backend Unit Test Suite
 │   ├── requirements.txt
 │   └── pytest.ini
 ├── frontend/
 │   ├── src/
-│   │   ├── components/                        # Navbar, VehicleCard, FilterBar, Modals
-│   │   ├── context/                           # AuthContext State Provider
-│   │   ├── test/                              # Vitest RTL Component Tests
-│   │   └── utils/                             # Currency (INR) & Sorting Utilities
+│   │   ├── components/            # Navbar, VehicleCard, Modals
+│   │   ├── context/               # AuthContext State Provider
+│   │   ├── test/                  # Vitest RTL Component Tests
+│   │   └── utils/                 # Currency & Sorting Utilities
 │   ├── package.json
 │   └── vite.config.js
-├── images/                                    # High-Res Application Flow Screenshots
-├── schema.sql                                 # PostgreSQL DDL Table Schemas & CHECK Constraints
-├── README.md                                  # Production Documentation & Architecture Walkthrough
-├── PROMPTS.md                                 # AI Collaboration & Prompt Engineering Logbook
-├── Development_logbook_final.docx             # Comprehensive Engineering Logbook (.docx)
-├── Combined_Backend_Frontend_Test_Report.docx # Combined Pytest & Vitest Test Report (.docx)
-├── render.yaml                                # Render Cloud Deployment Manifest
-└── frontend/vercel.json                       # Vercel SPA Routing Manifest
+├── schema.sql                     # PostgreSQL DDL Table Schemas & CHECK Constraints
+├── README.md                      # Comprehensive Project Documentation
+├── IMPLEMENTATION_PLAN.md         # Architecture & TDD Execution Plan
+├── PROMPTS.md                     # Chronological AI Interaction Log
+├── DEVELOPMENT_LOG.docx           # Detailed Logbook & Troubleshooting
+├── backend_test_report.txt        # Empirical Pytest Execution Output
+├── frontend_test_report.txt       # Empirical Vitest Execution Output
+└── render.yaml                    # Render Cloud Deployment Manifest
 ```
 
 ---
