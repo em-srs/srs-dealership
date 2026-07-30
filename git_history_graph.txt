@@ -1,0 +1,32 @@
+﻿* 72d2262 - (2026-07-29 22:58:36) feat: make frontend fully responsive across mobile, tablet, and desktop breakpoints - sunnyrajsu (HEAD -> master, origin/master, origin/HEAD)
+* cf39341 - (2026-07-29 22:54:32) feat: add client-side sorting controls to vehicle list - sunnyrajsu
+* 920ed39 - (2026-07-29 22:51:02) feat: display vehicle prices in INR with Lakh/Crore formatting - sunnyrajsu
+* 486fda6 - (2026-07-29 17:15:35) chore: remove temporary word lock file - sunnyrajsu
+* 7223575 - (2026-07-29 17:15:01) docs: update README, PROMPTS, and AUDIT logbooks with smooth scrolling feature - sunnyrajsu
+* a549696 - (2026-07-29 17:13:52) feat: add smooth scrolling and back-to-top button - sunnyrajsu
+* 32bcec6 - (2026-07-29 05:56:01) docs: finalize README.md and AUDIT.md with 100% verification checklist pass - sunnyrajsu
+* 8c00df6 - (2026-07-29 05:48:28) docs: add Design Decisions and Deployment sections to README.md - sunnyrajsu
+* d03e980 - (2026-07-29 05:48:13) docs: update AUDIT.md and README.md following endpoint protection fix - sunnyrajsu
+* 6ccfef5 - (2026-07-29 05:48:03) feat: protect GET /api/vehicles and GET /api/vehicles/search with get_current_user dependency - sunnyrajsu
+* 784c078 - (2026-07-29 05:47:42) test: require authentication for GET /api/vehicles and GET /api/vehicles/search endpoints - sunnyrajsu
+* ae611e8 - (2026-07-29 05:47:20) docs: update README with multi-AI tool attributions and co-author trailer clarification - sunnyrajsu
+* fb2cdbc - (2026-07-29 05:09:19) docs: update README, PROMPTS, and development logbooks with live production deployment details - sunnyrajsu
+* 39a26c4 - (2026-07-29 04:34:32) feat: provision live Neon PostgreSQL database and add production deployment configurations for Render and Vercel - sunnyrajsu
+* 2f3f834 - (2026-07-29 03:56:51) docs: update README, test reports, and AI usage ownership statement - sunnyrajsu
+* 0bcea5d - (2026-07-29 03:51:28) feat: wrap root App in AuthProvider and implement synchronous context state updates - sunnyrajsu
+* 4780997 - (2026-07-29 03:30:35) feat: implement single-page permission-gated dashboard layout with integrated top bar search & layered admin controls - sunnyrajsu
+* 39761f9 - (2026-07-29 03:23:51) feat: implement user profile button and dropdown menu - sunnyrajsu
+* 7857941 - (2026-07-29 03:19:29) fix(frontend): improve AuthModal error feedback and add processing state - sunnyrajsu
+* e606e27 - (2026-07-29 03:17:08) fix: resolve login modal trigger prop mismatch and implement OR-based search query logic - sunnyrajsu
+* df7dd96 - (2026-07-29 03:13:20) fix(backend): allow public unauthenticated access to view and search vehicle inventory catalog - sunnyrajsu
+* ddbc1ef - (2026-07-29 03:10:01) refactor: rename vehicle column make to maker across database, backend, and frontend - sunnyrajsu
+* 5c9cd28 - (2026-07-29 01:53:50) fix(frontend): resolve Tailwind CSS v4 PostCSS plugin deprecation error - sunnyrajsu
+* 7a4190f - (2026-07-29 01:45:24) docs: finalize test reports, README, and PROMPTS log - sunnyrajsu
+* 14f9742 - (2026-07-29 01:37:32) feat: implement frontend React components, AuthContext, Navbar, and vehicle management UI - sunnyrajsu
+* 16aba50 - (2026-07-29 01:35:04) test: add failing Vitest component tests for frontend AuthContext, Navbar, and VehicleCard - sunnyrajsu
+* e629b1e - (2026-07-29 01:30:34) feat: implement vehicle purchase and restock inventory endpoints - sunnyrajsu
+* e704d36 - (2026-07-29 01:28:58) test: add failing unit tests for inventory purchase and restock endpoints - sunnyrajsu
+* c176e5a - (2026-07-29 01:18:32) feat: implement vehicles CRUD and search filtering endpoints - sunnyrajsu
+* c858856 - (2026-07-29 01:17:33) test: add failing unit tests for vehicles CRUD and search endpoints - sunnyrajsu
+* 2e3ac3a - (2026-07-29 01:14:30) feat: implement user registration and login endpoints - sunnyrajsu
+* ccf2f12 - (2026-07-29 01:14:15) test: add failing unit tests for auth register and login endpoints - sunnyrajsu

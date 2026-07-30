@@ -23,3 +23,20 @@ CREATE TABLE IF NOT EXISTS vehicles (
 -- Indexing for search performance
 CREATE INDEX IF NOT EXISTS idx_vehicles_search ON vehicles (maker, model, category);
 CREATE INDEX IF NOT EXISTS idx_vehicles_price ON vehicles (price);
+
+-- Purchase History Table
+CREATE TABLE IF NOT EXISTS purchase_history (
+    id SERIAL PRIMARY KEY,
+    user_id INT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    vehicle_id INT REFERENCES vehicles(id) ON DELETE SET NULL,
+    quantity INT NOT NULL DEFAULT 1 CHECK (quantity > 0),
+    price_at_purchase NUMERIC(10, 2) NOT NULL CHECK (price_at_purchase >= 0),
+    buyer_name VARCHAR(255) NOT NULL,
+    buyer_phone VARCHAR(50) NOT NULL,
+    delivery_address TEXT NOT NULL,
+    note TEXT,
+    purchased_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX IF NOT EXISTS idx_purchase_history_user_id ON purchase_history (user_id);
+
