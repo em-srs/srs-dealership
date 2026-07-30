@@ -78,9 +78,14 @@ The application is deployed across production cloud infrastructure:
 - **Role-Based Permissions**:
   - `user` (Customer): Browse inventory, live search across maker/model, filter by category/price, purchase vehicles.
   - `admin` (Administrator): All user permissions + `+ Add Vehicle` button above grid, layered card controls (✏️ Edit, 🗑️ Delete with confirmation, ➕ Restock inventory).
+- **Dynamic E-Commerce Catalog Metrics Banner**: Real-time stats header displaying total Brands, Vehicle Models, and Categories (`Browse among X Brands in Y Vehicles across Z Categories`).
+- **INR Currency Formatting**: Prices formatted in **INR (₹)** with Indian number formatting (Lakhs/Crores) and USD-to-INR conversion logic.
+- **Client-Side Vehicle Sorting**: Interactive sorting by price (Low to High, High to Low), year, and model name.
+- **Full Mobile Responsiveness**: Mobile-friendly hamburger navigation, responsive grid layouts, and scrollable modal dialogs across all device breakpoints.
 - **Dynamic Search & Filtering**: Live text search (`q` parameter filtering `maker` OR `model`), category dropdown (`Sedan`, `SUV`, `Truck`, `Electric`, `Coupe`), and price range (`min_price`, `max_price`).
 - **Purchase Checkout & History**: Clicking Purchase opens a checkout modal to submit buyer details (`buyer_name`, `buyer_phone`, `delivery_address`, `note`, `quantity`). Completed purchases snapshot the vehicle price and are recorded in `purchase_history` accessible via profile history (`GET /api/purchases/me`).
 - **Real-Time Inventory Protection**: Purchasing decrements stock quantity by the purchased amount. Out-of-stock items (`quantity == 0`) render a greyed-out disabled Purchase button and are protected at DB level (`CHECK (quantity >= 0)`).
+- **Automated Secret Scanning & History Hardening**: Git pre-commit scanner hook preventing credential leaks, clean git history.
 - **Smooth Scrolling & Back-To-Top Button**: Modern CSS `scroll-behavior: smooth` integrated with a floating cyan/blue Back-To-Top button that appears dynamically on page scroll.
 - **Strict TDD Methodology**: Developed using Red -> Green -> Refactor cycle for both backend (`pytest`) and frontend (`Vitest` + RTL).
 
@@ -105,7 +110,7 @@ cd backend
 python -m venv venv
 .\venv\Scripts\Activate.ps1
 pip install -r requirements.txt
-pytest -v --cov=app > ../backend_test_report.txt
+python -m pytest backend/tests -v > ../backend_test_report.txt
 uvicorn app.main:app --reload --port 8000
 ```
 
