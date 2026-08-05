@@ -8,6 +8,11 @@ SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
 
 def get_db():
+    """
+    Creates and yields a database session instance for API request handling and closes it when done.
+    Connected to: FastAPI Route Dependencies (app.api.deps)
+    Requires: Database Connection (PostgreSQL/SQLite via SessionLocal)
+    """
     db = SessionLocal()
     try:
         yield db

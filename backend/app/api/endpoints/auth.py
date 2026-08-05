@@ -11,6 +11,11 @@ router = APIRouter()
 
 @router.post("/register", response_model=UserResponse, status_code=status.HTTP_201_CREATED)
 def register(user_in: UserCreate, db: Session = Depends(get_db)):
+    """
+    Registers a new user account by hashing password and creating a database record.
+    Connected to: Frontend AuthModal (Register form POST /api/auth/register)
+    Requires: Database Session (get_db), UserCreate schema, get_password_hash
+    """
     existing_user = db.query(User).filter(User.email == user_in.email).first()
     if existing_user:
         raise HTTPException(
@@ -31,6 +36,11 @@ def register(user_in: UserCreate, db: Session = Depends(get_db)):
 
 @router.post("/login", response_model=Token)
 def login(login_in: LoginRequest, db: Session = Depends(get_db)):
+    """
+    Authenticates user credentials and issues a signed JWT Bearer access token.
+    Connected to: Frontend AuthModal / AuthContext (Login form POST /api/auth/login)
+    Requires: Database Session (get_db), LoginRequest schema, verify_password, create_access_token
+    """
     user = db.query(User).filter(User.email == login_in.email).first()
     if not user or not verify_password(login_in.password, user.hashed_password):
         raise HTTPException(

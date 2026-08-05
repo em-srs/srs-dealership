@@ -13,6 +13,11 @@ class Settings(BaseSettings):
     @field_validator("DATABASE_URL", mode="before")
     @classmethod
     def assemble_db_connection(cls, v: str) -> str:
+        """
+        Normalizes database connection URIs by replacing legacy postgres:// schema with postgresql://.
+        Connected to: Database Connection Engine (app.db.database)
+        Requires: Pydantic field_validator, DATABASE_URL environment variable from .env
+        """
         if isinstance(v, str) and v.startswith("postgres://"):
             return v.replace("postgres://", "postgresql://", 1)
         return v

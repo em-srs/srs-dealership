@@ -21,4 +21,10 @@ app.include_router(purchases_router, prefix="/api/purchases", tags=["Purchases"]
 
 @app.get("/")
 def read_root():
+    """
+    Health check endpoint for the root route returning an operational status message.
+    Connected to: Frontend / External HTTP Clients (health check)
+    Requires: None
+    """
     return {"message": "Car Dealership API is operational"}
+

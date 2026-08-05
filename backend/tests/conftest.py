@@ -12,6 +12,11 @@ TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engin
 
 @pytest.fixture(scope="function")
 def db_session():
+    """
+    Pytest fixture that creates an isolated database session for testing and wipes tables before each test.
+    Connected to: PostgreSQL Test Database
+    Requires: SQLAlchemy test engine (settings.TEST_DATABASE_URL)
+    """
     connection = engine.connect()
     transaction = connection.begin()
     session = TestingSessionLocal(bind=connection)
@@ -29,7 +34,17 @@ def db_session():
 
 @pytest.fixture(scope="function")
 def client(db_session):
+    """
+    Pytest fixture providing a FastAPI TestClient configured with test database dependency overrides.
+    Connected to: FastAPI App instance (app.main.app)
+    Requires: Pytest db_session fixture, FastAPI TestClient
+    """
     def _override_get_db():
+        """
+        Helper dependency generator overriding get_db to return the test database session.
+        Connected to: FastAPI dependency_overrides[get_db]
+        Requires: db_session fixture
+        """
         try:
             yield db_session
         finally:

@@ -62,6 +62,11 @@ function App() {
     setTimeout(() => setToast(null), 4000);
   };
 
+  /**
+   * API CALL: Fetches vehicle inventory list from backend with active search and filter parameters.
+   * Connected to: Backend GET /api/vehicles & GET /api/vehicles/search endpoints
+   * Requires: User JWT Bearer Token, Filter state (search, category, min_price, max_price)
+   */
   const fetchVehicles = async () => {
     if (!token) {
       setVehicles([]);
@@ -130,7 +135,11 @@ function App() {
     setIsPurchaseModalOpen(true);
   };
 
-  // Submit purchase checkout form
+  /**
+   * API CALL: Submits purchase order details to backend for stock reduction and order creation.
+   * Connected to: Backend POST /api/vehicles/{vehicleId}/purchase endpoint, PurchaseModal form
+   * Requires: vehicleId integer, purchaseData object (buyer_name, phone, address, quantity), JWT Token
+   */
   const handlePurchaseSubmit = async (vehicleId, purchaseData) => {
     try {
       const res = await fetch(`${API_BASE}/vehicles/${vehicleId}/purchase`, {
@@ -157,7 +166,11 @@ function App() {
   };
 
 
-  // Add / Edit vehicle endpoint
+  /**
+   * API CALL: Creates a new vehicle (POST) or updates an existing vehicle (PUT) in inventory.
+   * Connected to: Backend POST /api/vehicles & PUT /api/vehicles/{id} endpoints, AdminModal form
+   * Requires: vehicleData object (maker, model, year, category, price, quantity), JWT Token
+   */
   const handleAdminSubmit = async (vehicleData) => {
     try {
       const url = vehicleToEdit
@@ -193,7 +206,11 @@ function App() {
     }
   };
 
-  // Restock inventory endpoint
+  /**
+   * API CALL: Restocks vehicle inventory quantity by calling backend restock endpoint (Admin).
+   * Connected to: Backend POST /api/vehicles/{vehicleId}/restock?amount={amount} endpoint, RestockModal
+   * Requires: vehicleId integer, restock amount integer, Admin JWT Token
+   */
   const handleRestockSubmit = async (vehicleId, amount) => {
     try {
       const res = await fetch(
@@ -220,7 +237,11 @@ function App() {
     }
   };
 
-  // Delete vehicle endpoint
+  /**
+   * API CALL: Permanently deletes a vehicle entry from inventory database (Admin).
+   * Connected to: Backend DELETE /api/vehicles/{vehicleId} endpoint, VehicleCard action button
+   * Requires: vehicleId integer, Admin JWT Token
+   */
   const handleDelete = async (vehicleId) => {
     if (!window.confirm('Are you sure you want to delete this vehicle entry?'))
       return;

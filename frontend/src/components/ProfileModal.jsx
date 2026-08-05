@@ -17,6 +17,11 @@ const ProfileModal = ({ isOpen, onClose, user }) => {
     }
   }, [isOpen, token]);
 
+  /**
+   * API CALL: Fetches user purchase history from the backend using the stored JWT authorization token.
+   * Connected to: Backend GET /api/purchases/me endpoint
+   * Requires: User JWT Bearer Token from AuthContext
+   */
   const fetchPurchaseHistory = async () => {
     setLoadingHistory(true);
     try {

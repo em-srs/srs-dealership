@@ -2,6 +2,11 @@ import pytest
 
 @pytest.fixture
 def user1_headers(client):
+    """
+    Registers and logs in primary test user 1, returning HTTP Authorization Bearer headers.
+    Connected to: Auth endpoints (POST /api/auth/register, POST /api/auth/login)
+    Requires: Pytest client fixture
+    """
     client.post(
         "/api/auth/register",
         json={"email": "buyer1@example.com", "password": "password123", "role": "user"}
@@ -15,6 +20,11 @@ def user1_headers(client):
 
 @pytest.fixture
 def user2_headers(client):
+    """
+    Registers and logs in secondary test user 2, returning HTTP Authorization Bearer headers.
+    Connected to: Auth endpoints (POST /api/auth/register, POST /api/auth/login)
+    Requires: Pytest client fixture
+    """
     client.post(
         "/api/auth/register",
         json={"email": "buyer2@example.com", "password": "password123", "role": "user"}
@@ -28,6 +38,11 @@ def user2_headers(client):
 
 @pytest.fixture
 def admin_headers(client):
+    """
+    Registers and logs in admin test user, returning HTTP Authorization Bearer headers.
+    Connected to: Auth endpoints (POST /api/auth/register, POST /api/auth/login)
+    Requires: Pytest client fixture
+    """
     client.post(
         "/api/auth/register",
         json={"email": "admin_purchases@example.com", "password": "password123", "role": "admin"}
@@ -41,6 +56,11 @@ def admin_headers(client):
 
 
 def test_purchase_vehicle_with_details_creates_history_record(client, user1_headers, admin_headers):
+    """
+    Tests purchasing a vehicle with buyer information and verifies purchase history record creation.
+    Connected to: Vehicle Purchase endpoint (POST /api/vehicles/{id}/purchase), PurchaseModal in Frontend
+    Requires: Pytest client, user1_headers, and admin_headers fixtures
+    """
     # 1. Create a vehicle
     res = client.post(
         "/api/vehicles",
@@ -71,6 +91,11 @@ def test_purchase_vehicle_with_details_creates_history_record(client, user1_head
     assert data["quantity"] == 1
 
 def test_get_user_purchase_history_isolation(client, user1_headers, user2_headers, admin_headers):
+    """
+    Tests data isolation for purchase histories, ensuring users cannot view other users' purchases.
+    Connected to: Purchases API (GET /api/purchases/me), User Dashboard / Navbar in Frontend
+    Requires: Pytest client, user1_headers, user2_headers, and admin_headers fixtures
+    """
     # 1. Create a vehicle
     res = client.post(
         "/api/vehicles",
@@ -107,5 +132,10 @@ def test_get_user_purchase_history_isolation(client, user1_headers, user2_header
     assert records[0]["price_at_purchase"] == 120000.00
 
 def test_get_purchases_unauthenticated_fails(client):
+    """
+    Tests that requesting user purchase history without authentication fails with HTTP 401 Unauthorized.
+    Connected to: Purchases API (GET /api/purchases/me), Auth middleware
+    Requires: Pytest client fixture
+    """
     response = client.get("/api/purchases/me")
     assert response.status_code == 401

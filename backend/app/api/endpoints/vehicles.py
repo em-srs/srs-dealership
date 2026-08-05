@@ -17,6 +17,11 @@ def create_vehicle(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
+    """
+    Creates and persists a new vehicle record in the inventory database.
+    Connected to: Frontend Add Vehicle Modal/Form (POST /api/vehicles)
+    Requires: Database Session (get_db), get_current_user dependency, VehicleCreate schema
+    """
     new_vehicle = Vehicle(
         maker=vehicle_in.maker,
         model=vehicle_in.model,
@@ -35,6 +40,11 @@ def get_all_vehicles(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
+    """
+    Retrieves all vehicle records from the database.
+    Connected to: Frontend Vehicle Catalog / Main Dashboard (GET /api/vehicles)
+    Requires: Database Session (get_db), get_current_user dependency
+    """
     return db.query(Vehicle).all()
 
 @router.get("/search", response_model=List[VehicleResponse])
@@ -48,6 +58,11 @@ def search_vehicles(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
+    """
+    Filters and searches vehicles based on search text, maker, model, category, and price range filters.
+    Connected to: Frontend Search & Filter Bar (GET /api/vehicles/search)
+    Requires: Database Session (get_db), get_current_user dependency, Query parameters
+    """
     query = db.query(Vehicle)
     if q:
         query = query.filter(
@@ -76,6 +91,11 @@ def update_vehicle(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
+    """
+    Updates details of an existing vehicle in the database by ID.
+    Connected to: Frontend Edit Vehicle Modal/Form (PUT /api/vehicles/{vehicle_id})
+    Requires: Database Session (get_db), get_current_user dependency, VehicleUpdate schema
+    """
     vehicle = db.query(Vehicle).filter(Vehicle.id == vehicle_id).first()
     if not vehicle:
         raise HTTPException(
@@ -97,6 +117,11 @@ def delete_vehicle(
     db: Session = Depends(get_db),
     admin_user: User = Depends(require_admin)
 ):
+    """
+    Deletes a vehicle record permanently from the database (Admin only).
+    Connected to: Frontend Delete Vehicle button (DELETE /api/vehicles/{vehicle_id})
+    Requires: Database Session (get_db), require_admin dependency
+    """
     vehicle = db.query(Vehicle).filter(Vehicle.id == vehicle_id).first()
     if not vehicle:
         raise HTTPException(
@@ -118,6 +143,11 @@ def purchase_vehicle(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
+    """
+    Processes a vehicle purchase for the authenticated user, updates stock, and records purchase history.
+    Connected to: Frontend Purchase Modal / Buy Now button (POST /api/vehicles/{vehicle_id}/purchase)
+    Requires: Database Session (get_db), get_current_user dependency, create_purchase_record service
+    """
     return create_purchase_record(
         db=db,
         user=current_user,
@@ -133,6 +163,11 @@ def restock_vehicle(
     db: Session = Depends(get_db),
     admin_user: User = Depends(require_admin)
 ):
+    """
+    Increases the inventory quantity for a specific vehicle by the given amount (Admin only).
+    Connected to: Frontend Restock inventory control (POST /api/vehicles/{vehicle_id}/restock)
+    Requires: Database Session (get_db), require_admin dependency, Query parameter 'amount'
+    """
     vehicle = db.query(Vehicle).filter(Vehicle.id == vehicle_id).first()
     if not vehicle:
         raise HTTPException(

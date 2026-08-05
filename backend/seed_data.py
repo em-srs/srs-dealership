@@ -68,6 +68,11 @@ vehicles_data = [
 ]
 
 def seed_database():
+    """
+    Populates the database with 50 initial vehicles and default demo accounts (admin and user).
+    Connected to: Database (vehicles and users tables)
+    Requires: SessionLocal, Vehicle model, User model, get_password_hash
+    """
     db = SessionLocal()
     try:
         print("Seeding 50 vehicles into PostgreSQL vehicles table...")

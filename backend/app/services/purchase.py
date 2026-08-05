@@ -14,6 +14,11 @@ def create_purchase_record(
     vehicle_id: int,
     purchase_in: Optional[PurchaseCreate] = None
 ) -> PurchaseResponse:
+    """
+    Validates stock availability, decrements vehicle inventory, creates a PurchaseHistory record, and returns response.
+    Connected to: Vehicle Endpoint (POST /api/vehicles/{vehicle_id}/purchase), Frontend PurchaseModal
+    Requires: Database Session, User model, Vehicle model, PurchaseHistory model
+    """
     vehicle = db.query(Vehicle).filter(Vehicle.id == vehicle_id).first()
     if not vehicle:
         raise HTTPException(
@@ -67,6 +72,11 @@ def create_purchase_record(
     )
 
 def get_user_purchases(db: Session, user_id: int) -> List[PurchaseResponse]:
+    """
+    Fetches all purchase history entries for a specific user joined with vehicle details, ordered by date.
+    Connected to: Purchase Endpoint (GET /api/purchases/me), Frontend User Dashboard / Purchase History Modal
+    Requires: Database Session, PurchaseHistory model, Vehicle model
+    """
     records = (
         db.query(PurchaseHistory, Vehicle)
         .outerjoin(Vehicle, PurchaseHistory.vehicle_id == Vehicle.id)

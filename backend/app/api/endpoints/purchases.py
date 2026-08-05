@@ -15,4 +15,9 @@ def get_my_purchases(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
+    """
+    Fetches the purchase history for the currently authenticated user.
+    Connected to: Frontend Navbar / User Dashboard / Purchase History Modal (GET /api/purchases/me)
+    Requires: Database Session (get_db), get_current_user dependency, get_user_purchases service
+    """
     return get_user_purchases(db=db, user_id=current_user.id)

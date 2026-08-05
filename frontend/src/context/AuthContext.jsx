@@ -9,6 +9,11 @@ export const AuthContext = createContext({
   logout: () => {},
 });
 
+/**
+ * Decodes and parses a JWT payload string to extract claims (subject, role, expiration).
+ * Connected to: LocalStorage JWT token storage
+ * Requires: Standard base64 JWT token string
+ */
 const parseJwt = (token) => {
   try {
     const base64Url = token.split('.')[1];
@@ -61,6 +66,11 @@ export const AuthProvider = ({ children }) => {
 
   const API_BASE = getApiBase();
 
+  /**
+   * API CALL: Sends user login credentials to backend and saves received JWT access token.
+   * Connected to: Backend POST /api/auth/login endpoint, AuthModal form
+   * Requires: User email and password strings
+   */
   const login = async (email, password) => {
     const res = await fetch(`${API_BASE}/auth/login`, {
       method: 'POST',
@@ -89,6 +99,11 @@ export const AuthProvider = ({ children }) => {
     return data;
   };
 
+  /**
+   * API CALL: Sends new user registration details to backend for account creation.
+   * Connected to: Backend POST /api/auth/register endpoint, AuthModal form
+   * Requires: User email, password, and optional role ('user' or 'admin')
+   */
   const register = async (email, password, role = 'user') => {
     const res = await fetch(`${API_BASE}/auth/register`, {
       method: 'POST',
@@ -104,6 +119,11 @@ export const AuthProvider = ({ children }) => {
     return await res.json();
   };
 
+  /**
+   * Clears saved token from local storage and resets user authentication state.
+   * Connected to: Navbar Logout button
+   * Requires: None
+   */
   const logout = () => {
     localStorage.removeItem('token');
     setToken(null);
