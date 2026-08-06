@@ -3,6 +3,7 @@
  * Connected to: Backend API Server (http://localhost:8000/api or production Render endpoint)
  * Requires: VITE_API_BASE_URL environment variable or window.location.hostname
  */
+
 export const getApiBase = () => {
   if (import.meta.env.VITE_API_BASE_URL) {
     return import.meta.env.VITE_API_BASE_URL;
@@ -15,3 +16,4 @@ export const getApiBase = () => {
   }
   return 'http://localhost:8000/api';
 };
+
