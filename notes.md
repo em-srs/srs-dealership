@@ -116,8 +116,8 @@ flowchart TD
     CustomerDash --> SearchFilter[Use Search & Category Filter Bar]
     SearchFilter --> ViewCards[Browse Vehicle Cards & Prices]
     ViewCards --> ClickBuy{Click Purchase Vehicle}
-    ClickBuy --> PurchaseModal[Fill Checkout Form: Name, Phone, Address, Quantity]
-    PurchaseModal --> SubmitPurchase[POST /api/vehicles/{id}/purchase]
+    ClickBuy --> PurchaseModal["Fill Checkout Form: Name, Phone, Address, Quantity"]
+    PurchaseModal --> SubmitPurchase["POST /api/vehicles/{id}/purchase"]
     SubmitPurchase -- Out of Stock / Invalid --> PurchaseErr[Show Error Notification]
     SubmitPurchase -- Success --> StockDecremented[Stock Decremented & Purchase Snapshot Saved]
     StockDecremented --> ViewHistory[View Order in Profile Purchase History Tab]
@@ -125,11 +125,11 @@ flowchart TD
     %% Admin Journey
     CheckRole -- Administrator (role: admin) --> AdminDash[Admin Catalog View with Elevated Controls]
     AdminDash --> ToggleView{Select Action}
-    ToggleView -- Add Vehicle --> AddModal[+ Add New Vehicle Modal] --> POST_Vehicle[POST /api/vehicles]
+    ToggleView -- Add Vehicle --> AddModal["+ Add New Vehicle Modal"] --> POST_Vehicle["POST /api/vehicles"]
     ToggleView -- Manage Inventory --> InventoryGroup[Brand-Grouped Inventory View]
-    InventoryGroup --> RestockAction[Click Restock] --> RestockModal[Restock Quantity Form] --> POST_Restock[POST /api/vehicles/{id}/restock]
-    InventoryGroup --> EditAction[Click Edit] --> EditModal[Edit Vehicle Details Form] --> PUT_Vehicle[PUT /api/vehicles/{id}]
-    InventoryGroup --> DeleteAction[Click Delete] --> DeleteConfirm[Delete Confirmation Prompt] --> DEL_Vehicle[DELETE /api/vehicles/{id}]
+    InventoryGroup --> RestockAction[Click Restock] --> RestockModal[Restock Quantity Form] --> POST_Restock["POST /api/vehicles/{id}/restock"]
+    InventoryGroup --> EditAction[Click Edit] --> EditModal[Edit Vehicle Details Form] --> PUT_Vehicle["PUT /api/vehicles/{id}"]
+    InventoryGroup --> DeleteAction[Click Delete] --> DeleteConfirm[Delete Confirmation Prompt] --> DEL_Vehicle["DELETE /api/vehicles/{id}"]
     
     POST_Vehicle & POST_Restock & PUT_Vehicle & DEL_Vehicle --> UpdateUI[Live Catalog Refresh & State Re-render]
 ```
