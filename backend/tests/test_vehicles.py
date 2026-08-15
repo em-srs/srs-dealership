@@ -76,41 +76,43 @@ def test_create_vehicle_unauthenticated_fails(client):
     response = client.post("/api/vehicles", json=payload)
     assert response.status_code == 401
 
-def test_get_all_vehicles_requires_authentication(client, user_token_headers):
+def test_get_all_vehicles_public_access(client, user_token_headers):
     """
-    Tests fetching all vehicles, verifying unauthenticated requests fail (401) and authenticated ones succeed (200).
+    Tests fetching all vehicles, verifying unauthenticated requests succeed (200) for public browsing.
     Connected to: Vehicles API (GET /api/vehicles), Vehicle Catalog in Frontend
     Requires: Pytest client and user_token_headers fixtures
     """
     client.post("/api/vehicles", json={"maker": "Ford", "model": "Mustang", "year": 2021, "category": "Coupe", "price": 35000.00, "quantity": 2}, headers=user_token_headers)
 
-    # Unauthenticated GET request must fail with 401 Unauthorized
+    # Unauthenticated GET request must succeed with 200 OK for public shop view
     unauth_response = client.get("/api/vehicles")
-    assert unauth_response.status_code == 401
+    assert unauth_response.status_code == 200
+    assert len(unauth_response.json()) >= 1
 
-    # Authenticated GET request must succeed with 200 OK
+    # Authenticated GET request must also succeed with 200 OK
     auth_response = client.get("/api/vehicles", headers=user_token_headers)
     assert auth_response.status_code == 200
     assert len(auth_response.json()) >= 1
 
-def test_search_vehicles_requires_authentication(client, user_token_headers):
+def test_search_vehicles_public_access(client, user_token_headers):
     """
-    Tests vehicle search and filtering, verifying unauthenticated requests fail (401) and authenticated ones succeed (200).
+    Tests vehicle search and filtering, verifying unauthenticated requests succeed (200) for public shop search.
     Connected to: Vehicles Search API (GET /api/vehicles/search), Search Bar in Frontend
     Requires: Pytest client and user_token_headers fixtures
     """
     client.post("/api/vehicles", json={"maker": "Toyota", "model": "Corolla", "year": 2020, "category": "Sedan", "price": 18000.00, "quantity": 3}, headers=user_token_headers)
 
-    # Unauthenticated search request must fail with 401 Unauthorized
+    # Unauthenticated search request must succeed with 200 OK
     unauth_response = client.get("/api/vehicles/search?maker=Toyota&max_price=30000")
-    assert unauth_response.status_code == 401
-
-    # Authenticated search request must succeed with 200 OK
-    auth_response = client.get("/api/vehicles/search?maker=Toyota&max_price=30000", headers=user_token_headers)
-    assert auth_response.status_code == 200
-    results = auth_response.json()
+    assert unauth_response.status_code == 200
+    results = unauth_response.json()
     assert len(results) == 1
     assert results[0]["model"] == "Corolla"
+
+    # Authenticated search request must also succeed with 200 OK
+    auth_response = client.get("/api/vehicles/search?maker=Toyota&max_price=30000", headers=user_token_headers)
+    assert auth_response.status_code == 200
+    assert len(auth_response.json()) == 1
 
 def test_update_vehicle_success(client, user_token_headers):
     """

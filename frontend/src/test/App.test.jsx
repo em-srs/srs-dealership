@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react';
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import VehicleCard from '../components/VehicleCard';
 import Navbar from '../components/Navbar';
 import AuthContext from '../context/AuthContext';
@@ -73,7 +73,14 @@ describe('Navbar Component', () => {
 });
 
 describe('App Unauthenticated State', () => {
-  it('displays Authentication Required banner for unauthenticated guest users', () => {
+  it('displays public shop catalog view and filter bar for unauthenticated guest users', async () => {
+    global.fetch = vi.fn().mockResolvedValue({
+      ok: true,
+      json: async () => [
+        { id: 1, maker: 'Toyota', model: 'Camry', year: 2023, category: 'Sedan', price: 26000, quantity: 5 }
+      ],
+    });
+
     const mockContext = { user: null, token: null, logout: () => {} };
     render(
       <AuthContext.Provider value={mockContext}>
@@ -81,9 +88,9 @@ describe('App Unauthenticated State', () => {
       </AuthContext.Provider>
     );
 
-    expect(screen.getByText('Authentication Required')).toBeInTheDocument();
-    expect(screen.getByText(/Please log in or register a new account to browse/i)).toBeInTheDocument();
-    expect(screen.queryByText('No Vehicles Found')).not.toBeInTheDocument();
+    expect(screen.getByText('Vehicle Inventory Catalog')).toBeInTheDocument();
+    expect(screen.getByPlaceholderText(/Toyota, BMW/i)).toBeInTheDocument();
+    expect(screen.queryByText('Authentication Required')).not.toBeInTheDocument();
   });
 });
 

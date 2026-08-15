@@ -68,11 +68,6 @@ function App() {
    * Requires: User JWT Bearer Token, Filter state (search, category, min_price, max_price)
    */
   const fetchVehicles = async () => {
-    if (!token) {
-      setVehicles([]);
-      setLoading(false);
-      return;
-    }
     setLoading(true);
     try {
       const params = new URLSearchParams();
@@ -270,30 +265,36 @@ function App() {
   const totalVehicles = vehicles.length;
   const totalCategories = new Set(vehicles.map((v) => v.category).filter(Boolean)).size;
 
-  if (!token || !user) {
-    return (
-      <div className="min-h-screen bg-[#050C1B] text-slate-100 flex flex-col font-sans">
-        {toast && (
-          <div
-            className={`fixed top-4 right-4 z-50 px-4 py-3 rounded-xl border shadow-2xl flex items-center gap-3 backdrop-blur-md transition-all ${
-              toast.type === 'error'
-                ? 'bg-rose-950/90 border-rose-800 text-rose-200'
-                : 'bg-emerald-950/90 border-emerald-800 text-emerald-200'
-            }`}
-          >
-            {toast.type === 'error' ? (
-              <AlertCircle className="w-5 h-5 text-rose-400" />
-            ) : (
-              <CheckCircle2 className="w-5 h-5 text-emerald-400" />
-            )}
-            <span className="text-sm font-semibold">{toast.message}</span>
-          </div>
-        )}
+  const handleInitiateEdit = (veh) => {
+    if (!token) {
+      setIsAuthModalOpen(true);
+      showToast('Please log in to manage inventory.', 'error');
+      return;
+    }
+    setVehicleToEdit(veh);
+    setIsAdminModalOpen(true);
+  };
 
-        <LandingPage onSuccess={(msg) => showToast(msg)} />
-      </div>
-    );
-  }
+  const handleInitiateRestock = (veh) => {
+    if (!token) {
+      setIsAuthModalOpen(true);
+      showToast('Please log in to manage inventory.', 'error');
+      return;
+    }
+    setVehicleToRestock(veh);
+    setIsRestockModalOpen(true);
+  };
+
+  const handleInitiateDelete = (vehicleId) => {
+    if (!token) {
+      setIsAuthModalOpen(true);
+      showToast('Please log in to manage inventory.', 'error');
+      return;
+    }
+    handleDelete(vehicleId);
+  };
+
+
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col font-sans">
@@ -322,6 +323,15 @@ function App() {
         onResetFilters={handleResetFilters}
         onOpenAuth={() => setIsAuthModalOpen(true)}
         onOpenAddVehicle={() => {
+          if (!token) {
+            setIsAuthModalOpen(true);
+            showToast('Please log in to manage inventory.', 'error');
+            return;
+          }
+          if (user && user.role !== 'admin') {
+            showToast('Admin privileges required to manage inventory.', 'error');
+            return;
+          }
           setActiveTab('admin');
         }}
         onOpenProfile={() => setIsProfileModalOpen(true)}
@@ -430,25 +440,19 @@ function App() {
                                 <td className="py-3.5 px-5">
                                   <div className="flex items-center justify-center gap-2">
                                     <button
-                                      onClick={() => {
-                                        setVehicleToEdit(v);
-                                        setIsAdminModalOpen(true);
-                                      }}
+                                      onClick={() => handleInitiateEdit(v)}
                                       className="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold rounded-lg border border-slate-700 transition-colors cursor-pointer"
                                     >
                                       Edit
                                     </button>
                                     <button
-                                      onClick={() => {
-                                        setVehicleToRestock(v);
-                                        setIsRestockModalOpen(true);
-                                      }}
+                                      onClick={() => handleInitiateRestock(v)}
                                       className="px-3 py-1.5 bg-emerald-950/80 hover:bg-emerald-900 text-emerald-400 text-xs font-semibold rounded-lg border border-emerald-800/80 transition-colors cursor-pointer"
                                     >
                                       Restock
                                     </button>
                                     <button
-                                      onClick={() => handleDelete(v.id)}
+                                      onClick={() => handleInitiateDelete(v.id)}
                                       className="px-3 py-1.5 bg-rose-950/80 hover:bg-rose-900 text-rose-400 text-xs font-semibold rounded-lg border border-rose-800/80 transition-colors cursor-pointer"
                                     >
                                       Delete
@@ -474,63 +478,34 @@ function App() {
                 <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
                   Vehicle Inventory Catalog
                 </h1>
-                {token && user ? (
-                  <div className="mt-2.5 flex flex-wrap items-center gap-2 text-xs sm:text-sm">
-                    <span className="text-slate-400 font-medium">Browse among</span>
-                    <span className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-cyan-950/80 border border-cyan-800/60 text-cyan-300 font-bold rounded-lg shadow-sm">
-                      <Award className="w-3.5 h-3.5 text-cyan-400" />
-                      {totalBrands} {totalBrands === 1 ? 'Brand' : 'Brands'}
-                    </span>
-                    <span className="text-slate-400 font-medium">in</span>
-                    <span className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-emerald-950/80 border border-emerald-800/60 text-emerald-300 font-bold rounded-lg shadow-sm">
-                      <Car className="w-3.5 h-3.5 text-emerald-400" />
-                      {totalVehicles} {totalVehicles === 1 ? 'Vehicle' : 'Vehicles'}
-                    </span>
-                    <span className="text-slate-400 font-medium">across</span>
-                    <span className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-purple-950/80 border border-purple-800/60 text-purple-300 font-bold rounded-lg shadow-sm">
-                      <Layers className="w-3.5 h-3.5 text-purple-400" />
-                      {totalCategories} {totalCategories === 1 ? 'Category' : 'Categories'}
-                    </span>
-                  </div>
-                ) : (
-                  <p className="mt-1.5 text-slate-400 text-xs sm:text-sm">
-                    Please log in to browse live vehicle inventory, check real-time stock availability, and place orders.
-                  </p>
-                )}
+                <div className="mt-2.5 flex flex-wrap items-center gap-2 text-xs sm:text-sm">
+                  <span className="text-slate-400 font-medium">Browse among</span>
+                  <span className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-cyan-950/80 border border-cyan-800/60 text-cyan-300 font-bold rounded-lg shadow-sm">
+                    <Award className="w-3.5 h-3.5 text-cyan-400" />
+                    {totalBrands} {totalBrands === 1 ? 'Brand' : 'Brands'}
+                  </span>
+                  <span className="text-slate-400 font-medium">in</span>
+                  <span className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-emerald-950/80 border border-emerald-800/60 text-emerald-300 font-bold rounded-lg shadow-sm">
+                    <Car className="w-3.5 h-3.5 text-emerald-400" />
+                    {totalVehicles} {totalVehicles === 1 ? 'Vehicle' : 'Vehicles'}
+                  </span>
+                  <span className="text-slate-400 font-medium">across</span>
+                  <span className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-purple-950/80 border border-purple-800/60 text-purple-300 font-bold rounded-lg shadow-sm">
+                    <Layers className="w-3.5 h-3.5 text-purple-400" />
+                    {totalCategories} {totalCategories === 1 ? 'Category' : 'Categories'}
+                  </span>
+                </div>
               </div>
             </div>
 
             {/* Dedicated Search & Filter Bar Section */}
-            {token && user && (
-              <FilterBar
-                filters={filters}
-                onFilterChange={handleFilterChange}
-                onReset={handleResetFilters}
-              />
-            )}
+            <FilterBar
+              filters={filters}
+              onFilterChange={handleFilterChange}
+              onReset={handleResetFilters}
+            />
 
-            {!token || !user ? (
-              <div className="bg-slate-900/60 border border-slate-800/80 rounded-3xl p-8 sm:p-12 text-center my-8 shadow-2xl backdrop-blur-sm max-w-2xl mx-auto">
-                <div className="w-16 h-16 bg-gradient-to-br from-cyan-500/20 to-blue-600/20 border border-cyan-500/30 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-inner">
-                  <Lock className="w-8 h-8 text-cyan-400" />
-                </div>
-                <h2 className="text-xl sm:text-2xl font-bold text-white tracking-tight">
-                  Authentication Required
-                </h2>
-                <p className="text-sm text-slate-400 mt-2.5 max-w-md mx-auto leading-relaxed">
-                  Please log in or register a new account to browse our vehicle inventory, view real-time pricing, and initiate purchases.
-                </p>
-                <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">
-                  <button
-                    onClick={() => setIsAuthModalOpen(true)}
-                    className="w-full sm:w-auto px-6 py-3 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white font-bold text-sm rounded-xl shadow-lg shadow-cyan-500/25 transition-all transform hover:-translate-y-0.5 cursor-pointer flex items-center justify-center gap-2"
-                  >
-                    <LogIn className="w-4 h-4" />
-                    Login / Register
-                  </button>
-                </div>
-              </div>
-            ) : loading ? (
+            {loading ? (
               <div className="flex flex-col items-center justify-center py-20">
                 <div className="w-10 h-10 border-4 border-cyan-500/30 border-t-cyan-500 rounded-full animate-spin"></div>
                 <p className="mt-4 text-sm text-slate-400 font-medium">
@@ -560,15 +535,9 @@ function App() {
                     key={v.id}
                     vehicle={v}
                     onPurchase={() => handleInitiatePurchase(v)}
-                    onEdit={(veh) => {
-                      setVehicleToEdit(veh);
-                      setIsAdminModalOpen(true);
-                    }}
-                    onRestock={(veh) => {
-                      setVehicleToRestock(veh);
-                      setIsRestockModalOpen(true);
-                    }}
-                    onDelete={handleDelete}
+                    onEdit={handleInitiateEdit}
+                    onRestock={handleInitiateRestock}
+                    onDelete={handleInitiateDelete}
                   />
                 ))}
               </div>

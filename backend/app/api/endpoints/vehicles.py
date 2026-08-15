@@ -37,13 +37,12 @@ def create_vehicle(
 
 @router.get("", response_model=List[VehicleResponse])
 def get_all_vehicles(
-    db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_user)
+    db: Session = Depends(get_db)
 ):
     """
     Retrieves all vehicle records from the database.
     Connected to: Frontend Vehicle Catalog / Main Dashboard (GET /api/vehicles)
-    Requires: Database Session (get_db), get_current_user dependency
+    Requires: Database Session (get_db)
     """
     return db.query(Vehicle).all()
 
@@ -55,13 +54,12 @@ def search_vehicles(
     category: Optional[str] = Query(None),
     min_price: Optional[float] = Query(None),
     max_price: Optional[float] = Query(None),
-    db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_user)
+    db: Session = Depends(get_db)
 ):
     """
     Filters and searches vehicles based on search text, maker, model, category, and price range filters.
     Connected to: Frontend Search & Filter Bar (GET /api/vehicles/search)
-    Requires: Database Session (get_db), get_current_user dependency, Query parameters
+    Requires: Database Session (get_db), Query parameters
     """
     query = db.query(Vehicle)
     if q:
