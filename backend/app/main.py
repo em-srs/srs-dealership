@@ -20,11 +20,15 @@ app.include_router(purchases_router, prefix="/api/purchases", tags=["Purchases"]
 
 
 @app.get("/")
-def read_root():
+@app.get("/health")
+@app.get("/healthz")
+@app.get("/api/health")
+def read_health():
     """
-    Health check endpoint for the root route returning an operational status message.
-    Connected to: Frontend / External HTTP Clients (health check)
+    Health check endpoint returning an operational status message.
+    Connected to: Frontend / Monitoring services (UptimeRobot) / Render Health Check
     Requires: None
     """
-    return {"message": "Car Dealership API is operational"}
+    return {"status": "healthy", "message": "Car Dealership API is operational"}
+
 
