@@ -7,7 +7,7 @@ A production-ready full-stack vehicle inventory management system built using **
 ![React](https://img.shields.io/badge/React-19-61DAFB)
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-Neon-336791)
 ![Coverage](https://img.shields.io/badge/Coverage-93%25-brightgreen)
-![Tests](https://img.shields.io/badge/Tests-37_Passing-success)
+![Tests](https://img.shields.io/badge/Tests-38_Passing-success)
 ![License](https://img.shields.io/badge/License-MIT-green)
 
 ---
@@ -29,6 +29,7 @@ A production-ready full-stack vehicle inventory management system built using **
 
 - **Permission-Gated Single-Page Dashboard**: Customers and administrators share the same single-page dashboard. Controls render dynamically based on `user.role` from `AuthContext`.
 - **JWT Authentication & Security**: Password hashing with `bcrypt`, token expiration, and role authorization.
+- **UptimeRobot Health Monitoring & Keep-Alive**: Multi-alias health check routes (`/health`, `/healthz`, `/api/health`, `/`) returning structured operational status (`200 OK`) to prevent Render free-tier 15-minute inactivity spin-downs.
 - **Dedicated Search & Filter Bar**: Sleek dark glassmorphism card featuring Maker/Brand, Model, Category, Year, Sort By, and an indigo/blue **Filter & Sort** action button.
 - **Brand-Grouped Admin Inventory Controls**: For administrators, clicking **`Manage Inventory`** opens a dedicated inventory management view grouping vehicles by their Brand/Maker (e.g., `Mercedes-Benz`, `Honda`, `BMW`, `Audi`, `Toyota`, etc.), complete with stock summaries and inline `Edit`, `Restock`, and `Delete` action controls.
 - **Dynamic E-Commerce Catalog Metrics Banner**: Real-time stats header displaying total Brands, Vehicle Models, and Categories (`Browse among X Brands in Y Vehicles across Z Categories`).
@@ -366,7 +367,7 @@ erDiagram
 
 | Method | Endpoint | Protected | Access Role | Description |
 | :--- | :--- | :---: | :--- | :--- |
-| `GET` | `/` | No | Public | Backend operational health check |
+| `GET` | `/`, `/health`, `/healthz`, `/api/health` | No | Public | Backend operational health check & UptimeRobot monitoring |
 | `POST` | `/api/auth/register` | No | Public | Register new user account |
 | `POST` | `/api/auth/login` | No | Public | Authenticate user & return JWT token |
 | `GET` | `/api/vehicles` | Yes | Customer / Admin | Retrieve full vehicle catalog |
@@ -382,13 +383,15 @@ erDiagram
 
 ### Detailed Endpoint Specifications
 
-#### 1. System Health Check
-- **Endpoint:** `GET /`
+#### 1. System Health Check & Keep-Alive
+- **Endpoints:** `GET /`, `GET /health`, `GET /healthz`, `GET /api/health`
 - **Authentication:** None (Public)
+- **Connected To:** Frontend, UptimeRobot, Render status checks
 - **Headers:** None
 - **Response `200 OK`:**
   ```json
   {
+    "status": "healthy",
     "message": "Car Dealership API is operational"
   }
   ```
@@ -720,13 +723,13 @@ npm run dev
 
 ---
 
-## 🧪 Testing & Code Coverage (37/37 Tests Passing — 93% Coverage)
+## 🧪 Testing & Code Coverage (38/38 Tests Passing — 93% Coverage)
 
 The project enforces a strict **Test-Driven Development (TDD)** methodology (Red -> Green -> Refactor) across both backend and frontend layers.
 
 ```text
-======================= 37 PASSED (100% Pass Rate) =======================
-Backend Pytest Suite   : 21 / 21 Passed  (93% Code Coverage)
+======================= 38 PASSED (100% Pass Rate) =======================
+Backend Pytest Suite   : 22 / 22 Passed  (93% Code Coverage)
 Frontend Vitest Suite  : 16 / 16 Passed  (100% Component Pass Rate)
 ==========================================================================
 ```
@@ -736,6 +739,7 @@ Frontend Vitest Suite  : 16 / 16 Passed  (100% Component Pass Rate)
 | Module / Layer | Test File | Passed Tests | Code Coverage | Focus Areas |
 | :--- | :--- | :---: | :---: | :--- |
 | **Auth Module** | `backend/tests/test_auth.py` | 6 | 100% | Registration, login, duplicate email guards, password hashing |
+| **Health Check Module** | `backend/tests/test_health.py` | 1 | 100% | UptimeRobot & Render keep-alive health endpoints (`/health`, `/healthz`, `/api/health`) |
 | **Vehicles Module** | `backend/tests/test_vehicles.py` | 7 | 91% | CRUD operations, OR-based search filters, admin authorization |
 | **Inventory Module** | `backend/tests/test_inventory.py` | 5 | 100% | Stock depletion, out-of-stock guards, admin restocking |
 | **Purchases Module** | `backend/tests/test_purchases.py` | 3 | 95% | Checkout history creation, user isolation, 401 guards |
@@ -756,6 +760,7 @@ Frontend Vitest Suite  : 16 / 16 Passed  (100% Component Pass Rate)
 | **Frontend SPA** | **Vercel** | [srs-dealership.vercel.app](https://srs-dealership.vercel.app) | SPA rewrite rules ([`frontend/vercel.json`](frontend/vercel.json)) |
 | **Backend API** | **Render** | [drivehub-dealership.onrender.com](https://drivehub-dealership.onrender.com) | Multi-worker Gunicorn server ([`render.yaml`](render.yaml)) |
 | **Database** | **Neon Cloud** | Managed PostgreSQL 16 | SSL connection pooling, DDL relational `CHECK` constraints |
+| **Uptime Monitor** | **UptimeRobot** | [drivehub-dealership.onrender.com/health](https://drivehub-dealership.onrender.com/health) | 5-min HTTP ping preventing Render 15-min inactivity spin-down |
 
 ---
 
