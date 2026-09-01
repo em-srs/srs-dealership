@@ -19,10 +19,10 @@ app.include_router(vehicles_router, prefix="/api/vehicles", tags=["Vehicles"])
 app.include_router(purchases_router, prefix="/api/purchases", tags=["Purchases"])
 
 
-@app.get("/")
-@app.get("/health")
-@app.get("/healthz")
-@app.get("/api/health")
+@app.api_route("/", methods=["GET", "HEAD"])
+@app.api_route("/health", methods=["GET", "HEAD"])
+@app.api_route("/healthz", methods=["GET", "HEAD"])
+@app.api_route("/api/health", methods=["GET", "HEAD"])
 def read_health():
     """
     Health check endpoint returning an operational status message.
