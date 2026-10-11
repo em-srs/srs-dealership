@@ -1,6 +1,6 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import AuthContext from '../context/AuthContext';
-import { X, LogIn, UserPlus, Lock, Mail, Shield, AlertTriangle } from 'lucide-react';
+import { X, ArrowRight, Eye, EyeOff, Lock, Mail, Shield, AlertTriangle, Car, ArrowLeft } from 'lucide-react';
 
 const AuthModal = ({ isOpen, onClose, onSuccess }) => {
   const { login, register } = useContext(AuthContext);
@@ -10,6 +10,19 @@ const AuthModal = ({ isOpen, onClose, onSuccess }) => {
   const [role, setRole] = useState('user');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        onClose();
+      }
+    };
+    if (isOpen) {
+      window.addEventListener('keydown', handleKeyDown);
+    }
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, onClose]);
 
   if (!isOpen) return null;
 
@@ -47,115 +60,211 @@ const AuthModal = ({ isOpen, onClose, onSuccess }) => {
   };
 
   return (
-    <div className="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-      <div className="bg-slate-900 border border-slate-800 w-[92vw] sm:w-full max-w-md max-h-[90vh] overflow-y-auto rounded-2xl p-5 sm:p-6 shadow-2xl relative animate-fade-in">
-        <button
-          onClick={onClose}
-          className="absolute top-4 right-4 text-slate-400 hover:text-white transition-colors"
-        >
-          <X className="w-5 h-5" />
-        </button>
+    <div
+      className="fixed inset-0 z-50 flex flex-col justify-between overflow-y-auto bg-black animate-fade-in"
+      style={{
+        backgroundImage: `url('/auth-bg.png')`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center 40%',
+        backgroundRepeat: 'no-repeat',
+      }}
+    >
+      {/* Layered dark atmospheric vignette */}
+      <div className="fixed inset-0 bg-gradient-to-b from-black/80 via-black/55 to-black/85 pointer-events-none" />
+      <div className="fixed inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(0,0,0,0.65)_100%)] pointer-events-none" />
 
-        <div className="flex items-center gap-3 mb-6">
-          <div className="p-3 bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 rounded-xl">
-            {isRegisterMode ? <UserPlus className="w-6 h-6" /> : <LogIn className="w-6 h-6" />}
+      {/* Minimal Top Brand & Navigation Header */}
+      <header className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 py-4 sm:py-6 flex items-center justify-between">
+        <div className="flex items-center gap-2.5 sm:gap-3 select-none">
+          <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-white/10 backdrop-blur-md border border-white/15 flex items-center justify-center text-white shadow-sm">
+            <Car className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
           </div>
           <div>
-            <h2 className="text-xl font-bold text-white">
-              {isRegisterMode ? 'Create Account' : 'Welcome Back'}
-            </h2>
-            <p className="text-xs text-slate-400">
-              {isRegisterMode ? 'Sign up to manage or purchase inventory' : 'Log in to access your account'}
+            <h1 className="text-sm sm:text-base font-bold text-white tracking-tight leading-tight font-display">
+              DriveHub Dealership
+            </h1>
+            <p className="text-[9px] sm:text-[10px] text-stone-400 font-medium tracking-wider uppercase">
+              Automotive Portal
             </p>
           </div>
         </div>
 
-        {error && (
-          <div className="mb-4 p-3 bg-rose-500/15 border border-rose-500/30 text-rose-300 text-xs rounded-xl flex items-start gap-2">
-            <AlertTriangle className="w-4 h-4 text-rose-400 shrink-0 mt-0.5" />
-            <span>{error}</span>
+        <button
+          onClick={onClose}
+          className="flex items-center gap-1.5 sm:gap-2 px-3 py-1.5 sm:px-3.5 sm:py-2 rounded-xl bg-white/10 hover:bg-white/15 backdrop-blur-md border border-white/15 text-white text-xs font-semibold tracking-wide transition-all cursor-pointer shadow-sm"
+          aria-label="Back to Showroom"
+        >
+          <ArrowLeft className="w-3.5 h-3.5" />
+          <span className="hidden sm:inline">Back to Showroom</span>
+          <span className="sm:hidden text-xs">Back</span>
+        </button>
+      </header>
+
+      {/* Centered Liquid-Glass Authentication Panel */}
+      <main className="relative z-10 flex-1 flex items-center justify-center p-3 sm:p-6 my-auto">
+        <div className="liquid-glass-panel w-full max-w-[480px] rounded-[22px] sm:rounded-[28px] p-6 sm:p-10 transition-all">
+          {/* Sign In & Register Tabs */}
+          <div className="flex items-center gap-6 border-b border-white/10 mb-7 pb-3">
+            <button
+              type="button"
+              onClick={() => {
+                setIsRegisterMode(false);
+                setError('');
+              }}
+              className={`text-sm font-semibold tracking-wide transition-all relative pb-3 -mb-3 cursor-pointer ${
+                !isRegisterMode
+                  ? 'text-white border-b-2 border-white'
+                  : 'text-stone-400 hover:text-stone-200 border-b-2 border-transparent'
+              }`}
+            >
+              Sign In
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                setIsRegisterMode(true);
+                setError('');
+              }}
+              className={`text-sm font-semibold tracking-wide transition-all relative pb-3 -mb-3 cursor-pointer ${
+                isRegisterMode
+                  ? 'text-white border-b-2 border-white'
+                  : 'text-stone-400 hover:text-stone-200 border-b-2 border-transparent'
+              }`}
+            >
+              Register
+            </button>
           </div>
-        )}
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label htmlFor="auth-email" className="text-xs font-semibold text-slate-300 block mb-1">Email Address</label>
-            <div className="relative">
-              <Mail className="w-4 h-4 text-slate-500 absolute left-3.5 top-3" />
-              <input
-                id="auth-email"
-                type="email"
-                required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="user@example.com"
-                className="w-full bg-slate-950 border border-slate-800 focus:border-cyan-500 text-slate-100 placeholder-slate-500 rounded-xl pl-10 pr-4 py-2.5 text-sm focus:outline-none focus:ring-1 focus:ring-cyan-500 transition-all"
-              />
-            </div>
+          {/* Form Header Info */}
+          <div className="mb-6">
+            <h2 className="text-xl sm:text-2xl font-extrabold text-white font-display tracking-tight">
+              {isRegisterMode ? 'Create Your Account' : 'Welcome to DriveHub'}
+            </h2>
+            <p className="text-xs text-stone-400 mt-1">
+              {isRegisterMode
+                ? 'Register to unlock vehicle purchasing and inventory controls'
+                : 'Enter your credentials to access vehicle inventory and orders'}
+            </p>
           </div>
 
-          <div>
-            <label htmlFor="auth-password" className="text-xs font-semibold text-slate-300 block mb-1">Password</label>
-            <div className="relative">
-              <Lock className="w-4 h-4 text-slate-500 absolute left-3.5 top-3" />
-              <input
-                id="auth-password"
-                type="password"
-                required
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="••••••••"
-                className="w-full bg-slate-950 border border-slate-800 focus:border-cyan-500 text-slate-100 placeholder-slate-500 rounded-xl pl-10 pr-4 py-2.5 text-sm focus:outline-none focus:ring-1 focus:ring-cyan-500 transition-all"
-              />
-            </div>
-          </div>
-
-
-          {isRegisterMode && (
-            <div>
-              <label className="text-xs font-semibold text-slate-300 block mb-1">Account Role</label>
-              <div className="relative">
-                <Shield className="w-4 h-4 text-slate-500 absolute left-3.5 top-3" />
-                <select
-                  value={role}
-                  onChange={(e) => setRole(e.target.value)}
-                  className="w-full bg-slate-950 border border-slate-800 focus:border-cyan-500 text-slate-100 rounded-xl pl-10 pr-4 py-2.5 text-sm focus:outline-none focus:ring-1 focus:ring-cyan-500 transition-all"
-                >
-                  <option value="user">Regular User (Browse & Purchase)</option>
-                  <option value="admin">Administrator (Full CRUD & Restock)</option>
-                </select>
-              </div>
+          {/* Error Message */}
+          {error && (
+            <div className="mb-5 p-3.5 bg-red-500/10 border border-red-500/25 text-red-200 text-xs rounded-xl flex items-start gap-2.5">
+              <AlertTriangle className="w-4 h-4 text-red-400 shrink-0 mt-0.5" />
+              <span>{error}</span>
             </div>
           )}
 
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full py-2.5 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white font-semibold text-sm rounded-xl shadow-lg shadow-cyan-500/25 transition-all mt-2 cursor-pointer flex items-center justify-center gap-2"
-          >
-            {loading ? (
-              <>
-                <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-                Processing...
-              </>
-            ) : isRegisterMode ? (
-              'Register Account'
-            ) : (
-              'Log In'
-            )}
-          </button>
-        </form>
+          {/* Authentication Form */}
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div>
+              <label htmlFor="auth-email" className="block text-[11px] font-bold text-stone-300 uppercase tracking-wider mb-2">
+                Email Address
+              </label>
+              <div className="relative">
+                <Mail className="w-4 h-4 text-stone-400 absolute left-3.5 top-3.5 pointer-events-none" />
+                <input
+                  id="auth-email"
+                  type="email"
+                  required
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="name@example.com"
+                  className="w-full bg-black/35 border border-white/10 focus:border-white/40 focus:bg-black/50 text-white placeholder-stone-500 rounded-xl pl-10 pr-4 py-3 text-sm transition-all outline-none"
+                />
+              </div>
+            </div>
 
-        <div className="mt-5 text-center">
-          <button
-            type="button"
-            onClick={toggleMode}
-            className="text-xs text-slate-400 hover:text-cyan-400 transition-colors font-medium cursor-pointer"
-          >
-            {isRegisterMode ? 'Already have an account? Log In' : "Don't have an account? Sign Up"}
-          </button>
+            <div>
+              <div className="flex items-center justify-between mb-2">
+                <label htmlFor="auth-password" className="block text-[11px] font-bold text-stone-300 uppercase tracking-wider">
+                  Password
+                </label>
+              </div>
+              <div className="relative">
+                <Lock className="w-4 h-4 text-stone-400 absolute left-3.5 top-3.5 pointer-events-none" />
+                <input
+                  id="auth-password"
+                  type={showPassword ? 'text' : 'password'}
+                  required
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="••••••••••••"
+                  className="w-full bg-black/35 border border-white/10 focus:border-white/40 focus:bg-black/50 text-white placeholder-stone-500 rounded-xl pl-10 pr-11 py-3 text-sm transition-all outline-none font-sans"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3.5 top-3.5 text-stone-400 hover:text-stone-200 transition-colors cursor-pointer"
+                  aria-label={showPassword ? "Hide password" : "Show password"}
+                >
+                  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                </button>
+              </div>
+            </div>
+
+            {isRegisterMode && (
+              <div>
+                <label className="block text-[11px] font-bold text-stone-300 uppercase tracking-wider mb-2">
+                  Account Role
+                </label>
+                <div className="relative">
+                  <Shield className="w-4 h-4 text-stone-400 absolute left-3.5 top-3.5 pointer-events-none" />
+                  <select
+                    value={role}
+                    onChange={(e) => setRole(e.target.value)}
+                    className="w-full bg-black/35 border border-white/10 focus:border-white/40 focus:bg-black/50 text-white rounded-xl pl-10 pr-4 py-3 text-sm transition-all outline-none cursor-pointer"
+                  >
+                    <option value="user" className="bg-stone-900 text-white">Regular User (Browse & Purchase)</option>
+                    <option value="admin" className="bg-stone-900 text-white">Administrator (Full CRUD & Restock)</option>
+                  </select>
+                </div>
+              </div>
+            )}
+
+            {/* Primary Action Button */}
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full py-3.5 bg-white hover:bg-stone-200 text-[#0f172a] font-bold text-xs uppercase tracking-widest rounded-xl transition-all flex items-center justify-center gap-2.5 cursor-pointer shadow-lg active:scale-[0.99] disabled:opacity-50 mt-6"
+            >
+              {loading ? (
+                <>
+                  <div className="w-4 h-4 border-2 border-[#0f172a]/30 border-t-[#0f172a] rounded-full animate-spin"></div>
+                  <span>Processing...</span>
+                </>
+              ) : isRegisterMode ? (
+                <>
+                  <span>Register Account</span>
+                  <ArrowRight className="w-4 h-4" />
+                </>
+              ) : (
+                <>
+                  <span>Log In</span>
+                  <ArrowRight className="w-4 h-4" />
+                </>
+              )}
+            </button>
+          </form>
+
+          {/* Bottom Switch Mode Toggle */}
+          <div className="mt-6 text-center pt-5 border-t border-white/10">
+            <button
+              type="button"
+              onClick={toggleMode}
+              className="text-xs text-stone-400 hover:text-stone-200 transition-colors font-medium cursor-pointer"
+            >
+              {isRegisterMode ? 'Already have an account? Log In' : "Don't have an account? Sign Up"}
+            </button>
+          </div>
         </div>
-      </div>
+      </main>
+
+      {/* Minimal Footer */}
+      <footer className="relative z-10 w-full max-w-7xl mx-auto px-6 py-4 flex items-center justify-between text-[11px] text-stone-500 font-mono">
+        <span>DRIVEHUB AUTOMOTIVE DEALERSHIP</span>
+        <span>SECURE AUTHENTICATION</span>
+      </footer>
     </div>
   );
 };

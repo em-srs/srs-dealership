@@ -16,49 +16,51 @@ const MobileNavMenu = ({
   return (
     <div
       data-testid="mobile-nav-menu"
-      className="md:hidden bg-slate-900/95 backdrop-blur-md border border-slate-800 rounded-2xl p-4 mt-3 shadow-2xl flex flex-col gap-3 text-xs animate-fade-in"
+      className="md:hidden bg-[#0f172a] border-t border-slate-800 px-4 pb-4 pt-2 flex flex-col gap-2 text-sm"
     >
       {user ? (
         <>
-          {/* User Info Header Badge */}
+          {/* User Info */}
           <div
             onClick={() => {
               onOpenProfile();
               if (onClose) onClose();
             }}
-            className="flex items-center justify-between p-3 bg-slate-950/80 border border-slate-800 rounded-xl cursor-pointer hover:border-slate-700 transition-colors"
+            className="flex items-center justify-between p-3 rounded-lg hover:bg-white/5 cursor-pointer transition-colors group"
           >
             <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-lg bg-gradient-to-tr from-indigo-600 to-blue-600 flex items-center justify-center text-white font-black text-sm shadow-sm">
+              <div className="w-10 h-10 rounded-full bg-amber-600 flex items-center justify-center text-white font-bold text-sm">
                 {initial}
               </div>
               <div>
-                <p className="font-bold text-white leading-tight capitalize">
+                <p className="font-semibold text-white leading-tight capitalize">
                   {user.role === 'admin' ? 'Admin User' : username}
                 </p>
-                <span className="text-[10px] text-slate-400 font-medium block">
+                <span className="text-xs text-slate-400 block">
                   {user.role === 'admin' ? 'Administrator' : 'Customer'} ({user.email})
                 </span>
               </div>
             </div>
-            <span className="text-[11px] text-indigo-400 font-semibold">View Profile →</span>
+            <span className="text-xs text-slate-400 font-medium group-hover:text-white transition-colors">
+              Profile →
+            </span>
           </div>
 
-          {/* Navigation Action Buttons */}
+          {/* Nav Buttons */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1">
             <button
               onClick={() => {
                 if (setActiveTab) setActiveTab('catalog');
                 if (onClose) onClose();
               }}
-              className={`w-full py-2.5 px-4 rounded-xl border text-xs font-semibold flex items-center justify-center gap-2 cursor-pointer transition-all ${
+              className={`w-full py-2.5 px-4 rounded-lg text-sm font-semibold flex items-center justify-center gap-2 cursor-pointer transition-colors ${
                 activeTab === 'catalog'
-                  ? 'bg-indigo-600/20 border-indigo-500 text-indigo-300 font-bold'
-                  : 'bg-slate-950 border-slate-800 text-slate-300 hover:text-white'
+                  ? 'bg-white/10 text-white'
+                  : 'text-slate-300 hover:text-white hover:bg-white/5'
               }`}
             >
-              <Car className="w-4 h-4 text-indigo-400" />
-              <span>Catalog View</span>
+              <Car className="w-4 h-4" />
+              <span>Catalog</span>
             </button>
 
             {user.role === 'admin' && (
@@ -67,41 +69,71 @@ const MobileNavMenu = ({
                   if (setActiveTab) setActiveTab('admin');
                   if (onClose) onClose();
                 }}
-                className={`w-full py-2.5 px-4 rounded-xl border text-xs font-semibold flex items-center justify-center gap-2 cursor-pointer transition-all ${
+                className={`w-full py-2.5 px-4 rounded-lg text-sm font-semibold flex items-center justify-center gap-2 cursor-pointer transition-colors ${
                   activeTab === 'admin'
-                    ? 'bg-indigo-600 border-indigo-500 text-white font-bold'
-                    : 'bg-indigo-950/80 border-indigo-800 text-indigo-300 hover:bg-indigo-900'
+                    ? 'bg-white/10 text-white'
+                    : 'text-slate-300 hover:text-white hover:bg-white/5'
                 }`}
               >
-                <PlusCircle className="w-4 h-4 text-indigo-300" />
+                <PlusCircle className="w-4 h-4" />
                 <span>Manage Inventory</span>
               </button>
             )}
           </div>
 
-          {/* Logout Action */}
+          {/* Contact */}
+          <button
+            onClick={() => {
+              if (setActiveTab) setActiveTab('catalog');
+              if (onClose) onClose();
+              setTimeout(() => {
+                const el = document.getElementById('contact-section');
+                if (el) el.scrollIntoView({ behavior: 'smooth' });
+              }, 100);
+            }}
+            className="w-full py-2.5 px-4 text-slate-300 hover:text-white font-medium text-sm rounded-lg hover:bg-white/5 transition-colors flex items-center justify-center gap-2 cursor-pointer"
+          >
+            <span>Contact Dealership</span>
+          </button>
+
+          {/* Logout */}
           <button
             onClick={() => {
               logout();
               if (onClose) onClose();
             }}
-            className="w-full py-2.5 px-4 bg-rose-950/40 hover:bg-rose-950/70 border border-rose-900/60 text-rose-300 font-semibold text-xs rounded-xl transition-all flex items-center justify-center gap-2 cursor-pointer mt-1"
+            className="w-full py-2.5 px-4 text-slate-400 hover:text-red-400 font-medium text-sm rounded-lg hover:bg-white/5 transition-colors flex items-center justify-center gap-2 cursor-pointer mt-1 border-t border-slate-800 pt-3"
           >
-            <LogOut className="w-4 h-4 text-rose-400" />
-            <span>Logout Account</span>
+            <LogOut className="w-4 h-4" />
+            <span>Logout</span>
           </button>
         </>
       ) : (
-        <button
-          onClick={() => {
-            onOpenAuth();
-            if (onClose) onClose();
-          }}
-          className="w-full py-3 bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-500 hover:to-blue-500 text-white font-bold text-xs rounded-xl shadow-lg shadow-indigo-600/30 flex items-center justify-center gap-2 cursor-pointer transition-all"
-        >
-          <LogIn className="w-4 h-4 text-white" />
-          <span>Login / Register</span>
-        </button>
+        <div className="flex flex-col gap-2">
+          <button
+            onClick={() => {
+              onOpenAuth();
+              if (onClose) onClose();
+            }}
+            className="w-full py-3 bg-white text-[#0f172a] font-semibold text-sm rounded-lg hover:bg-slate-100 flex items-center justify-center gap-2 cursor-pointer transition-colors"
+          >
+            <LogIn className="w-4 h-4" />
+            <span>Sign In / Register</span>
+          </button>
+          <button
+            onClick={() => {
+              if (setActiveTab) setActiveTab('catalog');
+              if (onClose) onClose();
+              setTimeout(() => {
+                const el = document.getElementById('contact-section');
+                if (el) el.scrollIntoView({ behavior: 'smooth' });
+              }, 100);
+            }}
+            className="w-full py-2.5 px-4 text-slate-300 hover:text-white font-medium text-sm rounded-lg hover:bg-white/5 transition-colors flex items-center justify-center gap-2 cursor-pointer"
+          >
+            <span>Contact Dealership</span>
+          </button>
+        </div>
       )}
     </div>
   );
