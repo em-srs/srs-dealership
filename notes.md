@@ -7,7 +7,7 @@ Welcome to the comprehensive technical revision guide and interview preparation 
 ## 📌 Executive Summary & 30-Second Elevator Pitch
 
 ### The Pitch
-> "I built a production-ready, full-stack Vehicle Inventory Management & E-Commerce application using **FastAPI**, **React 19**, **PostgreSQL (Neon Cloud)**, and **JWT Authentication**, strictly following a **Test-Driven Development (TDD)** methodology with **93% backend test coverage** (37/37 total tests passing). 
+> "I built a production-ready, full-stack Vehicle Inventory Management & E-Commerce application using **FastAPI**, **React 19**, **PostgreSQL (Neon Cloud)**, and **JWT Authentication**, strictly following a **Test-Driven Development (TDD)** methodology with **93% test coverage** (43/43 total automated tests passing — 27 backend pytest + 16 frontend vitest). 
 >
 > The system features a permission-gated single-page dashboard with role-based UI rendering (`user` vs `admin`), live search and filtering, INR currency formatting with Lakhs/Crores grouping, atomic purchase checkout with price snapshotting, and stock replenishment controls. It is deployed live on **Vercel** (Frontend) and **Render** (Backend API)."
 
@@ -166,10 +166,10 @@ sequenceDiagram
     Dep->>DB: Fetch current user
     DB-->>Dep: User Object
 
-    alt Admin Endpoint Guard (e.g. DELETE /api/vehicles/{id})
+    alt Admin Endpoint Guard (e.g. POST / PUT / DELETE / Restock /api/vehicles)
         Dep->>Dep: Check if user.role == "admin"
         alt Role is NOT admin
-            Dep-->>User: HTTP 403 Forbidden {"detail": "Administrator privileges required"}
+            Dep-->>User: HTTP 403 Forbidden {"detail": "Admin privileges required"}
         end
     end
 
