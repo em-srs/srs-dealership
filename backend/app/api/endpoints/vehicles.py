@@ -15,12 +15,12 @@ router = APIRouter()
 def create_vehicle(
     vehicle_in: VehicleCreate,
     db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_user)
+    admin_user: User = Depends(require_admin)
 ):
     """
-    Creates and persists a new vehicle record in the inventory database.
+    Creates and persists a new vehicle record in the inventory database (Admin only).
     Connected to: Frontend Add Vehicle Modal/Form (POST /api/vehicles)
-    Requires: Database Session (get_db), get_current_user dependency, VehicleCreate schema
+    Requires: Database Session (get_db), require_admin dependency, VehicleCreate schema
     """
     new_vehicle = Vehicle(
         maker=vehicle_in.maker,
@@ -87,12 +87,12 @@ def update_vehicle(
     vehicle_id: int,
     vehicle_in: VehicleUpdate,
     db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_user)
+    admin_user: User = Depends(require_admin)
 ):
     """
-    Updates details of an existing vehicle in the database by ID.
+    Updates details of an existing vehicle in the database by ID (Admin only).
     Connected to: Frontend Edit Vehicle Modal/Form (PUT /api/vehicles/{vehicle_id})
-    Requires: Database Session (get_db), get_current_user dependency, VehicleUpdate schema
+    Requires: Database Session (get_db), require_admin dependency, VehicleUpdate schema
     """
     vehicle = db.query(Vehicle).filter(Vehicle.id == vehicle_id).first()
     if not vehicle:
@@ -166,7 +166,7 @@ def restock_vehicle(
     Connected to: Frontend Restock inventory control (POST /api/vehicles/{vehicle_id}/restock)
     Requires: Database Session (get_db), require_admin dependency, Query parameter 'amount'
     """
-    vehicle = db.query(Vehicle).filter(Vehicle.id == vehicle_id).first()
+    vehicle = db.query(Vehicle).filter(Vehicle.id == vehicle_id).with_for_update().first()
     if not vehicle:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,

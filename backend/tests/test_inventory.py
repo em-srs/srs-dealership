@@ -18,17 +18,25 @@ def user_token_headers(client):
     token = res.json()["access_token"]
     return {"Authorization": f"Bearer {token}"}
 
+from app.models.user import User
+from app.core.security import get_password_hash
+
 @pytest.fixture
-def admin_token_headers(client):
+def admin_token_headers(client, db_session):
     """
-    Registers and logs in an admin test user, returning HTTP Authorization Bearer headers.
-    Connected to: Auth endpoints (POST /api/auth/register, POST /api/auth/login)
-    Requires: Pytest client fixture
+    Creates an admin test user directly in the database (trusted admin process)
+    and logs in, returning HTTP Authorization Bearer headers.
+    Connected to: Auth login endpoint (POST /api/auth/login)
+    Requires: Pytest client and db_session fixtures
     """
-    client.post(
-        "/api/auth/register",
-        json={"email": "inventoryadmin@example.com", "password": "adminpass123", "role": "admin"}
+    admin = User(
+        email="inventoryadmin@example.com",
+        hashed_password=get_password_hash("adminpass123"),
+        role="admin"
     )
+    db_session.add(admin)
+    db_session.commit()
+
     res = client.post(
         "/api/auth/login",
         json={"email": "inventoryadmin@example.com", "password": "adminpass123"}

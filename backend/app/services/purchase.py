@@ -2,6 +2,7 @@ from typing import List, Optional
 from fastapi import HTTPException, status
 from sqlalchemy.orm import Session
 from sqlalchemy import desc
+from sqlalchemy.exc import IntegrityError
 
 from app.models.vehicle import Vehicle
 from app.models.user import User
@@ -15,11 +16,13 @@ def create_purchase_record(
     purchase_in: Optional[PurchaseCreate] = None
 ) -> PurchaseResponse:
     """
-    Validates stock availability, decrements vehicle inventory, creates a PurchaseHistory record, and returns response.
+    Validates stock availability, decrements vehicle inventory with row locking (with_for_update),
+    creates an immutable PurchaseHistory record, and commits transaction safely.
     Connected to: Vehicle Endpoint (POST /api/vehicles/{vehicle_id}/purchase), Frontend PurchaseModal
     Requires: Database Session, User model, Vehicle model, PurchaseHistory model
     """
-    vehicle = db.query(Vehicle).filter(Vehicle.id == vehicle_id).first()
+    # Use pessimistic row locking to prevent concurrent checkout race conditions
+    vehicle = db.query(Vehicle).filter(Vehicle.id == vehicle_id).with_for_update().first()
     if not vehicle:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
@@ -53,7 +56,14 @@ def create_purchase_record(
         note=note,
     )
     db.add(purchase_record)
-    db.commit()
+    try:
+        db.commit()
+    except IntegrityError:
+        db.rollback()
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Vehicle out of stock"
+        )
     db.refresh(purchase_record)
 
     return PurchaseResponse(

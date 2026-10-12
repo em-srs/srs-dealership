@@ -7,7 +7,6 @@ const AuthModal = ({ isOpen, onClose, onSuccess }) => {
   const [isRegisterMode, setIsRegisterMode] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [role, setRole] = useState('user');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -33,7 +32,7 @@ const AuthModal = ({ isOpen, onClose, onSuccess }) => {
 
     try {
       if (isRegisterMode) {
-        await register(email, password, role);
+        await register(email, password);
         await login(email, password);
         if (onSuccess) onSuccess(`Account created successfully! Welcome, ${email}`);
       } else {
@@ -203,24 +202,6 @@ const AuthModal = ({ isOpen, onClose, onSuccess }) => {
               </div>
             </div>
 
-            {isRegisterMode && (
-              <div>
-                <label className="block text-[11px] font-bold text-stone-300 uppercase tracking-wider mb-2">
-                  Account Role
-                </label>
-                <div className="relative">
-                  <Shield className="w-4 h-4 text-stone-400 absolute left-3.5 top-3.5 pointer-events-none" />
-                  <select
-                    value={role}
-                    onChange={(e) => setRole(e.target.value)}
-                    className="w-full bg-black/35 border border-white/10 focus:border-white/40 focus:bg-black/50 text-white rounded-xl pl-10 pr-4 py-3 text-sm transition-all outline-none cursor-pointer"
-                  >
-                    <option value="user" className="bg-stone-900 text-white">Regular User (Browse & Purchase)</option>
-                    <option value="admin" className="bg-stone-900 text-white">Administrator (Full CRUD & Restock)</option>
-                  </select>
-                </div>
-              </div>
-            )}
 
             {/* Primary Action Button */}
             <button

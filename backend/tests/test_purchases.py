@@ -36,17 +36,25 @@ def user2_headers(client):
     token = res.json()["access_token"]
     return {"Authorization": f"Bearer {token}"}
 
+from app.models.user import User
+from app.core.security import get_password_hash
+
 @pytest.fixture
-def admin_headers(client):
+def admin_headers(client, db_session):
     """
-    Registers and logs in admin test user, returning HTTP Authorization Bearer headers.
-    Connected to: Auth endpoints (POST /api/auth/register, POST /api/auth/login)
-    Requires: Pytest client fixture
+    Creates an admin test user directly in the database (trusted admin process)
+    and logs in, returning HTTP Authorization Bearer headers.
+    Connected to: Auth login endpoint (POST /api/auth/login)
+    Requires: Pytest client and db_session fixtures
     """
-    client.post(
-        "/api/auth/register",
-        json={"email": "admin_purchases@example.com", "password": "password123", "role": "admin"}
+    admin = User(
+        email="admin_purchases@example.com",
+        hashed_password=get_password_hash("password123"),
+        role="admin"
     )
+    db_session.add(admin)
+    db_session.commit()
+
     res = client.post(
         "/api/auth/login",
         json={"email": "admin_purchases@example.com", "password": "password123"}
@@ -139,3 +147,94 @@ def test_get_purchases_unauthenticated_fails(client):
     """
     response = client.get("/api/purchases/me")
     assert response.status_code == 401
+
+def test_simultaneous_purchases_prevent_overselling():
+    """
+    Concurrency test: Simulates two simultaneous purchases competing for the last unit in stock.
+    Verifies that pessimistic row locking (with_for_update) serializes the transactions,
+    ensuring exactly one purchase succeeds and the other fails with HTTP 400 'Vehicle out of stock'.
+    Connected to: create_purchase_record with row-level locking
+    """
+    import concurrent.futures
+    from fastapi import HTTPException
+    from tests.conftest import TestingSessionLocal
+    from app.models.vehicle import Vehicle
+    from app.models.purchase import PurchaseHistory
+    from app.services.purchase import create_purchase_record
+    from app.schemas.purchase import PurchaseCreate
+
+    setup_session = TestingSessionLocal()
+    try:
+        # Create a vehicle with quantity = 1
+        vehicle = Vehicle(
+            maker="Ferrari",
+            model="Roma",
+            year=2024,
+            category="Sports",
+            price=245000.00,
+            quantity=1
+        )
+        setup_session.add(vehicle)
+
+        # Create 2 distinct users
+        user_a = User(email="concurrent_a@example.com", hashed_password="pwd", role="user")
+        user_b = User(email="concurrent_b@example.com", hashed_password="pwd", role="user")
+        setup_session.add_all([user_a, user_b])
+        setup_session.commit()
+        vehicle_id = vehicle.id
+        user_a_id = user_a.id
+        user_b_id = user_b.id
+    finally:
+        setup_session.close()
+
+    results = []
+
+    def attempt_purchase(user_id):
+        # Each concurrent worker gets its own isolated DB session connection
+        thread_session = TestingSessionLocal()
+        try:
+            user = thread_session.query(User).filter(User.id == user_id).first()
+            payload = PurchaseCreate(
+                quantity=1,
+                buyer_name=f"User {user_id}",
+                buyer_phone="555-0100",
+                delivery_address="123 Main St, Anytown"
+            )
+            res = create_purchase_record(thread_session, user, vehicle_id, payload)
+            return ("SUCCESS", res)
+        except HTTPException as e:
+            return ("FAILED", e.status_code, e.detail)
+        finally:
+            thread_session.close()
+
+    with concurrent.futures.ThreadPoolExecutor(max_workers=2) as executor:
+        f1 = executor.submit(attempt_purchase, user_a_id)
+        f2 = executor.submit(attempt_purchase, user_b_id)
+        results = [f1.result(), f2.result()]
+
+    statuses = [r[0] for r in results]
+    assert "SUCCESS" in statuses
+    assert "FAILED" in statuses
+    assert statuses.count("SUCCESS") == 1
+    assert statuses.count("FAILED") == 1
+
+    # Check the failure reason was out of stock
+    failed_result = [r for r in results if r[0] == "FAILED"][0]
+    assert failed_result[1] == 400
+    assert "out of stock" in failed_result[2].lower()
+
+    # Verify database state: quantity is exactly 0 (never negative) and 1 purchase history row
+    verify_session = TestingSessionLocal()
+    try:
+        v_db = verify_session.query(Vehicle).filter(Vehicle.id == vehicle_id).first()
+        assert v_db.quantity == 0
+        purchases = verify_session.query(PurchaseHistory).filter(PurchaseHistory.vehicle_id == vehicle_id).all()
+        assert len(purchases) == 1
+    finally:
+        # Cleanup created records
+        verify_session.query(PurchaseHistory).filter(PurchaseHistory.vehicle_id == vehicle_id).delete()
+        verify_session.query(Vehicle).filter(Vehicle.id == vehicle_id).delete()
+        verify_session.query(User).filter(User.id.in_([user_a_id, user_b_id])).delete()
+        verify_session.commit()
+        verify_session.close()
+

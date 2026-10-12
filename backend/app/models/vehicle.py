@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Numeric, DateTime, func
+from sqlalchemy import Column, Integer, String, Numeric, DateTime, func, CheckConstraint
 from app.db.database import Base
 
 class Vehicle(Base):
@@ -13,3 +13,9 @@ class Vehicle(Base):
     quantity = Column(Integer, nullable=False, default=0)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
+
+    __table_args__ = (
+        CheckConstraint("quantity >= 0", name="vehicles_quantity_check"),
+        CheckConstraint("price >= 0", name="vehicles_price_check"),
+        CheckConstraint("year >= 1886", name="vehicles_year_check"),
+    )

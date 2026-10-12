@@ -5,7 +5,7 @@ from typing import Optional
 class UserCreate(BaseModel):
     email: EmailStr
     password: str
-    role: Optional[str] = "user"
+    role: Optional[str] = None  # Ignored: public registration strictly assigns role="user"
 
 class UserResponse(BaseModel):
     model_config = ConfigDict(from_attributes=True)

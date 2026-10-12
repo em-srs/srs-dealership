@@ -7,7 +7,6 @@ const LandingPage = ({ onSuccess }) => {
   const [isRegisterMode, setIsRegisterMode] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [role, setRole] = useState('user');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -18,7 +17,7 @@ const LandingPage = ({ onSuccess }) => {
 
     try {
       if (isRegisterMode) {
-        await register(email, password, role);
+        await register(email, password);
         await login(email, password);
         if (onSuccess) onSuccess(`Account created successfully! Welcome, ${email}`);
       } else {
@@ -143,24 +142,6 @@ const LandingPage = ({ onSuccess }) => {
               />
             </div>
 
-            {isRegisterMode && (
-              <div>
-                <label className="block text-xs font-semibold text-stone-700 mb-1.5 uppercase tracking-wide">
-                  Account Role
-                </label>
-                <div className="relative">
-                  <Shield className="w-4 h-4 text-stone-400 absolute left-3.5 top-3.5" />
-                  <select
-                    value={role}
-                    onChange={(e) => setRole(e.target.value)}
-                    className="w-full bg-white border border-stone-200 focus:border-stone-900 focus:ring-1 focus:ring-stone-900 text-stone-900 rounded-xl pl-10 pr-4 py-3 text-sm outline-none transition-colors shadow-sm cursor-pointer"
-                  >
-                    <option value="user">Regular User (Browse & Purchase)</option>
-                    <option value="admin">Administrator (Full CRUD & Restock)</option>
-                  </select>
-                </div>
-              </div>
-            )}
 
             <button
               type="submit"

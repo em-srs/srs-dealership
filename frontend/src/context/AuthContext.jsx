@@ -102,13 +102,13 @@ export const AuthProvider = ({ children }) => {
   /**
    * API CALL: Sends new user registration details to backend for account creation.
    * Connected to: Backend POST /api/auth/register endpoint, AuthModal form
-   * Requires: User email, password, and optional role ('user' or 'admin')
+   * Requires: User email and password (role is securely assigned by backend)
    */
-  const register = async (email, password, role = 'user') => {
+  const register = async (email, password) => {
     const res = await fetch(`${API_BASE}/auth/register`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, password, role }),
+      body: JSON.stringify({ email, password }),
     });
 
     if (!res.ok) {

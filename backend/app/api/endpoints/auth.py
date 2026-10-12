@@ -24,10 +24,11 @@ def register(user_in: UserCreate, db: Session = Depends(get_db)):
         )
     
     hashed_pwd = get_password_hash(user_in.password)
+    # Unconditionally assign "user" role to prevent privilege escalation during public registration
     new_user = User(
         email=user_in.email,
         hashed_password=hashed_pwd,
-        role=user_in.role or "user"
+        role="user"
     )
     db.add(new_user)
     db.commit()

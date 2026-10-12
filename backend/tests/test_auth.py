@@ -17,20 +17,37 @@ def test_register_user_success(client):
     assert "id" in data
     assert "password" not in data
 
-def test_register_admin_success(client):
+def test_register_cannot_create_admin(client):
     """
-    Tests successful registration of an admin user with admin role.
+    Regression test: Verifies that public registration unconditionally assigns 'user' role,
+    preventing privilege escalation even if 'role': 'admin' is explicitly supplied in payload.
     Connected to: Auth API (POST /api/auth/register)
     Requires: Pytest client fixture, Test Database
     """
     response = client.post(
         "/api/auth/register",
-        json={"email": "admin@example.com", "password": "adminsecret123", "role": "admin"}
+        json={"email": "attempted_admin@example.com", "password": "adminsecret123", "role": "admin"}
     )
     assert response.status_code == 201
     data = response.json()
-    assert data["email"] == "admin@example.com"
-    assert data["role"] == "admin"
+    assert data["email"] == "attempted_admin@example.com"
+    assert data["role"] == "user"  # Strictly 'user', not 'admin'
+
+    # Verify that logging in also confirms the user role in JWT and profile
+    login_res = client.post(
+        "/api/auth/login",
+        json={"email": "attempted_admin@example.com", "password": "adminsecret123"}
+    )
+    assert login_res.status_code == 200
+    token = login_res.json()["access_token"]
+
+    # Verify this user cannot perform admin actions
+    admin_action_res = client.delete(
+        "/api/vehicles/1",
+        headers={"Authorization": f"Bearer {token}"}
+    )
+    assert admin_action_res.status_code == 403
+    assert "Admin privileges required" in admin_action_res.json()["detail"]
 
 def test_register_duplicate_email_fails(client):
     """
