@@ -14,10 +14,12 @@ class Settings(BaseSettings):
     @classmethod
     def assemble_db_connection(cls, v: str) -> str:
         """
-        Normalizes database connection URIs by replacing legacy postgres:// schema with postgresql://.
+        Normalizes PostgreSQL URLs to use the installed psycopg2 driver.
         Connected to: Database Connection Engine (app.db.database)
         Requires: Pydantic field_validator, DATABASE_URL environment variable from .env
         """
+        if isinstance(v, str) and v.startswith("postgresql+psycopg://"):
+            return v.replace("postgresql+psycopg://", "postgresql+psycopg2://", 1)
         if isinstance(v, str) and v.startswith("postgres://"):
             return v.replace("postgres://", "postgresql://", 1)
         return v
